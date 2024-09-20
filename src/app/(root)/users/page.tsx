@@ -1,4 +1,27 @@
-import React from "react";
+"use client";
+/* eslint-disable react/no-unescaped-entities */
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+interface Person {
+  name: string;
+  title: string;
+  department: string;
+  email: string;
+  role: string;
+  image: string;
+}
 
 const people = [
   {
@@ -14,8 +37,84 @@ const people = [
 ];
 
 export default function Users() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Person | null>(null);
+
+  const toggleModal = (user: Person) => {
+    setSelectedUser(user);
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const inviteUserModal =
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Invite User
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] bg-[#fff]">
+        <DialogHeader>
+          <DialogTitle className="text-base font-semibold leading-6 text-gray-900">Invite User</DialogTitle>
+          <DialogDescription className="text-sm text-gray-700">
+            Add the details of the user you want to invite here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right text-sm text-gray-700">
+              Name
+            </Label>
+            <Input
+              id="name"
+              defaultValue="Pedro Duarte"
+              className="col-span-3 text-sm text-gray-700"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-right text-sm text-gray-700">
+              Email
+            </Label>
+            <Input
+              id="username"
+              defaultValue="@peduarte"
+              className="col-span-3 text-sm text-gray-700"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+  const editUserModal = (
+    <Dialog open={isModalOpen} onOpenChange={closeModal}>
+      <DialogContent
+        className="w-[200px] right-0 sm:max-w-none"
+        style={{ position: 'absolute', right: 0 }}
+      >
+        <Button>Admin</Button>
+        <Button>Inactive</Button>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
+      {isModalOpen && editUserModal}
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
@@ -27,12 +126,7 @@ export default function Users() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
-            type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Add user
-          </button>
+          {inviteUserModal}
         </div>
       </div>
       <div className="mt-8 flow-root">
@@ -107,13 +201,13 @@ export default function Users() {
                       {person.role}
                     </td>
                     <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => toggleModal(person)}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
                         Edit
-                        <span className="sr-only">, {person.name}</span>
-                      </a>
+                        <span className="sr-only">, {selectedUser?.name}</span>
+                      </button>
                     </td>
                   </tr>
                 ))}
