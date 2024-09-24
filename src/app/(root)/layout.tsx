@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 import {
   Dialog,
   DialogBackdrop,
@@ -10,59 +10,67 @@ import {
   MenuItem,
   MenuItems,
   TransitionChild,
-} from "@headlessui/react";
+} from '@headlessui/react'
 import {
   Bars3Icon,
+  BellAlertIcon,
   BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
-  FolderIcon,
   HomeIcon,
   UsersIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+} from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { ExitIcon } from '@radix-ui/react-icons'
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
-];
-const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
-];
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
+  { name: 'Departments', href: '/departments', icon: UsersIcon, current: false },
+  {
+    name: 'Documents',
+    href: '/documents',
+    icon: DocumentDuplicateIcon,
+  },
+  { name: 'Users', href: 'users', icon: UsersIcon, current: false },
+  {
+    name: 'Announcements',
+    href: '/announcements',
+    icon: BellAlertIcon,
+  },
+  {
+    name: 'Roles',
+    href: '/roles',
+    icon: Cog6ToothIcon,
+  },
+  {
+    name: 'Settings',
+    href: '/settings',
+    icon: Cog6ToothIcon,
+  },
+]
+
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+  { name: 'Your profile', href: '#' },
+  { name: 'Sign out', href: '#' },
+]
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function Layout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const pathname = usePathname()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const isActive = (href: string) => {
+    console.log(pathname, href)
+    return pathname === href
+  }
 
   return (
     <>
       <div>
-        <Dialog
-          open={sidebarOpen}
-          onClose={setSidebarOpen}
-          className="relative z-50 lg:hidden"
-        >
+        <Dialog open={sidebarOpen} onClose={setSidebarOpen} className="relative z-50 lg:hidden">
           <DialogBackdrop
             transition
             className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
@@ -81,20 +89,19 @@ export default function Layout({
                     className="-m-2.5 p-2.5"
                   >
                     <span className="sr-only">Close sidebar</span>
-                    <XMarkIcon
-                      aria-hidden="true"
-                      className="h-6 w-6 text-white"
-                    />
+                    <XMarkIcon aria-hidden="true" className="h-6 w-6 text-white" />
                   </button>
                 </div>
               </TransitionChild>
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                 <div className="flex h-16 shrink-0 items-center">
-                  <img
+                  <Image
                     alt="Your Company"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                     className="h-8 w-auto"
+                    width={32}
+                    height={32}
                   />
                 </div>
                 <nav className="flex flex-1 flex-col">
@@ -103,58 +110,23 @@ export default function Layout({
                       <ul role="list" className="-mx-2 space-y-1">
                         {navigation.map((item) => (
                           <li key={item.name}>
-                            <a
+                            <Link
                               href={item.href}
-                              className={classNames(
-                                item.current
-                                  ? "bg-gray-50 text-indigo-600"
-                                  : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                                "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                              className={cn(
+                                'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                                {
+                                  'bg-gray-50 text-indigo-600': isActive(item.href),
+                                },
                               )}
                             >
                               <item.icon
                                 aria-hidden="true"
-                                className={classNames(
-                                  item.current
-                                    ? "text-indigo-600"
-                                    : "text-gray-400 group-hover:text-indigo-600",
-                                  "h-6 w-6 shrink-0"
-                                )}
+                                className={cn('h-6 w-6 shrink-0', {
+                                  'text-indigo-600': isActive(item.href),
+                                })}
                               />
                               {item.name}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                    <li>
-                      <div className="text-xs font-semibold leading-6 text-gray-400">
-                        Your teams
-                      </div>
-                      <ul role="list" className="-mx-2 mt-2 space-y-1">
-                        {teams.map((team) => (
-                          <li key={team.name}>
-                            <a
-                              href={team.href}
-                              className={classNames(
-                                team.current
-                                  ? "bg-gray-50 text-indigo-600"
-                                  : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                                "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                              )}
-                            >
-                              <span
-                                className={classNames(
-                                  team.current
-                                    ? "border-indigo-600 text-indigo-600"
-                                    : "border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium"
-                                )}
-                              >
-                                {team.initial}
-                              </span>
-                              <span className="truncate">{team.name}</span>
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -183,10 +155,12 @@ export default function Layout({
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              <img
+              <Image
                 alt="Your Company"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 className="h-8 w-auto"
+                width={32}
+                height={32}
               />
             </div>
             <nav className="flex flex-1 flex-col">
@@ -195,58 +169,27 @@ export default function Layout({
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <a
+                        <Link
                           href={item.href}
-                          className={classNames(
-                            item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                          className={cn(
+                            'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                            {
+                              'bg-gray-50 text-indigo-600': isActive(item.href),
+                              'text-gray-700 hover:bg-gray-50 hover:text-indigo-600': !isActive(
+                                item.href,
+                              ),
+                            },
                           )}
                         >
                           <item.icon
                             aria-hidden="true"
-                            className={classNames(
-                              item.current
-                                ? "text-indigo-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
-                              "h-6 w-6 shrink-0"
-                            )}
+                            className={cn('h-6 w-6 shrink-0', {
+                              'text-indigo-600': isActive(item.href),
+                              'text-gray-400 group-hover:text-indigo-600': !isActive(item.href),
+                            })}
                           />
                           {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-                <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
-                  </div>
-                  <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {teams.map((team) => (
-                      <li key={team.name}>
-                        <a
-                          href={team.href}
-                          className={classNames(
-                            team.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                          )}
-                        >
-                          <span
-                            className={classNames(
-                              team.current
-                                ? "border-indigo-600 text-indigo-600"
-                                : "border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium"
-                            )}
-                          >
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -256,11 +199,11 @@ export default function Layout({
                     href="#"
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                   >
-                    <Cog6ToothIcon
+                    <ExitIcon
                       aria-hidden="true"
                       className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
                     />
-                    Settings
+                    Logout
                   </a>
                 </li>
               </ul>
@@ -281,33 +224,14 @@ export default function Layout({
               </button>
 
               {/* Separator */}
-              <div
-                aria-hidden="true"
-                className="h-6 w-px bg-gray-200 lg:hidden"
-              />
+              <div aria-hidden="true" className="h-6 w-px bg-gray-200 lg:hidden" />
 
               <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                <form action="#" method="GET" className="relative flex flex-1">
-                  <label htmlFor="search-field" className="sr-only">
-                    Search
-                  </label>
-                  <MagnifyingGlassIcon
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                  />
-                  <input
-                    id="search-field"
-                    name="search"
-                    type="search"
-                    placeholder="Search..."
-                    className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                  />
-                </form>
+                <div className="relative flex flex-1 items-center">
+                  <h2>Dashboard</h2>
+                </div>
                 <div className="flex items-center gap-x-4 lg:gap-x-6">
-                  <button
-                    type="button"
-                    className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
-                  >
+                  <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
                     <span className="sr-only">View notifications</span>
                     <BellIcon aria-hidden="true" className="h-6 w-6" />
                   </button>
@@ -322,10 +246,12 @@ export default function Layout({
                   <Menu as="div" className="relative">
                     <MenuButton className="-m-1.5 flex items-center p-1.5">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        alt=""
+                      <Image
+                        alt="logo"
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                         className="h-8 w-8 rounded-full bg-gray-50"
+                        width={32}
+                        height={32}
                       />
                       <span className="hidden lg:flex lg:items-center">
                         <span
@@ -361,12 +287,10 @@ export default function Layout({
             </div>
           </div>
           <main className="py-10">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              {children}
-            </div>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>
       </div>
     </>
-  );
+  )
 }
