@@ -3,6 +3,14 @@ import Image from 'next/image'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 const userNavigation = [
   { name: 'Your profile', href: '#' },
@@ -27,7 +35,21 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
 
         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
           <div className="relative flex flex-1 items-center">
-            <h2>Dashboard</h2>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
           <div className="flex items-center gap-x-4 lg:gap-x-6">
             <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
