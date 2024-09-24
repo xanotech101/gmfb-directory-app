@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { CreateRole } from './_components/create-role'
+import { CreateDepartment } from './_components/create-department'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,28 +10,61 @@ import {
 import { EllipsisVertical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-const roles = [
+const departments = [
   {
-    type: 'Administrator',
-    number_of_users: '5',
-    permissions: ['All Access', 'Moderator'],
-    date_added: new Date(),
+    name: 'Admin',
+    slug: 'admin',
+    no_of_users: '5',
+    dept_head: 'John Doe',
+  },
+  {
+    name: 'Finance',
+    slug: 'finance',
+    no_of_users: '5',
+    dept_head: 'John Doe',
+  },
+  {
+    name: 'HR',
+    slug: 'hr',
+    no_of_users: '5',
+    dept_head: 'John Doe',
+  },
+  {
+    name: 'IT',
+    slug: 'it',
+    no_of_users: '5',
+    dept_head: 'John Doe',
+  },
+  {
+    name: 'Marketing',
+    slug: 'marketing',
+    no_of_users: '5',
+    dept_head: 'John Doe',
+  },
+  {
+    name: 'Operations',
+    slug: 'operations',
+    no_of_users: '5',
+    dept_head: 'John Doe',
+  },
+  {
+    name: 'Sales',
+    slug: 'sales',
+    no_of_users: '5',
+    dept_head: 'John Doe',
   },
 ]
 
-export default function Roles() {
+export default function Departments() {
   return (
     <>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">Roles</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            A list of all the roles in your account including their type, number of users,
-            permissions and date added.
-          </p>
+          <h1 className="text-base font-semibold leading-6 text-gray-900">Departments</h1>
+          <p className="mt-2 text-sm text-gray-700">A list of all the departments organization</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateRole />
+          <CreateDepartment />
         </div>
       </div>
       <div className="mt-8 flow-root">
@@ -50,13 +83,13 @@ export default function Roles() {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Slug
+                    HOD
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Permissions
+                    No of Users
                   </th>
                   <th scope="col" className="py-3.5 pl-3 pr-4 sm:pr-0">
                     <span className="sr-only">Edit</span>
@@ -64,16 +97,16 @@ export default function Roles() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {roles.map((role) => (
-                  <tr key={role.type}>
+                {departments.map((dept) => (
+                  <tr key={dept.slug}>
                     <td className="whitespace-nowrap px-3 text-sm sm:pl-0">
-                      <div className="font-medium text-gray-900">{role.type}</div>
+                      <div className="font-medium text-gray-900">{dept.name}</div>
                     </td>
                     <td className="whitespace-nowrap py-5 px-3 text-sm">
-                      <div className="font-medium text-gray-900">{role.type}</div>
+                      <div className="font-medium text-gray-900">{dept.dept_head}</div>
                     </td>
                     <td className="whitespace-nowrap py-5 px-3 text-sm">
-                      <div className="font-medium text-gray-900">5</div>
+                      <div className="font-medium text-gray-900">{dept.no_of_users}</div>
                     </td>
                     <td className="whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <DropdownMenu>
@@ -86,8 +119,8 @@ export default function Roles() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-auto max-w-56">
-                          <DropdownMenuItem>Edit Role</DropdownMenuItem>
-                          <DropdownMenuItem>Manage Permissions</DropdownMenuItem>
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem>Invite User</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </td>
