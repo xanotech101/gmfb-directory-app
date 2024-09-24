@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ExitIcon } from '@radix-ui/react-icons'
 import { RefAttributes, SVGProps } from 'react'
+import { LogOut } from 'lucide-react'
 
 export const DesktopSidebar = ({
   navigation,
@@ -65,7 +65,7 @@ export const DesktopSidebar = ({
                 href="#"
                 className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
               >
-                <ExitIcon
+                <LogOut
                   aria-hidden="true"
                   className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
                 />
