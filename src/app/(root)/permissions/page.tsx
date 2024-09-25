@@ -90,7 +90,7 @@ export default function Permissions() {
       <div className="sm:flex sm:items-center">
         <div className="flex items-center justify-between sm:flex-auto ">
           <div className="flex flex-col">
-            <h1 className="text-left font-semibold leading-6 text-gray-900">Hi, User</h1>
+            <h1 className="text-left font-semibold leading-6 text-gray-900">User</h1>
             <p className="mt-2 text-center text-sm text-gray-700">
               A list of all the roles permissions.
             </p>
