@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { CreateRole } from './_components/create-role'
+import { EditRole } from './_components/edit-role'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { EllipsisVertical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const roles = [
   {
@@ -86,8 +88,10 @@ export default function Roles() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-auto max-w-56">
-                          <DropdownMenuItem>Edit Role</DropdownMenuItem>
-                          <DropdownMenuItem>Manage Permissions</DropdownMenuItem>
+                          <EditRole />
+                          <DropdownMenuItem>
+                            <Link href="/permissions">Manage Permissions</Link>
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </td>
