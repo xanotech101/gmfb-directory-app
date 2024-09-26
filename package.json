@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
+    "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -28,9 +29,12 @@
     "next": "14.2.12",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.0",
+    "react-quill": "^2.0.0",
     "react-smart-conditional": "^1.0.21",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8",
     "zustand": "5.0.0-rc.2"
   },
   "devDependencies": {
