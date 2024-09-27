@@ -3,6 +3,8 @@ import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { PreviewAnnouncement } from './_components/preview-announcement'
+import { MultiSelect } from '@/components/ui/multi-select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -14,15 +16,53 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import dynamic from 'next/dynamic'
-import { PreviewAnnouncement } from './_components/preview-announcement'
+
+const departments = [
+  {
+    value: 'Marketing',
+    label: 'Marketing',
+  },
+  {
+    value: 'Information Technology',
+    label: 'Information Technology',
+  },
+  {
+    value: 'Human Resources',
+    label: 'Human Resources',
+  },
+  {
+    value: 'Sales',
+    label: 'Sales',
+  },
+  {
+    value: 'Agents',
+    label: 'Agents',
+  },
+]
+
+const users = [
+  {
+    value: 'John Doe',
+    label: 'John Doe',
+  },
+  {
+    value: 'John Smith',
+    label: 'John Smith',
+  },
+  {
+    value: 'Dan Doe',
+    label: 'Dan Doe',
+  },
+  {
+    value: 'Jane Doe',
+    label: 'Jane Doe',
+  },
+  {
+    value: 'Will Doe',
+    label: 'Will Doe',
+  },
+]
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 import 'react-quill/dist/quill.snow.css'
@@ -37,8 +77,11 @@ const formSchema = z.object({
   description: z.string().min(10, {
     message: 'Description must be at least 10 characters.',
   }),
-  department: z.string().nonempty({
-    message: 'Please select a department to share with.',
+  departments: z.array(z.string().min(1)).min(1).nonempty({
+    message: 'Please select at least one department.',
+  }),
+  users: z.array(z.string().min(1)).min(1).nonempty({
+    message: 'Please select at least one user.',
   }),
 })
 
@@ -49,7 +92,8 @@ export default function CreateAnnouncement() {
       title: '',
       subject: '',
       description: '',
-      department: '',
+      departments: [],
+      users: [],
     },
   })
 
@@ -75,7 +119,8 @@ export default function CreateAnnouncement() {
                 title: formData.title,
                 subject: formData.subject,
                 body: formData.description,
-                department: formData.department,
+                departments: formData.departments,
+                users: formData.users,
               }}
             />
           </div>
@@ -136,27 +181,48 @@ export default function CreateAnnouncement() {
 
             <FormField
               control={form.control}
-              name="department"
+              name="departments"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Department</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Human Resources">Human Resources</SelectItem>
-                        <SelectItem value="Marketing">Marketing</SelectItem>
-                        <SelectItem value="sales">Sales</SelectItem>
-                        <SelectItem value="Information Technology">
-                          Information Technology
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <MultiSelect
+                      options={departments}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Select options"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
                   </FormControl>
                   <FormDescription>
-                    Select the department to share the announcement with.
+                    Select the department(s) to share the announcement with.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="users"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={users}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Select options"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Select the user(s) to share the announcement with.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
