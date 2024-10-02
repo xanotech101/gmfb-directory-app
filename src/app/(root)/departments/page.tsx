@@ -9,49 +9,114 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { EllipsisVertical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 const departments = [
   {
+    id: 2,
     name: 'Admin',
     slug: 'admin',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'johndoe@mail.com',
+    },
   },
   {
+    id: 4,
     name: 'Finance',
     slug: 'finance',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      id: 77,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'finance@mail.com',
+    },
   },
   {
+    id: 5,
     name: 'HR',
     slug: 'hr',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      id: 30,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'finance@mail.com',
+    },
   },
   {
+    id: 8,
     name: 'IT',
     slug: 'it',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      id: 30,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'finance@mail.com',
+    },
   },
   {
+    id: 3,
     name: 'Marketing',
     slug: 'marketing',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      id: 5,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'finance@mail.com',
+    },
   },
   {
+    id: 30,
     name: 'Operations',
     slug: 'operations',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      id: 2,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'finance@mail.com',
+    },
   },
   {
+    id: 22,
     name: 'Sales',
     slug: 'sales',
     no_of_users: '5',
-    dept_head: 'John Doe',
+    hod: {
+      avatar:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      id: 3,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'finance@mail.com',
+    },
   },
 ]
 
@@ -67,69 +132,59 @@ export default function Departments() {
           <CreateDepartment />
         </div>
       </div>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    HOD
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    No of Users
-                  </th>
-                  <th scope="col" className="py-3.5 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {departments.map((dept) => (
-                  <tr key={dept.slug}>
-                    <td className="whitespace-nowrap px-3 text-sm sm:pl-0">
-                      <div className="font-medium text-gray-900">{dept.name}</div>
-                    </td>
-                    <td className="whitespace-nowrap py-5 px-3 text-sm">
-                      <div className="font-medium text-gray-900">{dept.dept_head}</div>
-                    </td>
-                    <td className="whitespace-nowrap py-5 px-3 text-sm">
-                      <div className="font-medium text-gray-900">{dept.no_of_users}</div>
-                    </td>
-                    <td className="whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="w-8 flex items-center justify-center"
-                          >
-                            <EllipsisVertical size={16} className="flex-shrink-0" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-auto max-w-56">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Invite User</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+
+      <div className="mt-8">
+        <Table>
+          <TableCaption className="sr-only">A list of your recent invoices.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>HOD</TableHead>
+              <TableHead>No of Users</TableHead>
+              <TableHead className="sr-only">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {departments.map((d) => (
+              <TableRow key={d.id}>
+                <TableCell>{d.name}</TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    <div className="h-11 w-11 flex-shrink-0">
+                      <Avatar>
+                        <AvatarImage src={d.hod.avatar} alt="profile image" />
+                        <AvatarFallback className="h-full w-full bg-blue-500 border border-blue-200 flex items-center justify-center">
+                          {d.hod.first_name[0]}
+                          {d.hod.last_name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-medium text-gray-900">
+                        {d.hod.first_name}
+                        {d.hod.last_name}
+                      </div>
+                      <div className="mt-1 text-gray-500">{d.hod.email}</div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{d.no_of_users}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-8 flex items-center justify-center">
+                        <EllipsisVertical size={16} className="flex-shrink-0" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-auto max-w-56">
+                      <DropdownMenuItem>View Users</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </>
   )
