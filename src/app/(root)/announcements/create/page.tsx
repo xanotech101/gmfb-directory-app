@@ -3,7 +3,7 @@ import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { PreviewAnnouncement } from './_components/preview-announcement'
+import { PreviewAnnouncement } from './_components/preview'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -110,19 +110,8 @@ export default function CreateAnnouncement() {
           <div className="flex flex-col">
             <h1 className="text-left font-semibold leading-6 text-gray-900">Create Announcement</h1>
             <p className="mt-2 text-center text-sm text-gray-700">
-              A form to create a new announcement.
+              Fill out the form below to create an announcement.
             </p>
-          </div>
-          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <PreviewAnnouncement
-              announcementData={{
-                title: formData.title,
-                subject: formData.subject,
-                body: formData.description,
-                departments: formData.departments,
-                users: formData.users,
-              }}
-            />
           </div>
         </div>
       </div>
@@ -228,8 +217,18 @@ export default function CreateAnnouncement() {
                 </FormItem>
               )}
             />
-
-            <Button type="submit">Submit</Button>
+            <div className="flex space-x-2">
+              <PreviewAnnouncement
+                announcementData={{
+                  title: formData.title,
+                  subject: formData.subject,
+                  body: formData.description,
+                  departments: formData.departments,
+                  users: formData.users,
+                }}
+              />
+              <Button type="submit">Submit</Button>
+            </div>
           </form>
         </Form>
       </div>

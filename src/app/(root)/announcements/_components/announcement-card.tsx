@@ -60,10 +60,10 @@ export const AnnouncementCard = () => {
             <div className="flex items-center py-8 px-2 text-[18px] pb-2 font-semibold">
               <span className="text-center">{announcement.subject}</span>
             </div>
-            <div className="flex items-center px-2 text-sm pb-2">
+            <div className="flex items-center px-2 text-sm pb-4">
               <span>{displayedBody}</span>
             </div>
-            <div className="flex items-center pb-4 px-2 text-sm pb-2">
+            <div className="flex items-center px-2 text-sm pb-2">
               {announcement.body.length > maxChars && (
                 <button
                   className="text-indigo-500 text-sm hover:underline font-semibold"

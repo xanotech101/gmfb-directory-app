@@ -15,9 +15,9 @@ export default function Permissions() {
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <Button>
-              <Link href={'/create-announcement'}>Create Announcement</Link>
-            </Button>
+            <Link href="/announcements/create">
+              <Button>Create Announcement</Button>
+            </Link>
           </div>
         </div>
       </div>
