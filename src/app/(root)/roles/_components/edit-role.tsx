@@ -43,12 +43,12 @@ export const EditRole = () => {
               id="description"
               name="description"
               rows={4}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#891C69] sm:text-sm sm:leading-6"
             />
           </div>
         </form>
         <DialogFooter>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-[#891C69] hover:bg-[#974D7B]">
             Save Changes
           </Button>
         </DialogFooter>

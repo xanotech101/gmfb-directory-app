@@ -12,11 +12,11 @@ export default function RestPassword() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
-            alt="Your Company"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-10 w-auto"
-            height={40}
-            width={40}
+            src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
+            alt="Grooming Microfinance Bank"
+            className="mx-auto sticky"
+            height={150}
+            width={150}
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Reset your password
@@ -38,7 +38,7 @@ export default function RestPassword() {
               <Label htmlFor="confirm_password">Password</Label>
               <Input id="confirm_password" type="password" />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-[#891C69] hover:bg-[#974D7B]">
               Reset Password
             </Button>
           </form>

@@ -14,10 +14,10 @@ export default function Permissions() {
             </p>
           </div>
           <div className="flex items-center justify-between">
-            <Button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600  hover:bg-indigo-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+            <Button className="px-4 py-2 text-sm font-medium text-white bg-[#891C69] hover:bg-[#974D7B] rounded-md focus:outline-none focus:ring-2 focus:ring-[#974D7B]">
               Save
             </Button>
-            <Button className="px-4 py-2 ml-2 text-sm font-medium text-white bg-red-600  hover:bg-red-500 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300">
+            <Button className="px-4 py-2 ml-2 text-sm font-medium text-white bg-gray-400  hover:bg-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300">
               Cancel
             </Button>
           </div>
