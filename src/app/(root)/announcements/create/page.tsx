@@ -227,7 +227,9 @@ export default function CreateAnnouncement() {
                   users: formData.users,
                 }}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" className="bg-[#891C69] hover:bg-[#974D7B]">
+                Submit
+              </Button>
             </div>
           </form>
         </Form>

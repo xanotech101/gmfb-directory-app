@@ -38,11 +38,15 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  <BreadcrumbLink href="/" className="hover:text-[#891C69]">
+                    Home
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+                  <BreadcrumbLink href="/components" className="hover:text-[#891C69]">
+                    Components
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
@@ -52,7 +56,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
             </Breadcrumb>
           </div>
           <div className="flex items-center gap-x-4 lg:gap-x-6">
-            <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+            <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-[#891C69]">
               <span className="sr-only">View notifications</span>
               <BellIcon aria-hidden="true" className="h-6 w-6" />
             </button>
@@ -74,11 +78,14 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                 <span className="hidden lg:flex lg:items-center">
                   <span
                     aria-hidden="true"
-                    className="ml-4 text-sm font-semibold leading-6 text-gray-900"
+                    className="ml-4 text-sm font-semibold leading-6 text-gray-900 hover:text-[#891C69]"
                   >
                     Tom Cook
                   </span>
-                  <ChevronDownIcon aria-hidden="true" className="ml-2 h-5 w-5 text-gray-400" />
+                  <ChevronDownIcon
+                    aria-hidden="true"
+                    className="ml-2 h-5 w-5 text-gray-400 hover:text-[#891C69]"
+                  />
                 </span>
               </MenuButton>
               <MenuItems

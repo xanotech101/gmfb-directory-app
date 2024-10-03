@@ -46,11 +46,11 @@ export const MobileSidebar = ({
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
               <Image
-                alt="Your Company"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
-                width={32}
-                height={32}
+                src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
+                alt="Grooming Microfinance Bank"
+                className="sticky"
+                height={120}
+                width={120}
               />
             </div>
             <nav className="flex flex-1 flex-col">
@@ -64,14 +64,14 @@ export const MobileSidebar = ({
                           className={cn(
                             'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
                             {
-                              'bg-gray-50 text-indigo-600': item.current,
+                              'bg-gray-50 text-[#891C69]': item.current,
                             },
                           )}
                         >
                           <item.icon
                             aria-hidden="true"
                             className={cn('h-6 w-6 shrink-0', {
-                              'text-indigo-600': item.current,
+                              'text-[#891C69]': item.current,
                             })}
                           />
                           {item.name}
@@ -83,11 +83,11 @@ export const MobileSidebar = ({
                 <li className="mt-auto">
                   <a
                     href="#"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-[#891C69]"
                   >
                     <Cog6ToothIcon
                       aria-hidden="true"
-                      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+                      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-[#891C69]"
                     />
                     Settings
                   </a>
