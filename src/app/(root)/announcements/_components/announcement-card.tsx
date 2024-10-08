@@ -31,6 +31,7 @@ const announcements = [
     users: ['Jon Doe', 'Jane Doe', 'Smith Doe'],
   },
 ]
+
 export const AnnouncementCard = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
 
