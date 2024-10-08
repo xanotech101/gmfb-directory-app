@@ -7,6 +7,8 @@ import {
   DocumentDuplicateIcon,
   HomeIcon,
   UsersIcon,
+  UserGroupIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
 import { DesktopSidebar } from '@/components/layout/sidebar/desktop-sidebar'
@@ -15,7 +17,7 @@ import { MobileSidebar } from '@/components/layout/sidebar/mobile-sidebar'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
-  { name: 'Departments', href: '/departments', icon: UsersIcon, current: false },
+  { name: 'Departments', href: '/departments', icon: UserGroupIcon, current: false },
   {
     name: 'Documents',
     href: '/documents',
@@ -30,7 +32,7 @@ const navigation = [
   {
     name: 'Roles',
     href: '/roles',
-    icon: Cog6ToothIcon,
+    icon: UserIcon,
   },
   {
     name: 'Settings',

@@ -81,8 +81,12 @@ export default function Documents() {
                   <div className="flex items-center">
                     <div className="h-11 w-11 flex-shrink-0">
                       <Avatar>
-                        <AvatarImage src={document.created_by.avatar} alt="profile image" />
-                        <AvatarFallback className="h-full w-full bg-blue-500 border border-blue-200 flex items-center justify-center">
+                        <AvatarImage
+                          src={document.created_by.avatar}
+                          alt="profile image"
+                          className="rounded-full"
+                        />
+                        <AvatarFallback className="h-full w-full bg-[#891C69] border border-[#974D7B] rounded-full flex items-center justify-center text-white">
                           {document.created_by.first_name[0]}
                           {document.created_by.last_name[0]}
                         </AvatarFallback>
