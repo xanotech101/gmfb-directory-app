@@ -109,13 +109,13 @@ export default function Settings() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium mb-1" htmlFor="createdAt">
+              <Label className="block text-sm font-medium mb-1" htmlFor="created_at">
                 Account Creation
               </Label>
               <Input
                 type="text"
-                name="createdAt"
-                id="createdAt"
+                name="created_at"
+                id="created_at"
                 value={profile.created_at}
                 readOnly
                 className="w-full p-2 border-b rounded bg-gray-100"
@@ -138,7 +138,7 @@ export default function Settings() {
 
             <div>
               <Label className="block text-sm font-medium mb-1" htmlFor="birth_date">
-                Birthdate
+                Birth Date
               </Label>
               <Input
                 type="date"
