@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 export default function Settings() {
   return (
     <Tabs defaultValue="account" className="w-full">
-      <TabsList className="grid w-full grid-cols-2 h-[45px]">
+      <TabsList className="grid w-1/2 grid-cols-2 h-[45px] border">
         <TabsTrigger className="h-[35px]" value="account">
           Account
         </TabsTrigger>
@@ -31,7 +31,7 @@ export default function Settings() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="name">Name</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -39,7 +39,7 @@ export default function Settings() {
                 defaultValue="Pedro Duarte"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="username">Username</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -47,7 +47,7 @@ export default function Settings() {
                 defaultValue="@peduarte"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -55,7 +55,7 @@ export default function Settings() {
                 defaultValue="08101194855"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -63,7 +63,7 @@ export default function Settings() {
                 defaultValue="peduarte@gmail.com"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="account_creation">Account Creation</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -72,7 +72,7 @@ export default function Settings() {
                 defaultValue="Oct 27, 2019, 9:54:41 PM"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="account_creation">Gender</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -80,7 +80,7 @@ export default function Settings() {
                 defaultValue="Male"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="birth_date">Birth Date</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -89,7 +89,7 @@ export default function Settings() {
                 defaultValue="Oct 27, 2019"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="account_creation">Age</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -112,7 +112,7 @@ export default function Settings() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="current">Current password</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -120,7 +120,7 @@ export default function Settings() {
                 type="password"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="new">New password</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
@@ -128,7 +128,7 @@ export default function Settings() {
                 type="password"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 py-2">
               <Label htmlFor="new">Confirm password</Label>
               <Input
                 className="focus:outline-none focus:border-[#891C69]"
