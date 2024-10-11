@@ -10,6 +10,8 @@ export default function Profile() {
     username: 'JohnDoe',
     first_name: 'John',
     last_name: 'Doe',
+    role: 'Team Manager',
+    location: 'Leeds, United Kingdom',
     email: 'johndoe@example.com',
     phone: '123-456-7890',
     gender: 'Male',
@@ -22,12 +24,12 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-4">
+    <div className="w-full py-4">
       <div className="flex flex-col items-start mb-4">
-        <h1 className="text-left font-semibold leading-6 text-gray-900">Profile</h1>
+        <h1 className="text-left font-semibold leading-6 text-gray-900">My Profile</h1>
       </div>
 
-      <div className="flex items-center space-x-4 mb-6">
+      <div className="flex items-center space-x-4 mb-6 p-4 border border-gray-200 rounded-md">
         <div className="h-20 w-20 flex-shrink-0">
           <Avatar className="rounded-full h-20 w-20">
             <AvatarImage
@@ -42,41 +44,61 @@ export default function Profile() {
           </Avatar>
         </div>
         <div>
-          <h2 className="text-left font-semibold leading-6 text-gray-900">{profile.username}</h2>
-          <p className="text-sm text-gray-500">{profile.email}</p>
+          <h2 className="text-left font-500 leading-6 mb-2 text-gray-900">
+            {profile.first_name} {''} {profile.last_name}
+          </h2>
+          <p className="text-sm text-gray-500">{profile.role}</p>
+          <p className="text-sm text-gray-500">{profile.location}</p>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <Label className="block text-sm font-medium">Username</Label>
-          <p className="text-sm text-gray-500">{profile.username}</p>
+      <div className="space-x-4 mb-6 p-4 border border-gray-200 rounded-md">
+        <div className="flex flex-col items-start mb-4">
+          <h1 className="text-left font-semibold leading-6 text-gray-900">Personal Information</h1>
         </div>
+        <div className="w-2/3 p-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="block text-sm text-gray-500">First Name</Label>
+              <p className="text-[16px] font-medium">{profile.first_name}</p>
+            </div>
 
-        <div>
-          <Label className="block text-sm font-medium">Email</Label>
-          <p className="text-sm text-gray-500">{profile.email}</p>
-        </div>
+            <div>
+              <Label className="block text-sm text-gray-500">Last Name</Label>
+              <p className="text-[16px] font-medium">{profile.last_name}</p>
+            </div>
 
-        <div>
-          <Label className="block text-sm font-medium">Phone</Label>
-          <p className="text-sm text-gray-500">{profile.phone}</p>
-        </div>
+            <div>
+              <Label className="block text-sm text-gray-500">Username</Label>
+              <p className="text-[16px] font-medium">{profile.username}</p>
+            </div>
 
-        <div>
-          <Label className="block text-sm font-medium">Gender</Label>
-          <p className="text-sm text-gray-500">{profile.gender}</p>
-        </div>
+            <div>
+              <Label className="block text-sm text-gray-500">Email Address</Label>
+              <p className="text-[16px] font-medium">{profile.email}</p>
+            </div>
 
-        <div>
-          <Label className="block text-sm font-medium">Birth Date</Label>
-          <p className="text-sm text-gray-500">
-            {new Date(profile.birth_date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </p>
+            <div>
+              <Label className="block text-sm text-gray-500">Phone</Label>
+              <p className="text-[16px] font-medium">{profile.phone}</p>
+            </div>
+
+            <div>
+              <Label className="block text-sm text-gray-500">Gender</Label>
+              <p className="text-[16px] font-medium">{profile.gender}</p>
+            </div>
+
+            <div>
+              <Label className="block text-sm text-gray-500">Birth Date</Label>
+              <p className="text-[16px] font-medium">
+                {new Date(profile.birth_date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
