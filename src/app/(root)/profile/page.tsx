@@ -53,56 +53,59 @@ export default function Profile() {
       </div>
 
       <div className="space-x-4 mb-6 p-4 border border-gray-200 rounded-md">
-        <div className="flex flex-col items-start mb-4">
-          <h1 className="text-left font-semibold leading-6 text-gray-900">Personal Information</h1>
-        </div>
-        <div className="w-2/3 p-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="block text-sm text-gray-500">First Name</Label>
-              <p className="text-[16px] font-medium">{profile.first_name}</p>
-            </div>
+        <div className="w-full">
+          <div className="flex flex-col items-start mb-4">
+            <h1 className="text-left font-semibold leading-6 text-gray-900">
+              Personal Information
+            </h1>
+          </div>
+          <div className="w-2/3 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="block text-sm text-gray-500">First Name</Label>
+                <p className="text-[16px] font-medium">{profile.first_name}</p>
+              </div>
 
-            <div>
-              <Label className="block text-sm text-gray-500">Last Name</Label>
-              <p className="text-[16px] font-medium">{profile.last_name}</p>
-            </div>
+              <div>
+                <Label className="block text-sm text-gray-500">Last Name</Label>
+                <p className="text-[16px] font-medium">{profile.last_name}</p>
+              </div>
 
-            <div>
-              <Label className="block text-sm text-gray-500">Username</Label>
-              <p className="text-[16px] font-medium">{profile.username}</p>
-            </div>
+              <div>
+                <Label className="block text-sm text-gray-500">Username</Label>
+                <p className="text-[16px] font-medium">{profile.username}</p>
+              </div>
 
-            <div>
-              <Label className="block text-sm text-gray-500">Email Address</Label>
-              <p className="text-[16px] font-medium">{profile.email}</p>
-            </div>
+              <div>
+                <Label className="block text-sm text-gray-500">Email Address</Label>
+                <p className="text-[16px] font-medium">{profile.email}</p>
+              </div>
 
-            <div>
-              <Label className="block text-sm text-gray-500">Phone</Label>
-              <p className="text-[16px] font-medium">{profile.phone}</p>
-            </div>
+              <div>
+                <Label className="block text-sm text-gray-500">Phone</Label>
+                <p className="text-[16px] font-medium">{profile.phone}</p>
+              </div>
 
-            <div>
-              <Label className="block text-sm text-gray-500">Gender</Label>
-              <p className="text-[16px] font-medium">{profile.gender}</p>
-            </div>
+              <div>
+                <Label className="block text-sm text-gray-500">Gender</Label>
+                <p className="text-[16px] font-medium">{profile.gender}</p>
+              </div>
 
-            <div>
-              <Label className="block text-sm text-gray-500">Birth Date</Label>
-              <p className="text-[16px] font-medium">
-                {new Date(profile.birth_date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
+              <div>
+                <Label className="block text-sm text-gray-500">Birth Date</Label>
+                <p className="text-[16px] font-medium">
+                  {new Date(profile.birth_date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Edit Button */}
       <div className="mt-6">
         <button
           onClick={handleEditProfile}
