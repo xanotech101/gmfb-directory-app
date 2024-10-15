@@ -1,15 +1,28 @@
 'use client'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
+import { OTP } from '@/components/otp/otp'
 
 export default function Login() {
-  const router = useRouter()
+  const [showOTP, setShowOTP] = useState<boolean>(false)
+  // const router = useRouter()
+
+  const sendOTP = async () => {
+    setShowOTP(true)
+  }
+
+  const closeModal = () => {
+    setShowOTP(false)
+  }
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        {showOTP && <OTP onClose={closeModal} />}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
@@ -28,12 +41,12 @@ export default function Login() {
             className="space-y-8"
             onSubmit={(e) => {
               e.preventDefault()
-              router.push('/dashboard')
+              sendOTP()
             }}
           >
             <div>
               <Label htmlFor="email">Email address</Label>
-              <Input id="email" defaultValue="Pedro Duarte" />
+              <Input id="email" type="email" defaultValue="pedroduarte@gmail.com" />
             </div>
             <div>
               <div className="flex items-center justify-between">
