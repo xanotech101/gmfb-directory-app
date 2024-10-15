@@ -11,12 +11,13 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { Button } from '../ui/button'
 
 interface OTPProps {
-  onClose: () => void
+  show: boolean
+  setShow(show: boolean): void
 }
 
-export const OTP: React.FC<OTPProps> = ({ onClose }) => {
+export const OTP: React.FC<OTPProps> = ({ setShow, show }) => {
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={show} onOpenChange={setShow}>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
@@ -31,14 +32,9 @@ export const OTP: React.FC<OTPProps> = ({ onClose }) => {
         <div className="flex items-center justify-center w-full">
           <InputOTP maxLength={6}>
             <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
+              {new Array(6).fill(0).map((_, index) => (
+                <InputOTPSlot key={index} index={index} />
+              ))}
             </InputOTPGroup>
           </InputOTP>
         </div>
@@ -46,7 +42,7 @@ export const OTP: React.FC<OTPProps> = ({ onClose }) => {
         <DialogFooter className="mt-6">
           <Button
             type="button"
-            onClick={onClose}
+            onClick={() => setShow(false)}
             className="w-full bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           >
             Cancel
