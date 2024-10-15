@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -7,26 +6,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
+
 import { Button } from '../ui/button'
-import { Input } from '../ui/input'
 
 interface OTPProps {
   onClose: () => void
 }
 
 export const OTP: React.FC<OTPProps> = ({ onClose }) => {
-  const [otp, setOtp] = useState(Array(6).fill(''))
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = e.target.value
-    if (value.match(/^[0-9]{0,1}$/)) {
-      // Allow only numbers
-      const newOtp = [...otp]
-      newOtp[index] = value
-      setOtp(newOtp)
-    }
-  }
-
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
@@ -40,20 +28,20 @@ export const OTP: React.FC<OTPProps> = ({ onClose }) => {
           </DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-4 mt-4">
-          <div className="flex justify-between">
-            {otp.map((digit, index) => (
-              <Input
-                key={index}
-                type="text"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(e, index)}
-                className="w-12 h-12 text-center text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-[#891C69] focus:border-[#891C69] solid"
-              />
-            ))}
-          </div>
-        </form>
+        <div className="flex items-center justify-center w-full">
+          <InputOTP maxLength={6}>
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+            </InputOTPGroup>
+            <InputOTPGroup>
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
 
         <DialogFooter className="mt-6">
           <Button
