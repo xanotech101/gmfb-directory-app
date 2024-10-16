@@ -97,7 +97,7 @@ const documents = [
     },
   },
   {
-    id: 1,
+    id: 2,
     title: 'Design System',
     created_by: {
       first_name: 'Ben',
@@ -122,7 +122,7 @@ const documents = [
     },
   },
   {
-    id: 1,
+    id: 3,
     title: 'Design System',
     created_by: {
       first_name: 'Travis',
@@ -147,7 +147,7 @@ const documents = [
     },
   },
   {
-    id: 1,
+    id: 4,
     title: 'Design System',
     created_by: {
       first_name: 'Jane',
@@ -172,7 +172,7 @@ const documents = [
     },
   },
   {
-    id: 1,
+    id: 5,
     title: 'Design System',
     created_by: {
       first_name: 'Jane',

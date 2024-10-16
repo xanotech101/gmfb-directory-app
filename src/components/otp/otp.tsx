@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -7,15 +8,54 @@ import {
   DialogTitle,
 } from '../ui/dialog'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
-
 import { Button } from '../ui/button'
-
+import { useMutation } from '@tanstack/react-query'
+import { post } from '@/lib/fetch'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import CircleLoader from 'react-spinners/ClipLoader'
 interface OTPProps {
   show: boolean
   setShow(show: boolean): void
+  formValues: { email: string; password: string }
 }
 
-export const OTP: React.FC<OTPProps> = ({ setShow, show }) => {
+export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
+  const [otp, setOtp] = useState<string>('')
+  const router = useRouter()
+
+  const login = useMutation({
+    mutationKey: ['login'],
+    mutationFn: async ({
+      email,
+      password,
+      otp,
+    }: {
+      email: string
+      password: string
+      otp: string
+    }) =>
+      post(`/api/auth`, {
+        isClient: true,
+        body: { email, password, otp },
+      }),
+    onSuccess: () => {
+      router.push('/dashboard')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const handleOTPSubmit = () => {
+    const { email, password } = formValues
+    login.mutate({
+      email,
+      password,
+      otp,
+    })
+  }
+
   return (
     <Dialog open={show} onOpenChange={setShow}>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
@@ -30,7 +70,7 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show }) => {
         </DialogHeader>
 
         <div className="flex items-center justify-center w-full">
-          <InputOTP maxLength={6}>
+          <InputOTP maxLength={6} onChange={(otp: string) => setOtp(otp)}>
             <InputOTPGroup>
               {new Array(6).fill(0).map((_, index) => (
                 <InputOTPSlot key={index} index={index} />
@@ -50,7 +90,12 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show }) => {
           <Button
             type="submit"
             className="w-full bg-[#891C69] hover:bg-[#974D7B] focus:outline-none focus:ring-2 focus:ring-[#974D7B]"
+            onClick={handleOTPSubmit}
+            disabled={login.status === 'pending'}
           >
+            {login.status === 'pending' && (
+              <CircleLoader size={18} color="#fff" className="ml-2" />
+            )}
             Verify OTP
           </Button>
         </DialogFooter>

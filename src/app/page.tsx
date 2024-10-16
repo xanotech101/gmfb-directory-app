@@ -11,14 +11,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-// import { useRouter } from 'next/navigation'
 import { OTP } from '@/components/otp/otp'
+import { ForgetPassword } from '@/components/forget-password/forget-password'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from 'sonner'
+import CircleLoader from 'react-spinners/ClipLoader'
 
 const formSchema = z.object({
   password: z.string().min(8, {
@@ -31,6 +32,9 @@ const formSchema = z.object({
 
 export default function Login() {
   const [showOTP, setShowOTP] = useState<boolean>(false)
+  const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false)
+  const [formValues, setFormValues] = useState<{ email: string; password: string } | null>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,7 +42,6 @@ export default function Login() {
       email: '',
     },
   })
-  // const router = useRouter()
 
   const generateOTP = useMutation({
     mutationKey: ['generate-otp'],
@@ -47,14 +50,14 @@ export default function Login() {
         isClient: true,
         body: { email, type: 'login' },
       }),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      setFormValues({ email: variables, password: form.getValues('password') })
       setShowOTP(true)
     },
     onError: (error) => {
       toast.error(error.message)
     },
   })
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     generateOTP.mutate(values.email)
   }
@@ -62,14 +65,16 @@ export default function Login() {
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <OTP setShow={setShowOTP} show={showOTP} />
+        <OTP setShow={setShowOTP} show={showOTP} formValues={formValues!} />
+        <ForgetPassword setShow={setShowForgotPassword} show={showForgotPassword} />
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
             alt="Grooming Microfinance Bank"
             className="mx-auto sticky"
-            height={150}
             width={150}
+            height={150}
+            priority
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
@@ -86,9 +91,18 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="email" {...field} />
+                      <Input placeholder="email@mail.com" {...field} />
                     </FormControl>
                     <FormMessage />
+                    <div className="flex items-center justify-end">
+                      <a
+                        href="#"
+                        onClick={() => setShowForgotPassword(true)}
+                        className="font-semibold text-[#891C69] hover:text-[#974D7B] text-sm"
+                      >
+                        Forgot password?
+                      </a>
+                    </div>
                   </FormItem>
                 )}
               />
@@ -105,35 +119,18 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-[#891C69] hover:bg-[#974D7B]">
+              <Button
+                type="submit"
+                className="inline-flex w-full items-center justify-center bg-[#891C69] hover:bg-[#974D7B]"
+                disabled={generateOTP.status === 'pending'}
+              >
+                {generateOTP.status === 'pending' && (
+                  <CircleLoader size={18} color="#fff" className="ml-2" />
+                )}
                 Sign in
               </Button>
             </form>
           </Form>
-          {/* <form
-            className="space-y-8"
-            onSubmit={(e) => {
-              e.preventDefault()
-              sendOTP()
-            }}
-          >
-            <div>
-              <Label htmlFor="email">Email address</Label>
-              <Input id="email" type="email" defaultValue="pedroduarte@gmail.com" />
-            </div>
-            <div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <a href="#" className="font-semibold text-[#891C69] hover:text-[#974D7B] text-sm">
-                  Forgot password?
-                </a>
-              </div>
-              <Input id="password" type="password" defaultValue="Pedro Duarte" />
-            </div>
-            <Button type="submit" className="w-full bg-[#891C69] hover:bg-[#974D7B]">
-              Sign in
-            </Button>
-          </form> */}
         </div>
       </div>
     </>

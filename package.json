@@ -40,6 +40,7 @@
     "react-hook-form": "^7.53.0",
     "react-quill": "^2.0.0",
     "react-smart-conditional": "^1.0.21",
+    "react-spinners": "^0.14.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
