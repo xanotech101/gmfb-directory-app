@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
+import CircleLoader from 'react-spinners/ClipLoader'
 
 import { cn } from '@/lib/utils'
 
@@ -9,7 +10,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[#891C69] text-primary-foreground shadow hover:bg-[#974D7B] ',
+        default: 'bg-[#891C69] text-primary-foreground shadow hover:bg-[#974D7B]',
         destructive: 'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
           'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
@@ -35,16 +36,45 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  isLoading?: boolean
+  spinnerPlacement?: 'start' | 'end'
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isLoading,
+      spinnerPlacement = 'start',
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : 'button'
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+        disabled={isLoading || props.disabled}
+      >
+        {isLoading && spinnerPlacement === 'start' && (
+          <CircleLoader size={18} color="#fff" className="mr-2" />
+        )}
+        {children}
+        {isLoading && spinnerPlacement === 'end' && (
+          <CircleLoader size={18} color="#fff" className="ml-2" />
+        )}
+      </Comp>
     )
   },
 )
+
 Button.displayName = 'Button'
 
 export { Button, buttonVariants }

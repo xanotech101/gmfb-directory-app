@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -13,7 +12,14 @@ import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import CircleLoader from 'react-spinners/ClipLoader'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
+
+const otpSchema = z.object({
+  otp: z.string().min(6, { message: 'OTP must be 6 digits.' }),
+})
 interface OTPProps {
   show: boolean
   setShow(show: boolean): void
@@ -21,8 +27,14 @@ interface OTPProps {
 }
 
 export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
-  const [otp, setOtp] = useState<string>('')
   const router = useRouter()
+
+  const form = useForm<z.infer<typeof otpSchema>>({
+    resolver: zodResolver(otpSchema),
+    defaultValues: {
+      otp: '',
+    },
+  })
 
   const login = useMutation({
     mutationKey: ['login'],
@@ -47,12 +59,12 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
     },
   })
 
-  const handleOTPSubmit = () => {
+  const onSubmit = async (values: z.infer<typeof otpSchema>) => {
     const { email, password } = formValues
     login.mutate({
       email,
       password,
-      otp,
+      otp: values.otp,
     })
   }
 
@@ -69,36 +81,52 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex items-center justify-center w-full">
-          <InputOTP maxLength={6} onChange={(otp: string) => setOtp(otp)}>
-            <InputOTPGroup>
-              {new Array(6).fill(0).map((_, index) => (
-                <InputOTPSlot key={index} index={index} />
-              ))}
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-
-        <DialogFooter className="mt-6">
-          <Button
-            type="button"
-            onClick={() => setShow(false)}
-            className="w-full bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            className="w-full bg-[#891C69] hover:bg-[#974D7B] focus:outline-none focus:ring-2 focus:ring-[#974D7B]"
-            onClick={handleOTPSubmit}
-            disabled={login.status === 'pending'}
-          >
-            {login.status === 'pending' && (
-              <CircleLoader size={18} color="#fff" className="ml-2" />
-            )}
-            Verify OTP
-          </Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="flex items-center justify-center w-full">
+                      <InputOTP
+                        maxLength={6}
+                        value={field.value}
+                        onChange={(otp: string) => field.onChange(otp)}
+                      >
+                        <InputOTPGroup>
+                          {new Array(6).fill(0).map((_, index) => (
+                            <InputOTPSlot key={index} index={index} />
+                          ))}
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
+                  </FormControl>
+                  {form.formState.errors.otp && (
+                    <FormMessage>{form.formState.errors.otp?.message}</FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+            <DialogFooter className="mt-6">
+              <Button
+                type="button"
+                onClick={() => setShow(false)}
+                className="w-full bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="w-full bg-[#891C69] hover:bg-[#974D7B] focus:outline-none focus:ring-2 focus:ring-[#974D7B]"
+                isLoading={login.status === 'pending'}
+              >
+                Verify OTP
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

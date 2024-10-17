@@ -12,14 +12,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { OTP } from '@/components/otp/otp'
-import { ForgetPassword } from '@/components/forget-password/forget-password'
+import { ForgetPassword } from '@/components/forgot-password/forgot-password'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from 'sonner'
-import CircleLoader from 'react-spinners/ClipLoader'
 
 const formSchema = z.object({
   password: z.string().min(8, {
@@ -122,11 +121,8 @@ export default function Login() {
               <Button
                 type="submit"
                 className="inline-flex w-full items-center justify-center bg-[#891C69] hover:bg-[#974D7B]"
-                disabled={generateOTP.status === 'pending'}
+                isLoading={generateOTP.status === 'pending'}
               >
-                {generateOTP.status === 'pending' && (
-                  <CircleLoader size={18} color="#fff" className="ml-2" />
-                )}
                 Sign in
               </Button>
             </form>
