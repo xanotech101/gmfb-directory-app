@@ -47,6 +47,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -79,10 +80,36 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground h-full;
   }
+
   html {
     @apply h-full;
   }
+}
+
+.pagination {
+  @apply flex space-x-2;
+}
+
+.pagination__item {
+  @apply relative inline-flex items-center justify-center w-[30px] h-[30px] text-xs font-medium text-gray-500 hover:bg-gray-50 rounded-full px-2 py-2 transition-all duration-200;
+}
+
+.pagination__item a {
+  @apply px-4 py-2;
+}
+
+.pagination__item-previous {
+  @apply w-[30px] h-[30px] rounded-full bg-[#F3F2F7] flex justify-center items-center py-2 text-sm font-medium text-black hover:bg-gray-50 transition-all duration-200;
+}
+
+.pagination__item-next {
+  @apply w-[30px] h-[30px] rounded-full bg-[#F3F2F7] flex justify-center items-center px-2 py-2 text-xs font-medium text-black hover:bg-gray-50 transition-all duration-200;
+}
+
+.active {
+  @apply bg-[#891C69] text-white rounded-full pointer-events-none cursor-not-allowed !shadow-lg;
 }
