@@ -8,7 +8,7 @@ interface PaginationProps {
   currentPage: number
 }
 
-const PER_PAGE = 5
+const PER_PAGE = 50
 
 export function Pagination({
   itemsPerPage = PER_PAGE,

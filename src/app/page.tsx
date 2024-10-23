@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import Image from 'next/image'
 import { z } from 'zod'
 import {
   Form,
@@ -12,13 +11,20 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { OTP } from '@/components/otp/otp'
-import { ForgetPassword } from '@/components/forgot-password/forgot-password'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from 'sonner'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import Image from 'next/image'
 
 const formSchema = z.object({
   password: z.string().min(8, {
@@ -32,7 +38,6 @@ const formSchema = z.object({
 export default function Login() {
   const [showOTP, setShowOTP] = useState<boolean>(false)
   const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false)
-  const [formValues, setFormValues] = useState<{ email: string; password: string } | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,8 +54,7 @@ export default function Login() {
         isClient: true,
         body: { email, type: 'login' },
       }),
-    onSuccess: (_, variables) => {
-      setFormValues({ email: variables, password: form.getValues('password') })
+    onSuccess: () => {
       setShowOTP(true)
     },
     onError: (error) => {
@@ -64,8 +68,6 @@ export default function Login() {
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <OTP setShow={setShowOTP} show={showOTP} formValues={formValues!} />
-        <ForgetPassword setShow={setShowForgotPassword} show={showForgotPassword} />
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
@@ -93,15 +95,6 @@ export default function Login() {
                       <Input placeholder="email@mail.com" {...field} />
                     </FormControl>
                     <FormMessage />
-                    <div className="flex items-center justify-end">
-                      <a
-                        href="#"
-                        onClick={() => setShowForgotPassword(true)}
-                        className="font-semibold text-[#891C69] hover:text-[#974D7B] text-sm"
-                      >
-                        Forgot password?
-                      </a>
-                    </div>
                   </FormItem>
                 )}
               />
@@ -110,7 +103,19 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <div className="flex justify-between items-center">
+                      <FormLabel>Password</FormLabel>
+                      <div className="flex items-center justify-end">
+                        <Button
+                          type="button"
+                          onClick={() => setShowForgotPassword(true)}
+                          variant="link"
+                          className="font-semibold text-[#891C69] hover:text-[#974D7B] text-sm p-0 h-auto"
+                        >
+                          Forgot password?
+                        </Button>
+                      </div>
+                    </div>
                     <FormControl>
                       <Input placeholder="...." {...field} />
                     </FormControl>
@@ -129,6 +134,24 @@ export default function Login() {
           </Form>
         </div>
       </div>
+      <OTP setShow={setShowOTP} show={showOTP} formValues={form.getValues()} />
+      <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
+        <DialogContent className="sm:max-w-[425px] bg-[#fff]">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold leading-6 text-gray-900 text-center">
+              Forgot Password?
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-700">
+              <div className="flex flex-col items-center text-center">
+                <Image src="/password.png" alt="Password Reset" width={150} height={150} />
+                <p className="mt-1 text-base">
+                  Please reach out to the admin to reset your password.
+                </p>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
