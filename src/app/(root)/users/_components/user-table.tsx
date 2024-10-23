@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
@@ -19,59 +18,35 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
-import { useMutation } from '@tanstack/react-query'
-import { get } from '@/lib/fetch'
-import { toast } from 'sonner'
 import { Pagination } from '@/components/pagination/pagination'
-import { useRouter } from 'next/navigation'
+import AvatarGroup from '@/components/ui/avatar-group'
+import { Badge } from '@/components/ui/badge'
+import { getRandomColor } from '@/lib/random-color'
 
-export const UserTable = () => {
-  const router = useRouter()
-  const [usersData, setUsersData] = useState<any[]>([])
-  const [currentPage, setCurrentPage] = useState<number | null>(null)
-  const [totalItems, setTotalItems] = useState(0)
-  const itemsPerPage = 4
+const itemsPerPage = 50
 
-  useEffect(() => {
-    const pageFromQuery = new URLSearchParams(window.location.search).get('page')
-    const pageNumber = pageFromQuery ? parseInt(pageFromQuery) : 1
-    setCurrentPage(pageNumber)
-  }, [])
-
-  const users = useMutation({
-    mutationKey: ['users', currentPage],
-    mutationFn: async () =>
-      get(`/api/users?page=${currentPage}&limit=${itemsPerPage}`, {
-        isClient: true,
-      }),
-    onSuccess: (response: any) => {
-      setUsersData(response.data.items)
-      setTotalItems(response.data.meta.total)
-    },
-    onError: (error: any) => {
-      toast.error(error.message)
-    },
-  })
-
-  useEffect(() => {
-    if (currentPage !== null) {
-      users.mutate()
-    }
-  }, [currentPage])
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    router.push(`?page=${page}`)
+interface UserTableProps {
+  data: any
+  pagination: {
+    currentPage: number
+    totalItems: number
+    handlePageChange: (page: number) => void
   }
+}
+
+export const UserTable = ({ data, pagination }: UserTableProps) => {
+  const { currentPage, totalItems, handlePageChange } = pagination
 
   function getFooterText() {
     if (totalItems > 0) {
-      const start = (currentPage! - 1) * itemsPerPage + 1
-      const end = Math.min(currentPage! * itemsPerPage, totalItems)
+      const start = (currentPage - 1) * itemsPerPage + 1
+      const end = Math.min(currentPage * itemsPerPage, totalItems)
       return `Showing ${start}-${end} of ${totalItems} results`
     }
     return null
   }
+
+  // handle empty state here please
 
   return (
     <div>
@@ -80,49 +55,58 @@ export const UserTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Department</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Departments</TableHead>
             <TableHead>Role</TableHead>
             <TableHead className="sr-only">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {usersData.map((user) => (
+          {data.map((user: any, index: number) => (
             <TableRow key={user.email}>
               <TableCell>
                 <div className="flex items-center">
-                  <div className="h-11 w-11 flex-shrink-0">
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt="" />
-                      <AvatarFallback className="h-full w-full bg-[#891C69] flex text-white items-center justify-center">
-                        {user.first_name[0]}
-                        {user.last_name[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
+                  <Avatar
+                    className="size-10 flex-shrink-0 border-2"
+                    style={{
+                      border: user?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`,
+                    }}
+                  >
+                    <AvatarImage src={user.avatar} alt="user's avatar" />
+                    <AvatarFallback
+                      className="h-full w-full flex justify-center items-center"
+                      style={{
+                        backgroundColor: getRandomColor(index).background,
+                        color: getRandomColor(index).text,
+                      }}
+                    >
+                      {user.first_name[0]}
+                      {user.last_name[0]}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="ml-4">
                     <div className="font-medium text-gray-900">
                       {user.first_name} {user.last_name}
+                      <Badge variant={user.status === 'active' ? 'green' : 'red'} className="ml-2">
+                        {user.status}
+                      </Badge>
                     </div>
                     <div className="mt-1 text-gray-500">{user.email}</div>
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                {user.departments && user.departments.length > 0
-                  ? user.departments.map((d: any, index: number) => (
-                      <span key={index}>
-                        {d.name}
-                        {index < user.departments.length - 1 ? ', ' : ''}
-                      </span>
-                    ))
-                  : 'No departments'}
+                {user.departments?.length > 0 ? (
+                  <AvatarGroup
+                    max={2}
+                    content={user.departments.map((d: any) => ({
+                      name: d.name,
+                    }))}
+                  />
+                ) : (
+                  'No departments'
+                )}
               </TableCell>
-              <TableCell>
-                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                  {user.status}
-                </span>
-              </TableCell>
+              <TableCell>{user.role?.name}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -141,20 +125,20 @@ export const UserTable = () => {
         </TableBody>
       </Table>
 
-      {totalItems > itemsPerPage && (
-        <div className="flex items-center justify-between  border-t px-3 py-5">
-          <div className="text-[14px] text-gray-500 flex-1">{getFooterText()}</div>
-          <div className="text-center flex-1 flex justify-center">
+      <div className="flex items-center justify-between border-t px-3 py-5">
+        <div className="text-[14px] text-gray-500 flex-1">{getFooterText()}</div>
+        <div className="text-center flex-1 flex justify-center">
+          {totalItems > itemsPerPage && (
             <Pagination
               totalItems={totalItems}
               currentPage={currentPage!}
               handlePageClick={handlePageChange}
               itemsPerPage={itemsPerPage}
             />
-          </div>
-          <span className="flex-1"></span>
+          )}
         </div>
-      )}
+        <span className="flex-1"></span>
+      </div>
     </div>
   )
 }
