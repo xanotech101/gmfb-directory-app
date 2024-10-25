@@ -8,7 +8,7 @@ import { RoleTable } from './_components/role-table'
 import { useQuery } from '@tanstack/react-query'
 
 export default function Roles() {
-  const { isFetching, data } = useQuery<any>({
+  const { isFetching, data } = useQuery({
     queryKey: ['roles'],
     queryFn: async () =>
       get("/api/roles", {
