@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from '@/providers'
 import { Toaster } from 'sonner'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import {ReactNode} from 'react'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -24,11 +25,11 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100/50`}>
         <NuqsAdapter>
           <Providers>{children}</Providers>
         </NuqsAdapter>

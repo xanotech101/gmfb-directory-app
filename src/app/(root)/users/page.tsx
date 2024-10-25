@@ -18,15 +18,13 @@ export default function Users() {
   const { isFetching, data } = useQuery<any>({
     queryKey: ['users', currentPage],
     queryFn: async () =>
-      get(`/api/users?page=${currentPage}&limit=${50}`, {
+      get(`/api/roles?page=${currentPage}&limit=${50}`, {
         isClient: true,
       }),
   })
 
-  console.log(data?.data?.meta)
-
   return (
-    <div>
+    <>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">Users</h1>
@@ -38,7 +36,7 @@ export default function Users() {
           <InviteUser />
         </div>
       </div>
-      <Show as="div" className="mt-8 flow-root">
+      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded">
         <Show.If condition={isFetching}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
@@ -53,6 +51,6 @@ export default function Users() {
           />
         </Show.If>
       </Show>
-    </div>
+    </>
   )
 }

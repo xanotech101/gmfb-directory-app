@@ -19,13 +19,11 @@ import {
 } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination } from '@/components/pagination/pagination'
-import AvatarGroup from '@/components/ui/avatar-group'
-import { Badge } from '@/components/ui/badge'
 import { getRandomColor } from '@/lib/random-color'
 
 const itemsPerPage = 50
 
-interface UserTableProps {
+interface DepartmentTableProps {
   data: any
   pagination: {
     currentPage: number
@@ -34,7 +32,7 @@ interface UserTableProps {
   }
 }
 
-export const UserTable = ({ data, pagination }: UserTableProps) => {
+export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
 
   function getFooterText() {
@@ -46,65 +44,55 @@ export const UserTable = ({ data, pagination }: UserTableProps) => {
     return null
   }
 
+  // handle empty state here please
+
   return (
     <div>
       <Table>
-        <TableCaption className="sr-only">A list of users.</TableCaption>
+        <TableCaption className="sr-only">A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Departments</TableHead>
-            <TableHead>Role</TableHead>
+            <TableHead>HOD</TableHead>
+            <TableHead>No of Users</TableHead>
             <TableHead className="sr-only">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((user: any, index: number) => (
-            <TableRow key={user.email}>
+          {data.map((d: any, index: number) => (
+            <TableRow key={d.id}>
+              <TableCell>{d.name}</TableCell>
               <TableCell>
-                <div className="flex items-center">
-                  <Avatar
-                    className="size-10 flex-shrink-0 border-2"
-                    style={{
-                      border: user?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`,
-                    }}
-                  >
-                    <AvatarImage src={user.avatar} alt="user's avatar" />
-                    <AvatarFallback
-                      className="h-full w-full flex justify-center items-center"
-                      style={{
-                        backgroundColor: getRandomColor(index).background,
-                        color: getRandomColor(index).text,
-                      }}
-                    >
-                      {user.first_name[0]}
-                      {user.last_name[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="ml-4">
-                    <div className="font-medium text-gray-900">
-                      {user.first_name} {user.last_name}
-                      <Badge variant={user.status === 'active' ? 'green' : 'red'} className="ml-2">
-                        {user.status}
-                      </Badge>
+                {d.hod ? (
+                  <div className="flex items-center">
+                    <div className="h-11 w-11 flex-shrink-0">
+                      <Avatar>
+                        <AvatarImage src={d.hod.avatar} alt="profile image" />
+                        <AvatarFallback
+                          className="h-full w-full flex justify-center items-center"
+                          style={{
+                            backgroundColor: getRandomColor(index).background,
+                            color: getRandomColor(index).text,
+                          }}
+                        >
+                          {d.hod.first_name[0]}
+                          {d.hod.last_name[0]}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
-                    <div className="mt-1 text-gray-500">{user.email}</div>
+                    <div className="ml-4">
+                      <div className="font-medium text-gray-900">
+                        {d.hod?.first_name}
+                        {d.hod?.last_name}
+                      </div>
+                      <div className="mt-1 text-gray-500">{d.hod.email}</div>
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                {user.departments?.length > 0 ? (
-                  <AvatarGroup
-                    max={2}
-                    content={user.departments.map((d: any) => ({
-                      name: d.name,
-                    }))}
-                  />
                 ) : (
-                  'No departments'
+                  'N/A'
                 )}
               </TableCell>
-              <TableCell>{user.role?.name}</TableCell>
+              <TableCell>{d?.users_count ?? '--'}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -113,8 +101,7 @@ export const UserTable = ({ data, pagination }: UserTableProps) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-auto max-w-56">
-                    <DropdownMenuItem>View profile</DropdownMenuItem>
-                    <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                    <DropdownMenuItem>View Users</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
