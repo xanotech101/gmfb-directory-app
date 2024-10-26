@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c83f4062-13a2-4e4f-8032-8bc23163055e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/app/(root)/departments/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/departments/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(root)/users/_components/invite-user-form-fields.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/users/_components/invite-user-form-fields.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(root)/users/_components/invite-user.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/users/_components/invite-user.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(root)/users/_components/user-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/users/_components/user-table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(root)/users/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/users/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(root)/announcements/_components/announcement-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/announcements/_components/announcement-card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(root)/announcements/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(root)/announcements/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,10 +13,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2nuINk9IBklelcEgdD9EgxAHVVv" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -32,6 +30,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -51,6 +50,7 @@
       <option name="presentableId" value="Default" />
       <updated>1729816495081</updated>
       <workItem from="1729816496186" duration="13000" />
+      <workItem from="1729883408211" duration="203000" />
     </task>
     <servers />
   </component>

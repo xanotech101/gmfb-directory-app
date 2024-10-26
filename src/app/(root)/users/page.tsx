@@ -18,7 +18,7 @@ export default function Users() {
   const { isFetching, data } = useQuery<any>({
     queryKey: ['users', currentPage],
     queryFn: async () =>
-      get(`/api/roles?page=${currentPage}&limit=${50}`, {
+      get(`/api/users?page=${currentPage}&limit=${50}`, {
         isClient: true,
       }),
   })

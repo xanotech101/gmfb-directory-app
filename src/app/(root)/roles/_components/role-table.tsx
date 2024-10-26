@@ -16,16 +16,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
-import { EditRole } from '@/app/(root)/roles/_components/edit-role'
 import Link from 'next/link'
 import React from 'react'
+import { EditRoleModal } from '@/app/(root)/roles/_components/create-edit-role/edit-role-modal'
+import { cn } from '@/lib/utils'
+
 
 interface RoleTableProps {
   data: any
 }
 
 export const RoleTable = ({ data }: RoleTableProps) => {
-  console.log(data, 'users')
   return (
     <Table>
       <TableCaption className="sr-only">A list of your recent invoices.</TableCaption>
@@ -51,7 +52,19 @@ export const RoleTable = ({ data }: RoleTableProps) => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-auto max-w-56">
-                  <EditRole />
+                    <DropdownMenuItem
+                      className={cn(
+                        r.is_default && 'opacity-50 cursor-not-allowed'
+                      )}
+                      onClick={(e) => {
+                        if(r.is_default) {
+                           e.stopPropagation()
+                           e.preventDefault()
+                        }
+                      }}
+                    >
+                      {r.is_default ? 'Edit role' : <EditRoleModal />}
+                    </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link href={`/roles/${r.id}`}>Manage Permissions</Link>
                   </DropdownMenuItem>
@@ -62,6 +75,5 @@ export const RoleTable = ({ data }: RoleTableProps) => {
         ))}
       </TableBody>
     </Table>
-
   )
 }

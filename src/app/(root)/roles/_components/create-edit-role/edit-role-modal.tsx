@@ -1,29 +1,22 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import React from 'react'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
-export const CreateRole = () => {
+export const EditRoleModal = () => {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className=" bg-[#891C69] hover:bg-[#974D7B]">Create Role</Button>
+      <DialogTrigger onClick={(e) => e.stopPropagation()}>
+        Edit Role
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#fff]">
+      <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
-            Create Role
+            Edit Role
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-700">
-            Add the details of the new role you want to create.
+            Fill the form to update this role
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-8 mt-2">
@@ -45,11 +38,6 @@ export const CreateRole = () => {
             />
           </div>
         </form>
-        <DialogFooter>
-          <Button type="submit" className="w-full bg-[#891C69] hover:bg-[#974D7B]">
-            Create role
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

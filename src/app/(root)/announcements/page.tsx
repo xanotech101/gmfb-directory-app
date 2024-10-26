@@ -21,7 +21,10 @@ export default function Permissions() {
           </div>
         </div>
       </div>
-      <div className="mt-8 flow-root">
+      <div className="mt-8 grid grid-cols-3 gap-4">
+        <AnnouncementCard />
+        <AnnouncementCard />
+        <AnnouncementCard />
         <AnnouncementCard />
       </div>
     </div>

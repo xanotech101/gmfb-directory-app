@@ -1,14 +1,16 @@
 'use client'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
-import { CreateRole } from './_components/create-role'
 import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import { RoleTable } from './_components/role-table'
 import { useQuery } from '@tanstack/react-query'
+import { CreateRoleModal } from '@/app/(root)/roles/_components/create-edit-role/create-role-modal'
 
 export default function Roles() {
-  const { isFetching, data } = useQuery({
+  const { isFetching, data, refetch } = useQuery<any>({
     queryKey: ['roles'],
     queryFn: async () =>
       get("/api/roles", {
@@ -26,7 +28,9 @@ export default function Roles() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateRole />
+          <CreateRoleModal
+            onSuccess={() => refetch()}
+          />
         </div>
       </div>
       <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded">
