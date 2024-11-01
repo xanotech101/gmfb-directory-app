@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as React from "react"
 import AvatarGroup from "@/components/ui/avatar-group"
 import { Button } from "@/components/ui/button"

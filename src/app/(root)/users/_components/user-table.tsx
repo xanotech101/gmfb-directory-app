@@ -22,6 +22,7 @@ import { Pagination } from '@/components/pagination/pagination'
 import AvatarGroup from '@/components/ui/avatar-group'
 import { Badge } from '@/components/ui/badge'
 import { getRandomColor } from '@/lib/random-color'
+import { UserDetailsModal } from './user-details-modal'
 
 const itemsPerPage = 50
 
@@ -113,8 +114,13 @@ export const UserTable = ({ data, pagination }: UserTableProps) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-auto max-w-56">
-                    <DropdownMenuItem>View profile</DropdownMenuItem>
-                    <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                    }}>
+                      <UserDetailsModal user={user} />
+                    </DropdownMenuItem>
+                    {/*<DropdownMenuItem>Edit Profile</DropdownMenuItem>*/}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

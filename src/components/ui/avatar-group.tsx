@@ -40,7 +40,6 @@ export default function AvatarGroup({ content = [], max = 5, size, fontSize }: A
                   style={{
                     backgroundColor: getRandomColor(index).background,
                     color: getRandomColor(index).text,
-                    border: `1px solid ${getRandomColor(lastIndex).border}`,
                     fontSize: `${fontSize}px`
                   }}
                 >

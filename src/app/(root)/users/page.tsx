@@ -15,7 +15,7 @@ export default function Users() {
     parse: (value) => Number(value),
   })
 
-  const { isFetching, data } = useQuery<any>({
+  const { isFetching, data, refetch } = useQuery<any>({
     queryKey: ['users', currentPage],
     queryFn: async () =>
       get(`/api/users?page=${currentPage}&limit=${50}`, {
@@ -33,10 +33,18 @@ export default function Users() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <InviteUser />
+          <InviteUser onCompleted={() => {
+              if (currentPage === 1) {
+                return refetch()
+              } else {
+                return setCurrentPage(1)
+              }
+            }}
+          />
         </div>
       </div>
-      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+      <Show as="div"
+            className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <Show.If condition={isFetching}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
@@ -46,7 +54,7 @@ export default function Users() {
             pagination={{
               currentPage,
               totalItems: data?.data?.meta?.total ?? 0,
-              handlePageChange: (page) => setCurrentPage(page),
+              handlePageChange: setCurrentPage,
             }}
           />
         </Show.If>

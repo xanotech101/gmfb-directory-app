@@ -21,7 +21,6 @@ import { EllipsisVertical } from 'lucide-react'
 import { Pagination } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
 
-
 interface DepartmentTableProps {
   data: any
   pagination: {
@@ -35,6 +34,7 @@ interface DepartmentTableProps {
 export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
   const { currentPage, totalItems, handlePageChange, itemsPerPage= 50 } = pagination
 
+  // todo: move to a re-useable hook
   function getFooterText() {
     if (totalItems > 0) {
       const start = (currentPage - 1) * itemsPerPage + 1
@@ -65,14 +65,17 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
               <TableCell>
                 {d.hod ? (
                   <div className="flex items-start">
-                    <div className="size-8 flex-shrink-0">
-                      <Avatar className="size-8">
+                    <div className="size-9 flex-shrink-0">
+                      <Avatar
+                        className="size-9"
+                        style={{ border: d?.hod?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`}}
+                      >
                         <AvatarImage src={d.hod.avatar} alt="profile image" />
                         <AvatarFallback
                           className="h-full w-full flex justify-center items-center"
                           style={{
                             backgroundColor: getRandomColor(index).background,
-                            color: getRandomColor(index).text,
+                            color: getRandomColor(index).text
                           }}
                         >
                           {d.hod.first_name[0]}
@@ -89,7 +92,7 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                     </div>
                   </div>
                 ) : (
-                  'N/A'
+                  'Not selected'
                 )}
               </TableCell>
               <TableCell>{d?.users_count ?? '--'}</TableCell>
@@ -109,7 +112,6 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
           ))}
         </TableBody>
       </Table>
-
       <div className="flex items-center justify-between border-t px-3 py-5">
         <div className="text-[14px] text-gray-500 flex-1">{getFooterText()}</div>
         <div className="text-center flex-1 flex justify-center">

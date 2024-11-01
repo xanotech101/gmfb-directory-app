@@ -38,6 +38,7 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
       }
       return response.json()
     } catch (error) {
+      console.log(error)
       throw error
     }
   }

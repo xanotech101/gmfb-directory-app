@@ -6,8 +6,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const page = searchParams.get('page') || '1'
   const limit = searchParams.get('limit') || '50'
+  const search = searchParams.get('search') || ''
 
-  const response = await get<any>(`/api/v1/departments?page=${page}&limit=${limit}`)
+  const response = await get<any>(`/api/v1/departments?page=${page}&limit=${limit}&search=${search}`)
 
   return NextResponse.json({
     ...response,

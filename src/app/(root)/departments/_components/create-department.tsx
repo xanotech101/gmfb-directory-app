@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Dialog,
   DialogContent,
@@ -13,9 +14,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import {  post } from '@/lib/fetch'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { get, post } from '@/lib/fetch'
 import { toast } from 'sonner'
+import { useDebounce } from 'use-debounce'
+import { MultiSelect } from '@/components/ui/multi-select'
 
 
 const formSchema = z.object({
@@ -25,48 +28,53 @@ const formSchema = z.object({
   hod: z.array(z.string().min(1)).optional(),
 })
 
-export const CreateDepartment = ({onSuccess}: {onSuccess?(): void}) => {
-  const [open, setOpen] = React.useState(false)
-  const [userSearchString, setUserSearchString] = useState('tommmmmmmm')
+export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
+  const [open, setOpen] = useState(false)
+  const [userSearchString, setUserSearchString] = useState('')
+  const [debouncedUserSearchString] = useDebounce(userSearchString, 500)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      hod: []
+      hod: [],
     },
   })
 
-  // const { isFetching, data } = useQuery<any>({
-  //   queryKey: ['users', userSearchString],
-  //   queryFn: async () =>
-  //     get(`/api/users?search=${userSearchString}`, {
-  //       isClient: true,
-  //     }),
-  // })
+  const users = useQuery<any>({
+    queryKey: ['users', debouncedUserSearchString],
+    queryFn: async () =>
+      get(`/api/users?search=${debouncedUserSearchString}`, {
+        isClient: true,
+      }),
+  })
 
   const createDepartment = useMutation({
     mutationKey: ['create-department'],
-    mutationFn: async (name: string, hod_id?: string) =>
+    mutationFn: async ({name, hod_id}: {name: string, hod_id?: string}) =>
       post(`/api/departments`, {
         isClient: true,
-        body: { name },
+        body: { name, hod_id },
       }),
     onSuccess: (data: any) => {
       toast.success(data?.message ?? 'Department created successfully.')
       setOpen(false)
-      onSuccess && onSuccess?.()
+      onSuccess?.()
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('Unable to create department')
     },
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    createDepartment.mutate(values.name)
+    console.log(values)
+    createDepartment.mutate({name: values.name, hod_id: values?.hod?.[0]})
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(open) => {
+      form.reset()
+      setOpen(open)
+    }}>
       <DialogTrigger asChild>
         <Button>Create Department</Button>
       </DialogTrigger>
@@ -86,9 +94,35 @@ export const CreateDepartment = ({onSuccess}: {onSuccess?(): void}) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
                   <FormControl>
                     <Input placeholder="Enter department name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="hod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Department</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={users.data?.data?.items?.map((u: any) => ({
+                        label: `${u.first_name} ${u.last_name}`,
+                        value: u.id,
+                      })) ?? []}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Select hod"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={1}
+                      filterValue={userSearchString}
+                      onFilterChange={setUserSearchString}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

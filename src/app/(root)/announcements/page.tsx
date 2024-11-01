@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import React from 'react'
 import Link from 'next/link'
@@ -8,9 +9,10 @@ import { get } from '@/lib/fetch'
 import { useQueryState } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
-import { DepartmentTable } from '@/app/(root)/departments/_components/department-table'
+
+
 export default function Announcements() {
-  const [currentPage, setCurrentPage] = useQueryState('page', {
+  const [currentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
   })
@@ -22,7 +24,6 @@ export default function Announcements() {
       }),
   })
 
-  console.log(data)
   return (
     <>
       <div className="sm:px-6 lg:px-0">
