@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { get } from '@/lib/fetch'
-import { NextResponse } from 'next/server'
+import { get, post } from '@/lib/fetch'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -16,3 +16,18 @@ export async function GET(request: Request) {
     },
   })
 }
+
+export async function POST(req: NextRequest) {
+  const payload = (await req.json()) as { name: string; hod?: string }
+  const response = await post<any>('/api/v1/departments', {
+    body: payload,
+  })
+
+  return NextResponse.json({
+    ...response,
+    data: {
+      ...response.data,
+    },
+  })
+}
+

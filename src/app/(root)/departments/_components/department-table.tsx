@@ -21,7 +21,6 @@ import { EllipsisVertical } from 'lucide-react'
 import { Pagination } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
 
-const itemsPerPage = 50
 
 interface DepartmentTableProps {
   data: any
@@ -29,11 +28,12 @@ interface DepartmentTableProps {
     currentPage: number
     totalItems: number
     handlePageChange: (page: number) => void
+    itemsPerPage?: number
   }
 }
 
 export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
-  const { currentPage, totalItems, handlePageChange } = pagination
+  const { currentPage, totalItems, handlePageChange, itemsPerPage= 50 } = pagination
 
   function getFooterText() {
     if (totalItems > 0) {
@@ -64,9 +64,9 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
               <TableCell>{d.name}</TableCell>
               <TableCell>
                 {d.hod ? (
-                  <div className="flex items-center">
-                    <div className="h-11 w-11 flex-shrink-0">
-                      <Avatar>
+                  <div className="flex items-start">
+                    <div className="size-8 flex-shrink-0">
+                      <Avatar className="size-8">
                         <AvatarImage src={d.hod.avatar} alt="profile image" />
                         <AvatarFallback
                           className="h-full w-full flex justify-center items-center"
@@ -80,12 +80,12 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                         </AvatarFallback>
                       </Avatar>
                     </div>
-                    <div className="ml-4">
+                    <div className="ml-2">
                       <div className="font-medium text-gray-900">
                         {d.hod?.first_name}
                         {d.hod?.last_name}
                       </div>
-                      <div className="mt-1 text-gray-500">{d.hod.email}</div>
+                      <div className="mt-0 text-gray-500">{d.hod.email}</div>
                     </div>
                   </div>
                 ) : (

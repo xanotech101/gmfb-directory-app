@@ -15,10 +15,10 @@ export default function Departments() {
     parse: (value) => Number(value),
   })
 
-  const { isFetching, data } = useQuery<any>({
+  const { isFetching, data, refetch } = useQuery<any>({
     queryKey: ['departments', currentPage],
     queryFn: async () =>
-      get(`/api/departments?page=${currentPage}&limit=${50}`, {
+      get(`/api/departments?page=${currentPage}&limit=${5}`, {
         isClient: true,
       }),
   })
@@ -31,11 +31,13 @@ export default function Departments() {
           <p className="mt-2 text-sm text-gray-700">A list of all the departments</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateDepartment />
+          <CreateDepartment
+            onSuccess={refetch}
+          />
         </div>
       </div>
 
-      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded">
+      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <Show.If condition={isFetching}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
@@ -45,6 +47,7 @@ export default function Departments() {
             pagination={{
               currentPage,
               totalItems: data?.data?.meta?.total ?? 0,
+              itemsPerPage: 5,
               handlePageChange: (page) => setCurrentPage(page),
             }}
           />

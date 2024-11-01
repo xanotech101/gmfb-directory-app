@@ -8,12 +8,65 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { InviteUserFormFields } from '../../users/_components/invite-user-form-fields'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import React, { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import {  post } from '@/lib/fetch'
+import { toast } from 'sonner'
 
-export const CreateDepartment = () => {
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: 'Subject must be at least 2 characters.',
+  }),
+  hod: z.array(z.string().min(1)).optional(),
+})
+
+export const CreateDepartment = ({onSuccess}: {onSuccess?(): void}) => {
+  const [open, setOpen] = React.useState(false)
+  const [userSearchString, setUserSearchString] = useState('tommmmmmmm')
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      hod: []
+    },
+  })
+
+  // const { isFetching, data } = useQuery<any>({
+  //   queryKey: ['users', userSearchString],
+  //   queryFn: async () =>
+  //     get(`/api/users?search=${userSearchString}`, {
+  //       isClient: true,
+  //     }),
+  // })
+
+  const createDepartment = useMutation({
+    mutationKey: ['create-department'],
+    mutationFn: async (name: string, hod_id?: string) =>
+      post(`/api/departments`, {
+        isClient: true,
+        body: { name },
+      }),
+    onSuccess: (data: any) => {
+      toast.success(data?.message ?? 'Department created successfully.')
+      setOpen(false)
+      onSuccess && onSuccess?.()
+    },
+    onError: (error) => {
+      toast.error('Unable to create department')
+    },
+  })
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    createDepartment.mutate(values.name)
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Create Department</Button>
       </DialogTrigger>
@@ -26,21 +79,26 @@ export const CreateDepartment = () => {
             Fill in the form below to create a new department
           </DialogDescription>
         </DialogHeader>
-        <form className="space-y-8 mt-2">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3 text-sm text-gray-700"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter department name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <hr />
-          <InviteUserFormFields />
-          <Button type="submit" className="w-full">
-            Create Department
-          </Button>
-        </form>
+            <Button type="submit" isLoading={createDepartment.status === 'pending'}>
+              Submit
+            </Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

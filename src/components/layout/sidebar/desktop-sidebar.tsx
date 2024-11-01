@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { RefAttributes, SVGProps } from 'react'
+import { ForwardRefExoticComponent, RefAttributes, SVGProps } from 'react'
 import { LogOut } from 'lucide-react'
 
 export const DesktopSidebar = ({
@@ -10,7 +10,7 @@ export const DesktopSidebar = ({
   navigation: {
     name: string
     href: string
-    icon: React.ForwardRefExoticComponent<
+    icon: ForwardRefExoticComponent<
       Omit<SVGProps<SVGSVGElement>, 'ref'> & {
         title?: string
         titleId?: string

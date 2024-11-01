@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100/50`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-50`}>
         <NuqsAdapter>
           <Providers>{children}</Providers>
         </NuqsAdapter>
