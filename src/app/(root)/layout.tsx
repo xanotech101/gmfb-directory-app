@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import {
   BellAlertIcon,
   Cog6ToothIcon,
@@ -23,7 +23,7 @@ const navigation = [
     href: '/documents',
     icon: DocumentDuplicateIcon,
   },
-  { name: 'Users', href: 'users', icon: UsersIcon, current: false },
+  { name: 'Users', href: '/users', icon: UsersIcon, current: false },
   {
     name: 'Announcements',
     href: '/announcements',
@@ -41,7 +41,7 @@ const navigation = [
   },
 ]
 
-export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const isActive = (href: string) => {

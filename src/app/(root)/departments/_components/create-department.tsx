@@ -30,16 +30,9 @@ const formSchema = z.object({
 
 export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
   const [open, setOpen] = useState(false)
+
   const [userSearchString, setUserSearchString] = useState('')
   const [debouncedUserSearchString] = useDebounce(userSearchString, 500)
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      hod: [],
-    },
-  })
-
   const users = useQuery<any>({
     queryKey: ['users', debouncedUserSearchString],
     queryFn: async () =>
@@ -48,6 +41,13 @@ export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
       }),
   })
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      hod: [],
+    },
+  })
   const createDepartment = useMutation({
     mutationKey: ['create-department'],
     mutationFn: async ({name, hod_id}: {name: string, hod_id?: string}) =>

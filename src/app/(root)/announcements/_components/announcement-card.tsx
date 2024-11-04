@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import * as React from "react"
 import AvatarGroup from "@/components/ui/avatar-group"
 import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -15,18 +13,20 @@ import {
   Badge
 } from "@/components/ui/badge"
 import { Show } from 'react-smart-conditional'
+import DOMPurify from 'dompurify';
 
 export function AnnouncementCard({announcement}: {announcement: any}   ) {
   return (
-    <Card className="p-0">
+    <Card className="p-0 divide-y divide-gray-200">
       <CardHeader className="pb-4">
         <CardTitle>{announcement?.subject}</CardTitle>
-        <CardDescription>
-          {announcement?.body}
-        </CardDescription>
       </CardHeader>
       <CardContent className="px-0">
-        <ul>
+        <ul className="divide-y divide-gray-200">
+          <li className="py-3 px-6">
+            <p className="mb-1 text-sm text-muted-foreground">Body</p>
+            <div className="break-words text-sm" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(announcement?.body ?? '')}}/>
+          </li>
           <li className="py-3 px-6">
             <p className="mb-1 text-sm text-muted-foreground">Departments</p>
             <Show>
@@ -59,7 +59,8 @@ export function AnnouncementCard({announcement}: {announcement: any}   ) {
           <li className="py-3 px-6">
             <p className="mb-1 text-sm text-muted-foreground">Status</p>
             <span className="d-inline-flex mb-1">
-              <Badge className="capitalize" variant={announcement.status === 'draft' ? "yellow" :"green"}>{announcement.status}</Badge>
+              <Badge className="capitalize"
+                     variant={announcement.status === 'draft' ? "yellow" : "green"}>{announcement.status}</Badge>
             </span>
           </li>
         </ul>

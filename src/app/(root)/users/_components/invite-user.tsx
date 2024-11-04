@@ -82,6 +82,7 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
       }),
   })
 
+  // todo: move to a re-useable hook
   const [deptSearchString, setDeptSearchString] = useState('')
   const [debouncedDeptSearchString] = useDebounce(deptSearchString, 500)
   const departments = useQuery<any>({
