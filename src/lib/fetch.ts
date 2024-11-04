@@ -34,14 +34,12 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
 
       if (!response.ok) {
         const error = await response.json()
-        console.error('Error:', error)
-        throw new Error('Failed to fetch')
+        throw error
       }
-
       return response.json()
     } catch (error) {
-      console.error('Error:', error)
-      throw new Error('Failed to fetch')
+      console.log(error)
+      throw error
     }
   }
 

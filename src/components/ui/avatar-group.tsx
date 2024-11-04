@@ -12,9 +12,10 @@ interface AvatarGroupProps {
   content?: Content[]
   max?: number
   size?: number
+  fontSize?: number
 }
 
-export default function AvatarGroup({ content = [], max = 5, size }: AvatarGroupProps) {
+export default function AvatarGroup({ content = [], max = 5, size, fontSize }: AvatarGroupProps) {
   const displayUsers = content.slice(0, max)
   const remainingUsers = Math.max(content.length - max, 0)
   const lastIndex = content.length - 1
@@ -39,6 +40,7 @@ export default function AvatarGroup({ content = [], max = 5, size }: AvatarGroup
                   style={{
                     backgroundColor: getRandomColor(index).background,
                     color: getRandomColor(index).text,
+                    fontSize: `${fontSize}px`
                   }}
                 >
                   {c.name
@@ -68,6 +70,7 @@ export default function AvatarGroup({ content = [], max = 5, size }: AvatarGroup
                 backgroundColor: getRandomColor(lastIndex).background,
                 color: getRandomColor(lastIndex).text,
                 border: `1px solid ${getRandomColor(lastIndex).border}`,
+                fontSize: `${fontSize}px`
               }}
             >
               +{remainingUsers}

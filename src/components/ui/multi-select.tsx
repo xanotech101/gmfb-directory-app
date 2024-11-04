@@ -60,6 +60,10 @@ interface MultiSelectProps
     icon?: React.ComponentType<{ className?: string }>
   }[]
 
+  filterValue: string
+
+  onFilterChange: (value: string) => void
+
   /**
    * Callback function triggered when the selected values change.
    * Receives an array of the new selected values.
@@ -105,6 +109,8 @@ interface MultiSelectProps
    * Optional, can be used to add custom styles.
    */
   className?: string
+
+  loading?: boolean
 }
 
 export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -120,13 +126,16 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
       modalPopover = false,
       asChild = false,
       className,
+      filterValue,
+      onFilterChange,
+      loading,
       ...props
     },
     ref,
   ) => {
     const [selectedValues, setSelectedValues] = React.useState<string[]>(defaultValue)
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
-    const [isAnimating, setIsAnimating] = React.useState(false)
+    const [isAnimating] = React.useState(false)
 
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
@@ -160,16 +169,6 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
       const newSelectedValues = selectedValues.slice(0, maxCount)
       setSelectedValues(newSelectedValues)
       onValueChange(newSelectedValues)
-    }
-
-    const toggleAll = () => {
-      if (selectedValues.length === options.length) {
-        handleClear()
-      } else {
-        const allValues = options.map((option) => option.value)
-        setSelectedValues(allValues)
-        onValueChange(allValues)
-      }
     }
 
     return (
@@ -245,35 +244,22 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               </div>
             ) : (
               <div className="flex items-center justify-between w-full mx-auto">
-                <span className="text-sm text-muted-foreground mx-3">{placeholder}</span>
+                <span className="text-sm text-muted-foreground mx-3 font-light">{placeholder}</span>
                 <ChevronDown className="h-4 cursor-pointer text-muted-foreground mx-2" />
               </div>
             )}
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0"
+          className="w-auto p-0 min-w-[300px]"
           align="start"
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
         >
-          <Command>
-            <CommandInput placeholder="Search..." onKeyDown={handleInputKeyDown} />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                <CommandItem key="all" onSelect={toggleAll} className="cursor-pointer">
-                  <div
-                    className={cn(
-                      'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-                      selectedValues.length === options.length
-                        ? 'bg-primary text-primary-foreground'
-                        : 'opacity-50 [&_svg]:invisible',
-                    )}
-                  >
-                    <CheckIcon className="h-4 w-4" />
-                  </div>
-                  <span>(Select All)</span>
-                </CommandItem>
+          <Command shouldFilter={false}>
+            <CommandInput placeholder="Search..." onKeyDown={handleInputKeyDown} value={filterValue} onValueChange={onFilterChange} className="m-3 my-4" />
+            <CommandList className="p-3">
+              {!options.length && <p className="py-6 text-center text-sm">No results found.</p>}
+              <CommandGroup className="my-2">
                 {options.map((option) => {
                   const isSelected = selectedValues.includes(option.value)
                   return (
@@ -302,7 +288,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-3">
                   {selectedValues.length > 0 && (
                     <>
                       <CommandItem
@@ -325,15 +311,6 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             </CommandList>
           </Command>
         </PopoverContent>
-        {animation > 0 && selectedValues.length > 0 && (
-          <WandSparkles
-            className={cn(
-              'cursor-pointer my-2 text-foreground bg-background w-3 h-3',
-              isAnimating ? '' : 'text-muted-foreground',
-            )}
-            onClick={() => setIsAnimating(!isAnimating)}
-          />
-        )}
       </Popover>
     )
   },

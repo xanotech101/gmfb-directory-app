@@ -1,36 +1,22 @@
 'use client'
-import React from 'react'
-import { CreateRole } from './_components/create-role'
-import { EditRole } from './_components/edit-role'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { EllipsisVertical } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 
-const roles = [
-  {
-    id: 1,
-    name: 'Administrator',
-    description: 'This role has all access to the system',
-    permissions: 5,
-  },
-]
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react'
+import { get } from '@/lib/fetch'
+import { Show } from 'react-smart-conditional'
+import { Skeleton } from '@/components/ui/skeleton'
+import { RoleTable } from './_components/role-table'
+import { useQuery } from '@tanstack/react-query'
+import { CreateRoleModal } from '@/app/(root)/roles/_components/create-edit-role/create-role-modal'
 
 export default function Roles() {
+  const { isFetching, data, refetch } = useQuery<any>({
+    queryKey: ['roles'],
+    queryFn: async () =>
+      get("/api/roles", {
+        isClient: true,
+      }),
+  })
   return (
     <>
       <div className="sm:flex sm:items-center">
@@ -42,46 +28,21 @@ export default function Roles() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateRole />
+          <CreateRoleModal
+            onSuccess={() => refetch()}
+          />
         </div>
       </div>
-      <div className="mt-8">
-        <Table>
-          <TableCaption className="sr-only">A list of your recent invoices.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Permissions</TableHead>
-              <TableHead className="sr-only">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {roles.map((r) => (
-              <TableRow key={r.id}>
-                <TableCell>{r.name}</TableCell>
-                <TableCell>{r.description}</TableCell>
-                <TableCell>{r.permissions}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-8 flex items-center justify-center">
-                        <EllipsisVertical size={16} className="flex-shrink-0" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-auto max-w-56">
-                      <EditRole />
-                      <DropdownMenuItem>
-                        <Link href={`/roles/${r.id}`}>Manage Permissions</Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded">
+        <Show.If condition={isFetching}>
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+        </Show.If>
+        <Show.If condition={data}>
+          <RoleTable
+            data={data?.data ?? []}
+          />
+        </Show.If>
+      </Show>
     </>
   )
 }

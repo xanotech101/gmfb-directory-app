@@ -1,9 +1,10 @@
 'use client'
-import React from 'react'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { PreviewAnnouncement } from './_components/preview'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,90 +18,83 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import dynamic from 'next/dynamic'
+import DOMPurify from 'dompurify';
 
-const departments = [
-  {
-    value: 'Marketing',
-    label: 'Marketing',
-  },
-  {
-    value: 'Information Technology',
-    label: 'Information Technology',
-  },
-  {
-    value: 'Human Resources',
-    label: 'Human Resources',
-  },
-  {
-    value: 'Sales',
-    label: 'Sales',
-  },
-  {
-    value: 'Agents',
-    label: 'Agents',
-  },
-]
-
-const users = [
-  {
-    value: 'John Doe',
-    label: 'John Doe',
-  },
-  {
-    value: 'John Smith',
-    label: 'John Smith',
-  },
-  {
-    value: 'Dan Doe',
-    label: 'Dan Doe',
-  },
-  {
-    value: 'Jane Doe',
-    label: 'Jane Doe',
-  },
-  {
-    value: 'Will Doe',
-    label: 'Will Doe',
-  },
-]
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 import 'react-quill/dist/quill.snow.css'
+import { useDebounce } from 'use-debounce'
+import { get, post } from '@/lib/fetch'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
-  title: z.string().min(2, {
-    message: 'Title must be at least 2 characters.',
-  }),
   subject: z.string().min(2, {
     message: 'Subject must be at least 2 characters.',
   }),
-  description: z.string().min(10, {
-    message: 'Description must be at least 10 characters.',
+  body: z.string().min(2, {
+    message: 'Body must be at least 2 characters.',
   }),
-  departments: z.array(z.string().min(1)).min(1).nonempty({
-    message: 'Please select at least one department.',
-  }),
-  users: z.array(z.string().min(1)).min(1).nonempty({
-    message: 'Please select at least one user.',
-  }),
+  departments: z.array(z.string().min(1)).optional().default([]),
+  users: z.array(z.string().min(1)).optional().default([]),
 })
 
 export default function CreateAnnouncement() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
       subject: '',
-      description: '',
+      body: '',
       departments: [],
       users: [],
     },
   })
 
-  const formData = form.watch()
+  // todo: move to a re-useable hook
+  const [deptSearchString, setDeptSearchString] = useState('')
+  const [debouncedDeptSearchString] = useDebounce(deptSearchString, 500)
+  const departments = useQuery<any>({
+    queryKey: ['search-departments', debouncedDeptSearchString],
+    queryFn: async () =>
+      get(`/api/departments?search=${debouncedDeptSearchString}&limit=5`, {
+        isClient: true,
+      }),
+  })
+
+  const [userSearchString, setUserSearchString] = useState('')
+  const [debouncedUserSearchString] = useDebounce(userSearchString, 500)
+  const users = useQuery<any>({
+    queryKey: ['users', debouncedUserSearchString],
+    queryFn: async () =>
+      get(`/api/users?search=${debouncedUserSearchString}`, {
+        isClient: true,
+      }),
+  })
+
+  const createAnnouncement = useMutation({
+    mutationKey: ['create-department'],
+    mutationFn: async (payload: z.infer<typeof formSchema>) =>
+      post(`/api/announcements`, {
+        isClient: true,
+        body: {
+          ...payload,
+          created_by: "ab18072d-cd7a-4363-b28a-bbfc637a8f04",
+          body: DOMPurify.sanitize(payload.body),
+          status: "published"
+        }
+      }),
+    onSuccess: (data: any) => {
+      toast.success(data?.message ?? 'Announcement created successfully.')
+    },
+    onError: () => {
+      toast.error('Unable to create announcement')
+    },
+  })
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+    createAnnouncement.mutate(values)
   }
 
   return (
@@ -115,45 +109,28 @@ export default function CreateAnnouncement() {
           </div>
         </div>
       </div>
-      <div className="mt-8 flow-root">
+      <div className="mt-8 flow-root bg-white p-4 shadow-sm border border-gray-200 overflow-hidden rounded-lg">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Announcement Title" {...field} />
-                  </FormControl>
-                  <FormDescription>This is the title of the announcement.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="subject"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Subject</FormLabel>
+                  <FormLabel required>Subject</FormLabel>
                   <FormControl>
-                    <Input placeholder="Subject" {...field} />
+                    <Input placeholder="Announcement Title" {...field} />
                   </FormControl>
-                  <FormDescription>What is the subject of the announcement?</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="description"
+              name="body"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel required>Description</FormLabel>
                   <FormControl>
                     <ReactQuill
                       value={field.value}
@@ -162,12 +139,10 @@ export default function CreateAnnouncement() {
                       placeholder="Write the details of your announcement here..."
                     />
                   </FormControl>
-                  <FormDescription>This is the body of your announcement.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="departments"
@@ -176,13 +151,18 @@ export default function CreateAnnouncement() {
                   <FormLabel>Department</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={departments}
+                      options={departments.data?.data?.items?.map((d: any) => ({
+                        label: d.name,
+                        value: d.id,
+                      })) ?? []}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      placeholder="Select options"
+                      placeholder="Select departments"
                       variant="inverted"
                       animation={2}
-                      maxCount={3}
+                      maxCount={5}
+                      filterValue={deptSearchString}
+                      onFilterChange={setDeptSearchString}
                     />
                   </FormControl>
                   <FormDescription>
@@ -192,22 +172,26 @@ export default function CreateAnnouncement() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="users"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>User</FormLabel>
+                  <FormLabel>Users</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={users}
+                      options={users.data?.data?.items?.map((u: any) => ({
+                        label: `${u.first_name} ${u.last_name}`,
+                        value: u.id,
+                      })) ?? []}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      placeholder="Select options"
+                      placeholder="Select users"
                       variant="inverted"
                       animation={2}
-                      maxCount={3}
+                      maxCount={6}
+                      filterValue={userSearchString}
+                      onFilterChange={setUserSearchString}
                     />
                   </FormControl>
                   <FormDescription>
@@ -218,17 +202,8 @@ export default function CreateAnnouncement() {
               )}
             />
             <div className="flex space-x-2">
-              <PreviewAnnouncement
-                announcementData={{
-                  title: formData.title,
-                  subject: formData.subject,
-                  body: formData.description,
-                  departments: formData.departments,
-                  users: formData.users,
-                }}
-              />
-              <Button type="submit" className="bg-[#891C69] hover:bg-[#974D7B]">
-                Submit
+              <Button type="submit">
+                Create Announcement
               </Button>
             </div>
           </form>
