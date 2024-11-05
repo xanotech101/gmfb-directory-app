@@ -4,7 +4,7 @@ import './globals.css'
 import { Providers } from '@/providers'
 import { Toaster } from 'sonner'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import {ReactNode} from 'react'
+import {ReactNode, Suspense} from 'react'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -31,7 +31,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-50`}>
         <NuqsAdapter>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Suspense fallback={null}>
+              {children}
+            </Suspense>
+            </Providers>
         </NuqsAdapter>
         <Toaster position="top-right" />
       </body>
