@@ -17,6 +17,7 @@ interface RequestParams {
   body?: unknown
   options?: RequestInit
   isClient?: boolean
+
 }
 
 const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE') =>
@@ -34,9 +35,11 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
 
       if (!response.ok) {
         const error = await response.json()
-        throw error
+        console.log(error)
+        throw Error(error)
       }
-      return response.json()
+
+      return await response.json() as T
     } catch (error) {
       console.log(error)
       throw error
