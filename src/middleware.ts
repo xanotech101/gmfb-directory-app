@@ -7,7 +7,7 @@ function isStaticFile(pathname: string) {
 }
 
 export function middleware(request: NextRequest) {
-  const session = request.cookies.get('session')?.value
+  const session = request.cookies.get('gmfbEToken')?.value
   const { pathname } = request.nextUrl
   const isAuthPage = pathname === '/'
   const isApiRoute = pathname.startsWith('/api/')
