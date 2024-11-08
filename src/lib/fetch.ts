@@ -35,14 +35,13 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
 
       if (!response.ok) {
         const error = await response.json()
-        console.log(error)
-        throw Error(error)
+        throw error
       }
 
       return await response.json() as T
     } catch (error) {
-      console.log(error)
-      throw error
+        console.log(error)
+        throw error
     }
   }
 
