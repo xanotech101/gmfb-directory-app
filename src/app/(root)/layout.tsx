@@ -11,9 +11,9 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
-import { DesktopSidebar } from '@/components/layout/sidebar/desktop-sidebar'
-import { Topbar } from '@/components/layout/topbar/topbar'
-import { MobileSidebar } from '@/components/layout/sidebar/mobile-sidebar'
+import { DesktopSidebar } from './_components/layout/sidebar/desktop-sidebar'
+import { Topbar } from './_components/layout/topbar/topbar'
+import { MobileSidebar } from "./_components/layout/sidebar/mobile-sidebar"
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
@@ -45,7 +45,6 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const isActive = (href: string) => {
-    console.log(pathname, href)
     return pathname === href
   }
 

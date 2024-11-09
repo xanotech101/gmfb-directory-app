@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -11,13 +10,21 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { useUser } from '@/providers/user.provider'
+import { Avatar } from '@/components/ui/avatar'
+import { getRandomColor } from '@/lib/random-color'
+import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { post } from '@/lib/fetch'
+import { useRouter } from 'next/navigation'
 
 const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Your profile', href: '#'},
 ]
 
 export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void }) => {
+  const router = useRouter()
+  const {user} = useUser()
+  console.log(user)
   return (
     <div className="bg-white border-b border-gray-200">
       <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
@@ -39,7 +46,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="/" className="hover:text-[#891C69]">
+                    <BreadcrumbLink href="/public" className="hover:text-[#891C69]">
                       Home
                     </BreadcrumbLink>
                   </BreadcrumbItem>
@@ -69,19 +76,30 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
               <Menu as="div" className="relative">
                 <MenuButton className="-m-1.5 flex items-center p-1.5">
                   <span className="sr-only">Open user menu</span>
-                  <Image
-                    alt="logo"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="h-8 w-8 rounded-full bg-gray-50"
-                    width={32}
-                    height={32}
-                  />
+                  <Avatar
+                    className="size-8 flex-shrink-0 border-2"
+                    style={{
+                      border: user?.avatar ? 'none' : `2px solid ${getRandomColor(1).border}`,
+                    }}
+                  >
+                    <AvatarImage src={user?.avatar} alt="user's avatar" />
+                    <AvatarFallback
+                      className="h-full w-full flex justify-center items-center"
+                      style={{
+                        backgroundColor: getRandomColor(1).background,
+                        color: getRandomColor(1).text,
+                      }}
+                    >
+                      {user?.first_name[0]}
+                      {user?.last_name[0]}
+                    </AvatarFallback>
+                  </Avatar>
                   <span className="hidden lg:flex lg:items-center">
                     <span
                       aria-hidden="true"
                       className="ml-4 text-sm font-semibold leading-6 text-gray-900 hover:text-[#891C69]"
                     >
-                      Tom Cook
+                      {user?.first_name} {user?.last_name}
                     </span>
                     <ChevronDownIcon
                       aria-hidden="true"
@@ -103,6 +121,14 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                       </a>
                     </MenuItem>
                   ))}
+                  <MenuItem>
+                    <button
+                      onClick={() => post('/api/auth/logout', {isClient: true}).finally(() => router.push('/login'))}
+                      className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                    >
+                      Logout
+                    </button>
+                  </MenuItem>
                 </MenuItems>
               </Menu>
             </div>

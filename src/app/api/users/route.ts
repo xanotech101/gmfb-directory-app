@@ -18,12 +18,7 @@ export async function GET(request: Request) {
     }
   })
 
-  return NextResponse.json({
-    ...response,
-    data: {
-      ...response.data,
-    },
-  })
+  return NextResponse.json(response)
 }
 
 export async function POST(request: Request) {
@@ -39,10 +34,5 @@ export async function POST(request: Request) {
     }
   })
 
-  return NextResponse.json({
-    ...response,
-    data: {
-      ...response.data,
-    },
-  })
+  return NextResponse.json(response)
 }
