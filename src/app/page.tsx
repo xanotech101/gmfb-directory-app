@@ -117,7 +117,7 @@ export default function Login() {
                       </div>
                     </div>
                     <FormControl>
-                      <Input placeholder="...." {...field} />
+                      <Input placeholder="...." type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

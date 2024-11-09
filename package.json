@@ -43,6 +43,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "react-merge-refs": "^2.1.1",
     "react-paginate": "^8.2.0",
     "react-quill": "^2.0.0",
     "react-smart-conditional": "^1.0.21",
