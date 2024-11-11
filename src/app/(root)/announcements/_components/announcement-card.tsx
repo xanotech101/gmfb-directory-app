@@ -59,8 +59,7 @@ export function AnnouncementCard({announcement}: {announcement: any}   ) {
           <li className="py-3 px-6">
             <p className="mb-1 text-sm text-muted-foreground">Status</p>
             <span className="d-inline-flex mb-1">
-              <Badge className="capitalize"
-                     variant={announcement.status === 'draft' ? "yellow" : "green"}>{announcement.status}</Badge>
+              <Badge className="capitalize" variant={announcement.status === 'draft' ? "yellow" : "green"}>{announcement.status}</Badge>
             </span>
           </li>
         </ul>

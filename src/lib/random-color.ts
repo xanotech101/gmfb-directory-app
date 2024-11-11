@@ -41,6 +41,7 @@ const colors = [
   },
 ]
 
-export const getRandomColor = (index: number) => {
-  return colors[index % colors.length]
+export const getRandomColor = (index?: number) => {
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[(index ?? randomIndex) % colors.length]
 }

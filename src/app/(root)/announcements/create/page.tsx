@@ -78,7 +78,6 @@ export default function CreateAnnouncement() {
         isClient: true,
         body: {
           ...payload,
-          created_by: "ab18072d-cd7a-4363-b28a-bbfc637a8f04",
           body: DOMPurify.sanitize(payload.body),
           status: "published"
         }

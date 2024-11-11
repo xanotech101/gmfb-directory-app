@@ -117,7 +117,7 @@ export default function Login() {
                       </div>
                     </div>
                     <FormControl>
-                      <Input placeholder="...." {...field} />
+                      <Input placeholder="...." type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,7 +136,7 @@ export default function Login() {
       </div>
       <OTP setShow={setShowOTP} show={showOTP} formValues={form.getValues()} />
       <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
-        <DialogContent className="sm:max-w-[425px] bg-[#fff]">
+        <DialogContent className="sm:max-w-[425px] bg-[#fff]" onInteractOutside={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle className="text-base font-semibold leading-6 text-gray-900 text-center">
               Forgot Password?
