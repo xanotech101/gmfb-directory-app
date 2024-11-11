@@ -7,16 +7,12 @@ export async function GET() {
   const {accessToken} = await getTokens()
   const response = await get<any>(`/api/v1/users/profile`, {
     options: {
+      cache: 'no-cache',
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     }
   })
 
-  return NextResponse.json({
-    ...response,
-    data: {
-      ...response.data,
-    },
-  })
+  return NextResponse.json(response)
 }

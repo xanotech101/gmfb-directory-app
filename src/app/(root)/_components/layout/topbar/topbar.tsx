@@ -24,7 +24,7 @@ const userNavigation = [
 export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void }) => {
   const router = useRouter()
   const {user} = useUser()
-  console.log(user)
+
   return (
     <div className="bg-white border-b border-gray-200">
       <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
