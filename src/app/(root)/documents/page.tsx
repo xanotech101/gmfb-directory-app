@@ -1,53 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import React from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { EllipsisVertical } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-const documents = [
-  {
-    id: 1,
-    title: 'Design System',
-    created_by: {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'jondoe@mail.com',
-      department: 'Design',
-      avatar: undefined,
-    },
-    date: '2021-07-23',
-    receipients: {
-      departments: [
-        {
-          name: 'Design',
-        },
-      ],
-      users: [
-        {
-          name: 'Jane Doe',
-          avatar: 'https://randomuser.me/api/portraits',
-        },
-      ],
-    },
-  },
-]
+import React from 'react'
+import { useQueryState } from 'nuqs'
+import { useQuery } from '@tanstack/react-query'
+import { get } from '@/lib/fetch'
+import { Show } from 'react-smart-conditional'
+import { Skeleton } from '@/components/ui/skeleton'
+import DocumentCard from './_components/document-card'
 
 export default function Documents() {
+  const [currentPage] = useQueryState('page', {
+    defaultValue: 1,
+    parse: (value) => Number(value),
+  })
+  const { isFetching, data } = useQuery<any>({
+    queryKey: ['documents', currentPage],
+    queryFn: async () =>
+      get(`/api/documents?page=${currentPage}&limit=${50}`, {
+        isClient: true,
+      }),
+  })
+
+  console.log(data)
+
   return (
     <>
       <div className="sm:flex sm:items-center">
@@ -59,67 +35,17 @@ export default function Documents() {
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none"></div>
       </div>
-      <div className="mt-8">
-        <Table>
-          <TableCaption className="sr-only">A list of your recent invoices.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Created By</TableHead>
-              <TableHead>Receipients</TableHead>
-              <TableHead className="sr-only">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {documents.map((document) => (
-              <TableRow key={document.id}>
-                <TableCell>
-                  <p>{document.title}</p>
-                  <p>Created: {document.date}</p>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <div className="h-11 w-11 flex-shrink-0">
-                      <Avatar>
-                        <AvatarImage
-                          src={document.created_by.avatar}
-                          alt="profile image"
-                          className="rounded-full"
-                        />
-                        <AvatarFallback className="h-full w-full bg-[#891C69] border border-[#974D7B] rounded-full flex items-center justify-center text-white">
-                          {document.created_by.first_name[0]}
-                          {document.created_by.last_name[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <div className="ml-4">
-                      <div className="font-medium text-gray-900">
-                        {document.created_by.first_name}
-                        {document.created_by.last_name}
-                      </div>
-                      <div className="mt-1 text-gray-500">{document.created_by.email}</div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>$250.00</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-8 flex items-center justify-center">
-                        <EllipsisVertical size={16} className="flex-shrink-0" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-auto max-w-56">
-                      <DropdownMenuItem>View profile</DropdownMenuItem>
-                      <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+
+      <Show as="div" className="mt-8">
+        <Show.If condition={isFetching}>
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+        </Show.If>
+        <Show.If condition={!!data} className="mt-8 grid grid-cols-3 gap-4">
+          {(data?.data?.items ?? []).map((item: any, index: number) => (
+            <DocumentCard doc={item} key={index} />
+          ))}
+        </Show.If>
+      </Show>
     </>
   )
 }

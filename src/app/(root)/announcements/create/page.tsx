@@ -27,6 +27,7 @@ import { useDebounce } from 'use-debounce'
 import { get, post } from '@/lib/fetch'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   subject: z.string().min(2, {
@@ -40,6 +41,7 @@ const formSchema = z.object({
 })
 
 export default function CreateAnnouncement() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,6 +86,7 @@ export default function CreateAnnouncement() {
       }),
     onSuccess: (data: any) => {
       toast.success(data?.message ?? 'Announcement created successfully.')
+      router.push('/announcements')
     },
     onError: () => {
       toast.error('Unable to create announcement')

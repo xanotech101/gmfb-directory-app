@@ -17,15 +17,18 @@ import DOMPurify from 'dompurify';
 
 export function AnnouncementCard({announcement}: {announcement: any}   ) {
   return (
-    <Card className="p-0 divide-y divide-gray-200">
+    <Card className="p-0 divide-y divide-gray-200 relative flex flex-col">
       <CardHeader className="pb-4">
-        <CardTitle>{announcement?.subject}</CardTitle>
+        <CardTitle className="flex justify-between items-start">
+          <span className="text-lg font-semibold truncate">{announcement?.subject}</span>
+          <Badge className="capitalize" variant={announcement.status === 'published' ? 'green' : 'yellow'}>{announcement.status}</Badge>
+        </CardTitle>
       </CardHeader>
-      <CardContent className="px-0">
+      <CardContent className="px-0 pb-0 relative flex-grow">
         <ul className="divide-y divide-gray-200">
           <li className="py-3 px-6">
             <p className="mb-1 text-sm text-muted-foreground">Body</p>
-            <div className="break-words text-sm" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(announcement?.body ?? '')}}/>
+            <div className="break-words text-sm line-clamp-3" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(announcement?.body ?? '') }} />
           </li>
           <li className="py-3 px-6">
             <p className="mb-1 text-sm text-muted-foreground">Departments</p>
@@ -57,15 +60,13 @@ export function AnnouncementCard({announcement}: {announcement: any}   ) {
             </Show>
           </li>
           <li className="py-3 px-6">
-            <p className="mb-1 text-sm text-muted-foreground">Status</p>
-            <span className="d-inline-flex mb-1">
-              <Badge className="capitalize" variant={announcement.status === 'draft' ? "yellow" : "green"}>{announcement.status}</Badge>
-            </span>
+            <p className="mb-1 text-sm text-muted-foreground">Created By</p>
+            <p className="text-sm"> {announcement?.created_by_user?.first_name} {announcement?.created_by_user?.last_name}</p>
           </li>
         </ul>
       </CardContent>
-      <CardFooter className="hidden">
-        <Button variant="outline">View details</Button>
+      <CardFooter className="pt-4 mt-auto">
+        <Button variant="outline" className="w-full">View details</Button>
       </CardFooter>
     </Card>
   )
