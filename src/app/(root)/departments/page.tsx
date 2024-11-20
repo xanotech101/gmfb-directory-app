@@ -31,9 +31,7 @@ export default function Departments() {
           <p className="mt-2 text-sm text-gray-700">A list of all the departments</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateDepartment
-            onSuccess={refetch}
-          />
+          <CreateDepartment onSuccess={refetch} />
         </div>
       </div>
 
