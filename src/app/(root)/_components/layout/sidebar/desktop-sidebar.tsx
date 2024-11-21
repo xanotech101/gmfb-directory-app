@@ -29,9 +29,9 @@ export const DesktopSidebar = ({
           <Image
             src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
             alt="Grooming Microfinance Bank"
-            className="sticky"
             height={120}
             width={120}
+            priority
           />
         </div>
         <nav className="flex flex-1 flex-col">

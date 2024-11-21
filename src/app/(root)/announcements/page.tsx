@@ -9,9 +9,13 @@ import { get } from '@/lib/fetch'
 import { useQueryState } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Package } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 
 export default function Announcements() {
+  const router = useRouter()
   const [currentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
@@ -49,9 +53,21 @@ export default function Announcements() {
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
         <Show.If condition={!!data} className="mt-8 grid grid-cols-3 gap-4">
-          {(data?.data?.items ?? []).map((item: any, index: number) => (
-            <AnnouncementCard key={index} announcement={item}  />
-          ))}
+          <Show.If condition={data?.data?.items?.length === 0} className="col-span-3 bg-white">
+            <EmptyState
+              icon={Package}
+              title="No Announcements"
+              description="Get started by creating a new announcement."
+              actionLabel="Add Announcement"
+              onAction={() => router.push('/announcements/create')}
+              className="w-full"
+            />
+          </Show.If>
+          <Show.Else>
+            {(data?.data?.items ?? []).map((item: any, index: number) => (
+              <AnnouncementCard key={index} announcement={item}  />
+            ))}
+          </Show.Else>
         </Show.If>
       </Show>
     </>

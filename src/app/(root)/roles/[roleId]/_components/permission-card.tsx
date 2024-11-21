@@ -1,119 +1,64 @@
 'use client'
-import React, { useState } from 'react'
+
 import { Checkbox } from '@/components/ui/checkbox'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { CheckedState } from '@radix-ui/react-checkbox'
 
-const roles = [
-  {
-    name: 'Customer',
-    permissions: [
-      'Can View Business Metrics',
-      'Can Edit Business Metrics',
-      'Can Delete Business Metrics',
-      'Can View Customer Data',
-    ],
-  },
-  {
-    name: 'Member',
-    permissions: [
-      'Can View Business Metrics',
-      'Can Edit Business Metrics',
-      'Can Delete Business Metrics',
-      'Can View Customer Data',
-    ],
-  },
-  {
-    name: 'User',
-    permissions: [
-      'Can View Business Metrics',
-      'Can Edit Business Metrics',
-      'Can Delete Business Metrics',
-      'Can View Customer Data',
-      'Can Edit Customer Data',
-      'Can Delete Customer Data',
-      'Can View Sales Data',
-      'Can Edit Sales Data',
-      'Can Delete Sales Data',
-    ],
-  },
-  {
-    name: 'Admin',
-    permissions: [
-      'Can View Business Metrics',
-      'Can Edit Business Metrics',
-      'Can Delete Business Metrics',
-      'Can View Customer Data',
-      'Can Edit Customer Data',
-      'Can Delete Customer Data',
-      'Can View Sales Data',
-      'Can Edit Sales Data',
-      'Can Delete Sales Data',
-    ],
-  },
-]
+interface PermissionCardProps {
+  scope: string
+  scopePermissions: Record<string, string>[]
+  selectedPermissions: string[]
+  setSelectedPermissions(permissions: string[]): void
+}
 
-export const PermissionCard = () => {
-  const [selectedPermissions, setSelectedPermissions] = useState<{ [role: string]: string[] }>({})
+export const PermissionCard = ({ scope, scopePermissions, selectedPermissions = [], setSelectedPermissions }: PermissionCardProps) => {
 
-  const handlePermissionCheckboxChange = (role: string, permission: string) => {
-    setSelectedPermissions((prevState) => {
-      const rolePermissions = prevState[role] || []
-      if (rolePermissions.includes(permission)) {
-        return {
-          ...prevState,
-          [role]: rolePermissions.filter((p) => p !== permission),
-        }
-      } else {
-        return {
-          ...prevState,
-          [role]: [...rolePermissions, permission],
-        }
-      }
-    })
+  const handleCheckAll = (isChecked: boolean) => {
+    if(isChecked) {
+      setSelectedPermissions(scopePermissions.map((p) => p.id))
+    } else {
+      setSelectedPermissions([])
+    }
   }
-  const handleRoleCheckboxChange = (roleName: string, isChecked: boolean) => {
-    setSelectedPermissions((prevSelectedPermissions) => {
-      const updatedPermissions = { ...prevSelectedPermissions }
 
-      if (isChecked) {
-        updatedPermissions[roleName] =
-          roles.find((role) => role.name === roleName)?.permissions || []
-      } else {
-        updatedPermissions[roleName] = []
-      }
-
-      return updatedPermissions
-    })
+  const handleCheckSingle = (isChecked: CheckedState, permissionId: string) => {
+    if(isChecked === true) {
+     setSelectedPermissions([...selectedPermissions, permissionId])
+    } else {
+      setSelectedPermissions(selectedPermissions.filter((id) => id !== permissionId))
+    }
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0">
-      {roles.map((role, index) => (
-        <div key={index} className="rounded border border-gray-200">
-          <ul className="list-none">
-            <li className="flex items-center border-b-[0.5px] border-gray-200 bg-[#F6F6F6] py-4 px-2 text-sm font-semibold pb-2">
+    <Card className="overflow-hidden rounded-md">
+      <CardHeader className="p-0">
+        <CardTitle className="flex items-center text-sm bg-gray-50 p-6 py-3 border-b">
+          <Checkbox
+            defaultChecked={selectedPermissions.length === scopePermissions.length}
+            checked={selectedPermissions.length === scopePermissions.length}
+            onCheckedChange={(checked: boolean) => handleCheckAll(checked)}
+            className="mr-2"
+          />
+          <span className="capitalize">{scope}</span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="list-none divide-y divide-gray-200">
+          {scopePermissions.map((permission, idx) => (
+            <li
+              key={idx}
+              className="flex items-center py-4 text-sm whitespace-nowrap"
+            >
               <Checkbox
-                checked={selectedPermissions[role.name]?.length === role.permissions.length}
-                onCheckedChange={(checked: boolean) => handleRoleCheckboxChange(role.name, checked)}
+                checked={selectedPermissions.includes(permission.id)}
+                onCheckedChange={(checked) => handleCheckSingle(checked, permission.id)}
                 className="mr-2"
               />
-              <span>{role.name}</span>
+              <span className="text-gray-600">{permission.name}</span>
             </li>
-            {role.permissions.map((permission, idx) => (
-              <li
-                key={idx}
-                className="flex items-center border-b-[0.5px] border-gray-200 p-2 text-sm mt-4 pb-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-full"
-              >
-                <Checkbox
-                  checked={selectedPermissions[role.name]?.includes(permission) || false}
-                  onCheckedChange={() => handlePermissionCheckboxChange(role.name, permission)}
-                  className="mr-2"
-                />
-                <span>{permission}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }

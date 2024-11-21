@@ -15,6 +15,7 @@ import {
 import { Show } from 'react-smart-conditional'
 import DOMPurify from 'dompurify';
 
+
 export function AnnouncementCard({announcement}: {announcement: any}   ) {
   return (
     <Card className="p-0 divide-y divide-gray-200 relative flex flex-col">

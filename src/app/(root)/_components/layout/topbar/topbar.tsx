@@ -79,15 +79,15 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                   <Avatar
                     className="size-8 flex-shrink-0 border-2"
                     style={{
-                      border: user?.avatar ? 'none' : `2px solid ${getRandomColor(1).border}`,
+                      border: user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
                     }}
                   >
                     <AvatarImage src={user?.avatar} alt="user's avatar" />
                     <AvatarFallback
                       className="h-full w-full flex justify-center items-center"
                       style={{
-                        backgroundColor: getRandomColor(1).background,
-                        color: getRandomColor(1).text,
+                        backgroundColor: getRandomColor(0).background,
+                        color: getRandomColor(0).text,
                       }}
                     >
                       {user?.first_name[0]}
@@ -97,7 +97,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                   <span className="hidden lg:flex lg:items-center">
                     <span
                       aria-hidden="true"
-                      className="ml-4 text-sm font-semibold leading-6 text-gray-900 hover:text-[#891C69]"
+                      className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                     >
                       {user?.first_name} {user?.last_name}
                     </span>
@@ -124,7 +124,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                   <MenuItem>
                     <button
                       onClick={() => post('/api/auth/logout', {isClient: true}).finally(() => router.push('/login'))}
-                      className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                      className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50 w-full text-left"
                     >
                       Logout
                     </button>

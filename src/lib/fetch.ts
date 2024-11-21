@@ -40,8 +40,7 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
 
       return await response.json() as T
     } catch (error) {
-        console.log(error)
-        throw error
+      throw error
     }
   }
 

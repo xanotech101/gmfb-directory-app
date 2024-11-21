@@ -5,10 +5,7 @@ import { getTokens } from '@/lib/get-tokens'
 
 export async function GET() {
   const response = await get<any>('/api/v1/roles')
-
-  return NextResponse.json({
-    ...response,
-  })
+  return NextResponse.json(response)
 }
 
 export async function POST(req: NextRequest) {
@@ -22,9 +19,6 @@ export async function POST(req: NextRequest) {
       }
     }
   })
-
-  return NextResponse.json({
-    ...response,
-  })
+  return NextResponse.json(response)
 }
 

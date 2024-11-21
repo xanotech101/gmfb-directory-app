@@ -2,38 +2,44 @@
 import { get, post } from '@/lib/fetch'
 import { NextRequest, NextResponse } from 'next/server'
 import { getTokens } from '@/lib/get-tokens'
+import { handleServerError } from '@/lib/handle-server-error'
 
 export async function GET(request: Request) {
-  const {accessToken} = await getTokens()
+  const { accessToken } = await getTokens()
+  try {
+    const { searchParams } = new URL(request.url)
+    const page = searchParams.get('page') || '1'
+    const limit = searchParams.get('limit') || '50'
 
-  const { searchParams } = new URL(request.url)
-  const page = searchParams.get('page') || '1'
-  const limit = searchParams.get('limit') || '50'
+    const response = await get<any>(`/api/v1/documents?page=${page}&limit=${limit}`, {
+      options: {
+        headers: {
+          'authorization': `Bearer ${accessToken}`,
+        },
+      },
+    })
 
-  const response = await get<any>(`/api/v1/documents?page=${page}&limit=${limit}`, {
-    options: {
-      headers: {
-        'authorization': `Bearer ${accessToken}`
-      }
-    }
-  })
-
-  return NextResponse.json(response)
+    return NextResponse.json(response)
+  } catch (error) {
+    return handleServerError(error)
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const {accessToken} = await getTokens()
-
-  const payload = (await req.json()) as any
-  const response = await post<any>('/api/v1/documents', {
-    body: payload,
-    options: {
-      headers: {
-        'authorization': `Bearer ${accessToken}`
-      }
-    }
-  })
-
-  return NextResponse.json(response)
+  const { accessToken } = await getTokens()
+  try {
+    const payload = (await req.json()) as any
+    const response = await post<any>('/api/v1/documents', {
+      body: payload,
+      options: {
+        headers: {
+          'authorization': `Bearer ${accessToken}`,
+        },
+      },
+    })
+    return NextResponse.json(response)
+  } catch (error) {
+    return handleServerError(error)
+  }
 }
 
