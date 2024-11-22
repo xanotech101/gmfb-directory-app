@@ -64,7 +64,7 @@ export default function Announcements() {
                 className="w-full"
               />
             </Show.If>
-            <Show.Else className="mt-8 grid grid-cols-3 gap-4">
+            <Show.Else className="mt-8 grid md:grid-cols-3 lg:grid-cols-4 gap-4">
               {(data?.data?.items ?? []).map((item: any, index: number) => (
                 <AnnouncementCard key={index} announcement={item} />
               ))}
