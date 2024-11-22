@@ -1,33 +1,25 @@
 'use client'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import dynamic from 'next/dynamic'
-import DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify'
+import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { useDepartmentSearch } from '@/app/(root)/hooks/use-department-search'
+import { useUserSearch } from '@/app/(root)/hooks/use-user-search'
+import { post } from '@/lib/fetch'
 
+import 'react-quill/dist/quill.snow.css'
+import { toast } from '@/hooks/use-toast'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-import 'react-quill/dist/quill.snow.css'
-import { useDebounce } from 'use-debounce'
-import { get, post } from '@/lib/fetch'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   subject: z.string().min(2, {
@@ -52,26 +44,8 @@ export default function CreateAnnouncement() {
     },
   })
 
-  // todo: move to a re-useable hook
-  const [deptSearchString, setDeptSearchString] = useState('')
-  const [debouncedDeptSearchString] = useDebounce(deptSearchString, 500)
-  const departments = useQuery<any>({
-    queryKey: ['search-departments', debouncedDeptSearchString],
-    queryFn: async () =>
-      get(`/api/departments?search=${debouncedDeptSearchString}&limit=5`, {
-        isClient: true,
-      }),
-  })
-
-  const [userSearchString, setUserSearchString] = useState('')
-  const [debouncedUserSearchString] = useDebounce(userSearchString, 500)
-  const users = useQuery<any>({
-    queryKey: ['users', debouncedUserSearchString],
-    queryFn: async () =>
-      get(`/api/users?search=${debouncedUserSearchString}`, {
-        isClient: true,
-      }),
-  })
+  const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
+  const { userSearchString, setUserSearchString, users } = useUserSearch()
 
   const createAnnouncement = useMutation({
     mutationKey: ['create-department'],
@@ -81,21 +55,27 @@ export default function CreateAnnouncement() {
         body: {
           ...payload,
           body: DOMPurify.sanitize(payload.body),
-          status: "published"
-        }
+          status: 'published',
+        },
       }),
-    onSuccess: (data: any) => {
-      toast.success(data?.message ?? 'Announcement created successfully.')
+    onSuccess: () => {
+      toast({
+        title: 'Announcement created',
+        description: 'The announcement has been successfully created',
+      })
       router.push('/announcements')
     },
-    onError: () => {
-      toast.error('Unable to create announcement')
+    onError: (error) => {
+      toast({
+        title: error?.message ?? 'An error occurred',
+        description: 'An error occurred while creating the announcement',
+        variant: 'destructive',
+      })
     },
   })
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     createAnnouncement.mutate(values)
   }
 
@@ -203,11 +183,9 @@ export default function CreateAnnouncement() {
                 </FormItem>
               )}
             />
-            <div className="flex space-x-2">
-              <Button type="submit">
-                Create Announcement
-              </Button>
-            </div>
+            <Button type="submit" isLoading={createAnnouncement.isPending}>
+              Create Announcement
+            </Button>
           </form>
         </Form>
       </div>

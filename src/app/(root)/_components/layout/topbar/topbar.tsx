@@ -77,7 +77,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                 <MenuButton className="-m-1.5 flex items-center p-1.5">
                   <span className="sr-only">Open user menu</span>
                   <Avatar
-                    className="size-8 flex-shrink-0 border-2"
+                    className="size-7 flex-shrink-0 border-2 text-sm"
                     style={{
                       border: user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
                     }}
@@ -97,7 +97,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                   <span className="hidden lg:flex lg:items-center">
                     <span
                       aria-hidden="true"
-                      className="ml-4 text-sm font-semibold leading-6 text-gray-900"
+                      className="ml-1.5 text-sm font-semibold leading-6 text-gray-900"
                     >
                       {user?.first_name} {user?.last_name}
                     </span>

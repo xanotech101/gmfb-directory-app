@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 'use client'
 
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
@@ -10,14 +8,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { PlusCircle, Trash2 } from 'lucide-react'
-import { toast } from '@/hooks/use-toast'
-import React, { useState } from 'react'
-import { useDebounce } from 'use-debounce'
-import { useQuery } from '@tanstack/react-query'
-import { get } from '@/lib/fetch'
+import React from 'react'
 import { MultiSelect } from '@/components/ui/multi-select'
+import { useDepartmentSearch } from '@/app/(root)/hooks/use-department-search'
+import { useUserSearch } from '@/app/(root)/hooks/use-user-search'
+import { toast } from '@/hooks/use-toast'
+import { useMutation } from '@tanstack/react-query'
+import { post } from '@/lib/fetch'
+import { useRouter } from 'next/navigation'
 
-const MAX_FILE_SIZE = 5000000 // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 10MB
 
 const formSchema = z.object({
   subject: z.string().min(1, 'Subject is required'),
@@ -33,6 +33,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 export default function CreateDocument() {
+  const [isUploadingFile, setIsUploadingFile] = React.useState(false)
+  const router = useRouter()
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,37 +50,79 @@ export default function CreateDocument() {
     control: form.control,
   })
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const { deptSearchString, setDeptSearchString,  departments} = useDepartmentSearch()
+  const { userSearchString, setUserSearchString, users} = useUserSearch()
+
+  const createDocument = useMutation({
+    mutationKey: ['create-department'],
+    mutationFn: async (payload: Record<string, unknown>) =>
+      post(`/api/documents`, {
+        isClient: true,
+        body: payload,
+      }),
+    onSuccess: () => {
+      toast({
+        title: 'Document created',
+        description: 'The document has been successfully created',
+      })
+      router.push('/documents')
+    },
+    onError: (error) => {
+      toast({
+        title: error?.message ?? 'An error occurred',
+        description: 'An error occurred while creating the document',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  const uploadFiles = async (files: File[]) => {
+    setIsUploadingFile(true)
+    try {
+      const promises = files.map((file) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        return fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
+      })
+
+      const response = await Promise.all(promises)
+
+      if (!response.every((res) => res.ok)) {
+        toast({
+          title: 'Failed to upload files',
+          duration: 5000,
+          variant: 'destructive'
+        })
+        throw new Error('Failed to upload files')
+      }
+
+      return await Promise.all(response.map((res) => res.json()))
+
+    } catch (error) {
+      throw error
+    } finally {
+      setIsUploadingFile(false)
+    }
   }
 
-  // todo: move to a re-useable hook
-  const [deptSearchString, setDeptSearchString] = useState('')
-  const [debouncedDeptSearchString] = useDebounce(deptSearchString, 500)
-  const departments = useQuery<any>({
-    queryKey: ['search-departments', debouncedDeptSearchString],
-    queryFn: async () =>
-      get(`/api/departments?search=${debouncedDeptSearchString}&limit=5`, {
-        isClient: true,
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const files = data.files
+    const filteredFiles = files.filter(({ file }) => file?.size > 0)
+    const uploadedFiles = await uploadFiles(filteredFiles.map(({ file }) => file))
+    createDocument.mutate({
+      ...data,
+      status: 'published',
+      files: uploadedFiles.map((file) => {
+        return {
+          url: file?.data?.url,
+          type: file.data?.mimeType,
+        }
       }),
-  })
-
-  const [userSearchString, setUserSearchString] = useState('')
-  const [debouncedUserSearchString] = useDebounce(userSearchString, 500)
-  const users = useQuery<any>({
-    queryKey: ['users', debouncedUserSearchString],
-    queryFn: async () =>
-      get(`/api/users?search=${debouncedUserSearchString}`, {
-        isClient: true,
-      }),
-  })
+    })
+  }
 
   return (
     <>
@@ -209,6 +253,7 @@ export default function CreateDocument() {
                 type="button"
                 variant="outline"
                 size="sm"
+                disabled={fields.length >= 5}
                 className="mt-2"
                 onClick={() => append({ file: new File([], '') })}
               >
@@ -216,7 +261,9 @@ export default function CreateDocument() {
                 Add Another File
               </Button>
             </div>
-            <Button type="submit">Share Documents</Button>
+            <Button type="submit" isLoading={isUploadingFile || createDocument.isPending}>
+              Create Document
+            </Button>
           </form>
         </Form>
       </div>

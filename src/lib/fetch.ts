@@ -24,11 +24,16 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
   async function <T>(endpoint: string, params?: RequestParams): Promise<T> {
     const { body, options, isClient } = params ?? {}
     const url = isClient ? endpoint : `${BASE_URL}${endpoint}`
-    console.log(url, 'url')
+    let formattedBody = body as string | FormData | undefined
+
+    if (body !== undefined && !(body instanceof FormData)) {
+      formattedBody = JSON.stringify(body)
+    }
+
     const mergedOptions = mergeOptions({
       ...options,
       method,
-      ...(body !== undefined && { body: JSON.stringify(body) }),
+      ...(body !== undefined && { body: formattedBody }),
     })
 
     try {

@@ -41,13 +41,12 @@ export default function Documents() {
           </Link>
         </div>
       </div>
-
       <Show as="div" className="mt-8">
         <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
-        <Show.If condition={!!data} className="mt-8 grid grid-cols-3 gap-4">
-          <Show className="col-span-3 bg-white">
+        <Show.If condition={data} as={Fragment}>
+          <Show as={Fragment}>
             <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
               <EmptyState
                 icon={Package}
@@ -56,7 +55,7 @@ export default function Documents() {
                 className="w-full"
               />
             </Show.If>
-            <Show.Else as={Fragment}>
+            <Show.Else className="grid grid-cols-3 gap-4">
               {(data?.data?.items ?? []).map((item: any, index: number) => (
                 <DocumentCard key={index} doc={item} />
               ))}

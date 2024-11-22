@@ -23,7 +23,7 @@ export default function Announcements() {
   const { isFetching, data } = useQuery<any>({
     queryKey: ['announcements', currentPage],
     queryFn: async () =>
-      get(`/api/announcements?page=${currentPage}&limit=${50}`, {
+      get(`/api/announcements?page=${currentPage}&limit=${12}`, {
         isClient: true,
       }),
   })
@@ -52,22 +52,24 @@ export default function Announcements() {
         <Show.If condition={isFetching}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
-        <Show.If condition={!!data}>
-          <Show.If condition={data?.data?.items?.length === 0} className="bg-white">
-            <EmptyState
-              icon={Package}
-              title="No Announcements"
-              description="Get started by creating a new announcement."
-              actionLabel="Add Announcement"
-              onAction={() => router.push('/announcements/create')}
-              className="w-full"
-            />
-          </Show.If>
-          <Show.Else className="mt-8 grid grid-cols-3 gap-4">
-            {(data?.data?.items ?? []).map((item: any, index: number) => (
-              <AnnouncementCard key={index} announcement={item}  />
-            ))}
-          </Show.Else>
+        <Show.If condition={data}>
+          <Show>
+            <Show.If condition={data?.data?.items?.length === 0} className="bg-white">
+              <EmptyState
+                icon={Package}
+                title="No Announcements"
+                description="Get started by creating a new announcement."
+                actionLabel="Add Announcement"
+                onAction={() => router.push('/announcements/create')}
+                className="w-full"
+              />
+            </Show.If>
+            <Show.Else className="mt-8 grid grid-cols-3 gap-4">
+              {(data?.data?.items ?? []).map((item: any, index: number) => (
+                <AnnouncementCard key={index} announcement={item} />
+              ))}
+            </Show.Else>
+          </Show>
         </Show.If>
       </Show>
     </>

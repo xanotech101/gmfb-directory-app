@@ -7,7 +7,7 @@ import { handleServerError } from '@/lib/handle-server-error'
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const page = searchParams.get('page') || '1'
-  const limit = searchParams.get('limit') || '50'
+  const limit = searchParams.get('limit') || '2'
   try {
     const { accessToken } = await getTokens()
     const response = await get<any>(`/api/v1/announcements?page=${page}&limit=${limit}`, {

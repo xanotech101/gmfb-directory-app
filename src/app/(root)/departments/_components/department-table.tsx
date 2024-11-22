@@ -8,15 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
@@ -66,7 +58,7 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                   <div className="flex items-start">
                     <div className="size-9 flex-shrink-0">
                       <Avatar
-                        className="size-9"
+                        className="size-8 text-sm"
                         style={{ border: d?.hod?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`}}
                       >
                         <AvatarImage src={d.hod.avatar} alt="profile image" />
