@@ -1,19 +1,20 @@
 'use client'
 
+import { Toaster } from '@/components/ui/toaster'
 import { ReactNode, useState } from 'react'
 import {
   BellAlertIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
   HomeIcon,
-  UsersIcon,
   UserGroupIcon,
   UserIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
 import { DesktopSidebar } from './_components/layout/sidebar/desktop-sidebar'
 import { Topbar } from './_components/layout/topbar/topbar'
-import { MobileSidebar } from "./_components/layout/sidebar/mobile-sidebar"
+import { MobileSidebar } from './_components/layout/sidebar/mobile-sidebar'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
@@ -63,6 +64,7 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
         <main className="py-10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
+        <Toaster />
       </div>
     </div>
   )

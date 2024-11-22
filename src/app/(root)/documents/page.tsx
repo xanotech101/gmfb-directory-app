@@ -10,6 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import DocumentCard from './_components/document-card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export default function Documents() {
   const [currentPage] = useQueryState('page', {
@@ -33,7 +35,11 @@ export default function Documents() {
             A list of all documents created and shared within the organization.
           </p>
         </div>
-        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none"></div>
+        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <Link href="/documents/create">
+            <Button>Create Document</Button>
+          </Link>
+        </div>
       </div>
 
       <Show as="div" className="mt-8">

@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { patch } from '@/lib/fetch'
 import { toast } from 'sonner'
+import { useUser } from '@/providers/user.provider'
 
 const passwordSchema = z
   .string()
@@ -28,6 +29,7 @@ const passwordSchema = z
 
 
 export function Password() {
+  const {refetchUser} = useUser()
   const formSchema = z
     .object({
       old_password: z.string(),
@@ -58,6 +60,7 @@ export function Password() {
     onSuccess: () => {
       form.reset()
       toast.success("Password changed successfully")
+      refetchUser()
     },
     onError: (error) => {
       toast.error(error.message)

@@ -20,6 +20,7 @@ import {
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
+import { DepartmentUsers } from '@/app/(root)/departments/_components/department-users'
 
 interface DepartmentTableProps {
   data: any
@@ -43,8 +44,6 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
     }
     return null
   }
-
-  // handle empty state here please
 
   return (
     <div>
@@ -104,7 +103,12 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-auto max-w-56">
-                    <DropdownMenuItem>View Users</DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                    }}>
+                      <DepartmentUsers name={d.name} id={d.id} />
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

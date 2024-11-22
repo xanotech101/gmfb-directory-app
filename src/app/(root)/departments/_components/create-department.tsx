@@ -16,9 +16,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { get, post } from '@/lib/fetch'
-import { toast } from 'sonner'
 import { useDebounce } from 'use-debounce'
 import { MultiSelect } from '@/components/ui/multi-select'
+import { toast } from '@/hooks/use-toast'
 
 
 const formSchema = z.object({
@@ -55,13 +55,19 @@ export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
         isClient: true,
         body: { name, hod_id },
       }),
-    onSuccess: (data: any) => {
-      toast.success(data?.message ?? 'Department created successfully.')
+    onSuccess: () => {
+      toast({
+        title: 'Department created successfully.',
+        variant: 'default',
+      })
       setOpen(false)
       onSuccess?.()
     },
-    onError: () => {
-      toast.error('Unable to create department')
+    onError: (error) => {
+      toast({
+        title: error?.message ?? 'Department created successfully.',
+        variant: 'destructive',
+      })
     },
   })
 

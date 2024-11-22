@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, ReactNode, useContext } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { QueryObserverResult, RefetchOptions, useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 
 interface UserContextValue {
   user: any
+  refetchUser: (options?: RefetchOptions) => Promise<QueryObserverResult<any, Error>>
 }
 
 const UserContext = createContext<UserContextValue>({
   user: null,
+  refetchUser: () => Promise.resolve({} as any),
 })
 
 export const UserContextProvider = ({children}: {children: ReactNode}) => {
-  const { data } = useQuery<any>({
+  const { data, refetch: refetchUser } = useQuery<any>({
     queryKey: ['profile'],
     queryFn: async () =>
       get("/api/users/profile", {
@@ -21,7 +23,7 @@ export const UserContextProvider = ({children}: {children: ReactNode}) => {
   })
 
   return (
-    <UserContext.Provider value={{user: data?.data}}>
+    <UserContext.Provider value={{user: data?.data, refetchUser}}>
       {children}
     </UserContext.Provider>
   )

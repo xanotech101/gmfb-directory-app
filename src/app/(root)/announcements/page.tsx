@@ -41,7 +41,7 @@ export default function Announcements() {
             </div>
             <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
               <Link href="/announcements/create">
-                <Button className="bg-[#891C69] hover:bg-[#974D7B]">Create Announcement</Button>
+                <Button>Create Announcement</Button>
               </Link>
             </div>
           </div>

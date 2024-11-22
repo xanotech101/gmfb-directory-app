@@ -24,6 +24,7 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
   async function <T>(endpoint: string, params?: RequestParams): Promise<T> {
     const { body, options, isClient } = params ?? {}
     const url = isClient ? endpoint : `${BASE_URL}${endpoint}`
+    console.log(url, 'url')
     const mergedOptions = mergeOptions({
       ...options,
       method,
