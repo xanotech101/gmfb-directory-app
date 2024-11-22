@@ -18,7 +18,7 @@ import { post } from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
 
 const userNavigation = [
-  { name: 'Your profile', href: '#'},
+  { name: 'Your profile', href: 'settings' },
 ]
 
 export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void }) => {
