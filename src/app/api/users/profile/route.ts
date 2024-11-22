@@ -7,7 +7,7 @@ export async function GET() {
   const {accessToken} = await getTokens()
   const response = await get<any>(`/api/v1/users/profile`, {
     options: {
-      cache: 'no-cache',
+      cache: 'no-store',
       headers: {
         Authorization: `Bearer ${accessToken}`
       }

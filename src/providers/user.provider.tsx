@@ -20,6 +20,7 @@ export const UserContextProvider = ({children}: {children: ReactNode}) => {
       get("/api/users/profile", {
         isClient: true,
       }),
+    staleTime: 0,
   })
 
   return (

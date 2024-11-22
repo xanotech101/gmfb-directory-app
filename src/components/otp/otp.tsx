@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '../ui/button'
 import { useMutation } from '@tanstack/react-query'
@@ -16,6 +9,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
+import { useUser } from '@/providers/user.provider'
 
 const otpSchema = z.object({
   otp: z.string().min(6, { message: 'OTP must be 6 digits.' }),
@@ -28,6 +22,7 @@ interface OTPProps {
 
 export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
   const router = useRouter()
+  const { refetchUser } = useUser()
 
   const form = useForm<z.infer<typeof otpSchema>>({
     resolver: zodResolver(otpSchema),
@@ -48,6 +43,7 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
         body: { email, password, otp },
       }),
     onSuccess: () => {
+      refetchUser()
       router.push('/dashboard')
     },
     onError: (error) => {

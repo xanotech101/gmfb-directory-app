@@ -52,8 +52,8 @@ export default function Announcements() {
         <Show.If condition={isFetching}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
-        <Show.If condition={!!data} className="mt-8 grid grid-cols-3 gap-4">
-          <Show.If condition={data?.data?.items?.length === 0} className="col-span-3 bg-white">
+        <Show.If condition={!!data}>
+          <Show.If condition={data?.data?.items?.length === 0} className="bg-white">
             <EmptyState
               icon={Package}
               title="No Announcements"
@@ -63,7 +63,7 @@ export default function Announcements() {
               className="w-full"
             />
           </Show.If>
-          <Show.Else>
+          <Show.Else className="mt-8 grid grid-cols-3 gap-4">
             {(data?.data?.items ?? []).map((item: any, index: number) => (
               <AnnouncementCard key={index} announcement={item}  />
             ))}
