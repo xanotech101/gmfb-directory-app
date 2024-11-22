@@ -38,11 +38,7 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
 
   const login = useMutation({
     mutationKey: ['login'],
-    mutationFn: async ({
-      email,
-      password,
-      otp,
-    }: {
+    mutationFn: async ({ email, password, otp, }: {
       email: string
       password: string
       otp: string

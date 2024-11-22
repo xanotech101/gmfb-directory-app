@@ -2,6 +2,7 @@
 import { get, post } from '@/lib/fetch'
 import { NextResponse } from 'next/server'
 import { getTokens } from '@/lib/get-tokens'
+import { handleServerError } from '@/lib/handle-server-error'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -23,16 +24,18 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json()
-
-  const {accessToken} = await getTokens()
-  const response = await post<any>('/api/v1/users/invite', {
-    body,
-    options: {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
+  try {
+    const { accessToken } = await getTokens()
+    const response = await post<any>('/api/v1/users/invite', {
+      body,
+      options: {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       }
-    }
-  })
-
-  return NextResponse.json(response)
+    })
+    return NextResponse.json(response)
+  }catch(error) {
+    return handleServerError(error)
+  }
 }

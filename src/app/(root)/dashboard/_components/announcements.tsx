@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
@@ -9,6 +8,9 @@ import { getRandomColor } from '@/lib/random-color'
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { Avatar } from '@/components/ui/avatar'
 import { parseISO, formatDistanceToNow } from 'date-fns'
+import { Package } from 'lucide-react'
+import { EmptyState } from '@/components/ui/empty-state'
+import React from 'react'
 
 export const Announcements = () => {
   const { data } = useQuery<any>({
@@ -24,7 +26,6 @@ export const Announcements = () => {
       <CardHeader>
         <CardTitle className="flex flex-row justify-between items-center">
           Latest Announcements
-          <Button>View All</Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -66,7 +67,19 @@ export const Announcements = () => {
             </li>
           ))}
         </ul>
+        <EmptyState
+          icon={Package}
+          title="No Announcements"
+          description="Get started by creating a new announcement."
+          className="w-full"
+        />
       </CardContent>
+
+      {data && data?.data?.items?.length > 0 && (
+        <CardFooter>
+          <Button className="w-full" variant="outline">View All</Button>
+        </CardFooter>
+      )}
     </Card>
   )
 }

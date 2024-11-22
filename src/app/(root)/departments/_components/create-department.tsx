@@ -107,7 +107,7 @@ export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
               name="hod"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Department</FormLabel>
+                  <FormLabel>Hod</FormLabel>
                   <FormControl>
                     <MultiSelect
                       options={users.data?.data?.items?.map((u: any) => ({
