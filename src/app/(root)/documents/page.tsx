@@ -7,21 +7,22 @@ import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
-import DocumentCard from './_components/document-card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { DocumentsTable } from './_components/documents-table'
 
 export default function Documents() {
-  const [currentPage] = useQueryState('page', {
+  const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
   })
+
   const { isFetching, data } = useQuery<any>({
     queryKey: ['documents', currentPage],
     queryFn: async () =>
-      get(`/api/documents?page=${currentPage}&limit=${50}`, {
+      get(`/api/documents?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
   })
@@ -55,10 +56,15 @@ export default function Documents() {
                 className="w-full"
               />
             </Show.If>
-            <Show.Else className="grid grid-cols-3 gap-4">
-              {(data?.data?.items ?? []).map((item: any, index: number) => (
-                <DocumentCard key={index} doc={item} />
-              ))}
+            <Show.Else as={Fragment}>
+              <DocumentsTable
+                data={data?.data?.items ?? []}
+                pagination={{
+                  currentPage,
+                  totalItems: data?.data?.meta?.total ?? 0,
+                  handlePageChange: setCurrentPage,
+                }}
+              />
             </Show.Else>
           </Show>
         </Show.If>

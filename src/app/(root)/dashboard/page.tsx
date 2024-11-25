@@ -12,12 +12,12 @@ export default function Dashboard() {
   return (
     <>
       {user?.is_default_password && (
-        <Alert className="mb-12 bg-orange-50 border-orange-100 border-2 p-4 px-6">
+        <Alert className="mb-12 bg-brand/5 border-brand/10 border-2 p-4 px-6">
           <div className="flex">
-            <ExclamationTriangleIcon className="size-7 text-orange-500 mt-1" />
+            <ExclamationTriangleIcon className="size-8 text-[#891C69] mt-1" />
             <div className="ml-5">
-              <p className="text-lg font-semibold">Update your password</p>
-              <p className="mt-1 text-gray-600 text-base">You are yet to change your password form the default
+              <p className="text-base font-semibold">Update your password</p>
+              <p className="mt-1 text-gray-600 text-[14px]">You are yet to change your password form the default
                 password
               </p>
               <Link href="/settings">

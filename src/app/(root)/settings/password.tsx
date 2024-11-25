@@ -1,22 +1,16 @@
-"use client"
+'use client'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { patch } from '@/lib/fetch'
-import { toast } from 'sonner'
 import { useUser } from '@/providers/user.provider'
+import { toast } from '@/hooks/use-toast'
 
 const passwordSchema = z
   .string()
@@ -59,11 +53,18 @@ export function Password() {
       }),
     onSuccess: () => {
       form.reset()
-      toast.success("Password changed successfully")
+      toast({
+        title: 'Success',
+        description: 'Password updated successfully',
+      })
       refetchUser()
     },
     onError: (error) => {
-      toast.error(error.message)
+      toast({
+        title: 'Error',
+        variant: 'destructive',
+        description: error.message ?? 'An error occurred',
+      })
     },
   })
 

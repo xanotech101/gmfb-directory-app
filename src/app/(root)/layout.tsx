@@ -1,6 +1,5 @@
 'use client'
 
-import { Toaster } from '@/components/ui/toaster'
 import { ReactNode, useState } from 'react'
 import {
   BellAlertIcon,
@@ -64,7 +63,6 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
         <main className="py-10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
-        <Toaster />
       </div>
     </div>
   )

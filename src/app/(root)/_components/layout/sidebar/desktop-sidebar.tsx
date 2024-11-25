@@ -27,10 +27,11 @@ export const DesktopSidebar = ({
       <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
         <div className="flex h-16 shrink-0 items-center justify-start">
           <Image
-            src="https://groomingmfb.com/wp-content/uploads/2021/10/GMFB-Logo.png"
+            className="object-cover"
+            src="/logo.png"
             alt="Grooming Microfinance Bank"
-            height={120}
-            width={120}
+            height={70}
+            width={130}
             priority
           />
         </div>
@@ -66,7 +67,7 @@ export const DesktopSidebar = ({
             <li className="mt-auto">
               <button
                 onClick={() => post('/api/auth/logout', {isClient: true}).finally(() => router.push('/login'))}
-                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-[#891C69]"
+                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-brand w-full"
               >
                 <LogOut
                   aria-hidden="true"

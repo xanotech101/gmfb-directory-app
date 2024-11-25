@@ -2,29 +2,16 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { OTP } from '@/components/otp/otp'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
-import { toast } from 'sonner'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import Image from 'next/image'
+import { toast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
   password: z.string().min(8, {
@@ -36,8 +23,8 @@ const formSchema = z.object({
 })
 
 export default function Login() {
-  const [showOTP, setShowOTP] = useState<boolean>(false)
-  const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false)
+  const [showOTP, setShowOTP] = useState(false)
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,9 +45,14 @@ export default function Login() {
       setShowOTP(true)
     },
     onError: (error) => {
-      toast.error(error.message)
+      toast({
+        title: 'Error',
+        variant: 'destructive',
+        description: error.message ?? 'An error occurred',
+      })
     },
   })
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     generateOTP.mutate(values.email)
   }

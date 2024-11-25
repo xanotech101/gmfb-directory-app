@@ -20,7 +20,7 @@ export default function Departments() {
   const { isFetching, data, refetch } = useQuery<any>({
     queryKey: ['departments', currentPage],
     queryFn: async () =>
-      get(`/api/departments?page=${currentPage}&limit=${5}`, {
+      get(`/api/departments?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
   })
@@ -36,29 +36,29 @@ export default function Departments() {
           <CreateDepartment onSuccess={refetch} />
         </div>
       </div>
-      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+      <Show as="div" className="mt-8 flow-root">
         <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
         <Show.If condition={data} as={Fragment}>
           <Show as={Fragment}>
-            <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
-              <EmptyState
-                icon={Package}
-                title="No Documents"
-                description="Get started by creating a new document."
-                className="w-full"
-              />
-            </Show.If>
-            <Show.Else as={Fragment}>
+            <Show.If condition={data?.data?.items?.length > 0} as={Fragment}>
               <DepartmentTable
                 data={data?.data?.items ?? []}
                 pagination={{
                   currentPage,
                   totalItems: data?.data?.meta?.total ?? 0,
-                  itemsPerPage: 5,
+                  itemsPerPage: 25,
                   handlePageChange: (page) => setCurrentPage(page),
                 }}
+              />
+            </Show.If>
+            <Show.Else as={Fragment}>
+              <EmptyState
+                icon={Package}
+                title="No Documents"
+                description="Get started by creating a new document."
+                className="w-full"
               />
             </Show.Else>
           </Show>

@@ -1,18 +1,20 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '../ui/button'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
-import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { useUser } from '@/providers/user.provider'
+import { Input } from '@/components/ui/input'
+import { toast } from '@/hooks/use-toast'
+import { FC } from 'react'
+
 
 const otpSchema = z.object({
-  otp: z.string().min(6, { message: 'OTP must be 6 digits.' }),
+  otp: z.string().min(6, { message: 'OTP must be 6 digits.' }).max(6, { message: 'OTP must be 6 digits.' }),
 })
 interface OTPProps {
   show: boolean
@@ -20,7 +22,7 @@ interface OTPProps {
   formValues: { email: string; password: string }
 }
 
-export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
+export const OTP: FC<OTPProps> = ({ setShow, show, formValues }) => {
   const router = useRouter()
   const { refetchUser } = useUser()
 
@@ -47,8 +49,15 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
       router.push('/dashboard')
     },
     onError: (error) => {
-      toast.error(error.message)
+      toast({
+        title: 'Error',
+        variant: 'destructive',
+        description: error.message ?? 'An error occurred',
+      })
     },
+    onSettled: () => {
+      setShow(false)
+    }
   })
 
   const onSubmit = async (values: z.infer<typeof otpSchema>) => {
@@ -62,7 +71,7 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
 
   return (
     <Dialog open={show} onOpenChange={setShow}>
-      <DialogContent className="sm:max-w-[425px] bg-[#fff]">
+      <DialogContent className="sm:max-w-[425px] bg-white" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
             Enter OTP
@@ -80,38 +89,18 @@ export const OTP: React.FC<OTPProps> = ({ setShow, show, formValues }) => {
               name="otp"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Enter OTP Code</FormLabel>
                   <FormControl>
-                    <div className="flex items-center justify-center w-full">
-                      <InputOTP
-                        maxLength={6}
-                        value={field.value}
-                        onChange={(otp: string) => field.onChange(otp)}
-                      >
-                        <InputOTPGroup>
-                          {new Array(6).fill(0).map((_, index) => (
-                            <InputOTPSlot key={index} index={index} />
-                          ))}
-                        </InputOTPGroup>
-                      </InputOTP>
-                    </div>
+                    <Input placeholder="..." {...field} />
                   </FormControl>
-                  {form.formState.errors.otp && (
-                    <FormMessage>{form.formState.errors.otp?.message}</FormMessage>
-                  )}
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter className="mt-6">
               <Button
-                type="button"
-                onClick={() => setShow(false)}
-                className="w-full bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
-              >
-                Cancel
-              </Button>
-              <Button
                 type="submit"
-                className="w-full bg-[#891C69] hover:bg-[#974D7B] focus:outline-none focus:ring-2 focus:ring-[#974D7B]"
+                className="w-full"
                 isLoading={login.status === 'pending'}
               >
                 Verify OTP

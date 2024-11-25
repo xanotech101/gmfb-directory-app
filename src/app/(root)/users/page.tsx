@@ -8,6 +8,9 @@ import { get } from '@/lib/fetch'
 import { useQueryState } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
+import React, { Fragment } from 'react'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Package } from 'lucide-react'
 
 export default function Users() {
   const [currentPage, setCurrentPage] = useQueryState('page', {
@@ -18,7 +21,7 @@ export default function Users() {
   const { isFetching, data, refetch } = useQuery<any>({
     queryKey: ['users', currentPage],
     queryFn: async () =>
-      get(`/api/users?page=${currentPage}&limit=${50}`, {
+      get(`/api/users?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
   })
@@ -34,28 +37,40 @@ export default function Users() {
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <InviteUser onCompleted={() => {
-              if (currentPage === 1) {
-                return refetch()
-              } else {
-                return setCurrentPage(1)
-              }
-            }}
+            if (currentPage === 1) {
+              return refetch()
+            } else {
+              return setCurrentPage(1)
+            }
+          }}
           />
         </div>
       </div>
-      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-        <Show.If condition={isFetching}>
+      <Show as="div" className="mt-8">
+        <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
-        <Show.If condition={data}>
-          <UserTable
-            data={data?.data?.items ?? []}
-            pagination={{
-              currentPage,
-              totalItems: data?.data?.meta?.total ?? 0,
-              handlePageChange: setCurrentPage,
-            }}
-          />
+        <Show.If condition={data} as={Fragment}>
+          <Show as={Fragment}>
+            <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
+              <EmptyState
+                icon={Package}
+                title="No Users"
+                description="Get started by creating a new document."
+                className="w-full"
+              />
+            </Show.If>
+            <Show.Else as={Fragment}>
+              <UserTable
+                data={data?.data?.items ?? []}
+                pagination={{
+                  currentPage,
+                  totalItems: data?.data?.meta?.total ?? 0,
+                  handlePageChange: setCurrentPage,
+                }}
+              />
+            </Show.Else>
+          </Show>
         </Show.If>
       </Show>
     </>

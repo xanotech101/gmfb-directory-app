@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import React from 'react'
+import React, { Fragment } from 'react'
 import Link from 'next/link'
-import { AnnouncementCard } from './_components/announcement-card'
 import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
@@ -12,18 +11,19 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { AnnouncementsTable } from './_components/announcement-table'
 
 
 export default function Announcements() {
   const router = useRouter()
-  const [currentPage] = useQueryState('page', {
+  const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
   })
   const { isFetching, data } = useQuery<any>({
     queryKey: ['announcements', currentPage],
     queryFn: async () =>
-      get(`/api/announcements?page=${currentPage}&limit=${12}`, {
+      get(`/api/announcements?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
   })
@@ -49,12 +49,22 @@ export default function Announcements() {
       </div>
 
       <Show as="div" className="mt-8">
-        <Show.If condition={isFetching}>
+        <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
-        <Show.If condition={data}>
-          <Show>
-            <Show.If condition={data?.data?.items?.length === 0} className="bg-white">
+        <Show.If condition={data} as={Fragment}>
+          <Show as={Fragment}>
+            <Show.If condition={data?.data?.items?.length > 0} as={Fragment}>
+              <AnnouncementsTable
+                data={data?.data?.items ?? []}
+                pagination={{
+                  currentPage,
+                  totalItems: data?.data?.meta?.total ?? 0,
+                  handlePageChange: setCurrentPage,
+                }}
+              />
+            </Show.If>
+            <Show.Else className="bg-white">
               <EmptyState
                 icon={Package}
                 title="No Announcements"
@@ -63,11 +73,6 @@ export default function Announcements() {
                 onAction={() => router.push('/announcements/create')}
                 className="w-full"
               />
-            </Show.If>
-            <Show.Else className="mt-8 grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {(data?.data?.items ?? []).map((item: any, index: number) => (
-                <AnnouncementCard key={index} announcement={item} />
-              ))}
             </Show.Else>
           </Show>
         </Show.If>

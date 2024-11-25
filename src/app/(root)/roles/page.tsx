@@ -1,7 +1,7 @@
 'use client'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react'
+import React, { Fragment } from 'react'
 import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,8 +24,7 @@ export default function Roles() {
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">Roles</h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the roles in your account including their type, number of users,
-            permissions and date added.
+            A list of all the roles
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -34,14 +33,12 @@ export default function Roles() {
           />
         </div>
       </div>
-      <Show as="div" className="mt-8 flow-root bg-white p-4 border border-gray-200 rounded">
-        <Show.If condition={isFetching}>
+      <Show as="div" className="mt-8 flow-root">
+        <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
         <Show.If condition={data}>
-          <RoleTable
-            data={data?.data ?? []}
-          />
+          <RoleTable data={data?.data ?? []} />
         </Show.If>
       </Show>
     </>

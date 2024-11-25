@@ -8,11 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
+} from '@/components/ui/dialog'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 import { getRandomColor } from '@/lib/random-color'
 
 const randomIndex = Math.floor(Math.random())
@@ -36,7 +36,7 @@ export function UserDetailsModal({ user }: { user: any }) {
             Detailed information about {user.first_name} {user.last_name}
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="max-h-[60vh] pr-4">
+        <ScrollArea className="max-h-[60vh] pr-4 [&_.scrollbar]:hidden">
           <div className="flex flex-col items-center space-y-4 pb-4">
             <Avatar className="size-20" style={{
               border: user?.avatar ? 'none' : `2px solid ${getRandomColor(randomIndex).border}`,
