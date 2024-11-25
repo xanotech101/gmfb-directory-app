@@ -8,23 +8,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -32,7 +19,7 @@ import { get, post } from '@/lib/fetch'
 import React, { useState } from 'react'
 import { useDebounce } from 'use-debounce'
 import { MultiSelect } from '@/components/ui/multi-select'
-import { toast } from 'sonner'
+import { toast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
   first_name: z.string().min(1, {
@@ -103,12 +90,18 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
     onSuccess: () => {
       onSuccess?.()
       setOpen(false)
-      toast.success('Invite sent successfully.')
+      toast({
+        title: 'Success',
+        description: 'Invite sent successfully.',
+      })
     },
     onError: (error) => {
-      console.log(error)
       onError?.()
-      toast.error(error.message)
+      toast({
+        title: 'Success',
+        variant: "destructive",
+        description: 'Invite sent successfully.',
+      })
     },
     onSettled: () => {
       onCompleted?.()
@@ -182,7 +175,7 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
                   <FormControl>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-full">
-                        <SelectValue className="text-sm" placeholder="Select Gender" />
+                        <SelectValue className="text-sm" placeholder="Select Role" />
                       </SelectTrigger>
                       <SelectContent>
                         {roles?.data?.data?.map((r: any) => (
