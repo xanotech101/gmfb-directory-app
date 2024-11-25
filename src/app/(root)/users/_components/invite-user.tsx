@@ -16,10 +16,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { get, post } from '@/lib/fetch'
-import React, { useState } from 'react'
-import { useDebounce } from 'use-debounce'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/hooks/use-toast'
+import { useDepartmentSearch } from '@/app/(root)/hooks/use-department-search'
+import { useState } from 'react'
 
 const formSchema = z.object({
   first_name: z.string().min(1, {
@@ -47,7 +47,8 @@ interface InviteUserProps {
 }
 
 export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
+  useDepartmentSearch()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,8 +60,7 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
       departments: [],
     },
   })
-
-  // todo: move to a re-useable hook as it is used somewhere else also
+  
   const roles = useQuery<any>({
     queryKey: ['roles'],
     queryFn: async () =>
@@ -69,16 +69,7 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
       }),
   })
 
-  // todo: move to a re-useable hook
-  const [deptSearchString, setDeptSearchString] = useState('')
-  const [debouncedDeptSearchString] = useDebounce(deptSearchString, 500)
-  const departments = useQuery<any>({
-    queryKey: ['search-departments', debouncedDeptSearchString],
-    queryFn: async () =>
-      get(`/api/departments?search=${debouncedDeptSearchString}&limit=5`, {
-        isClient: true,
-      }),
-  })
+  const { deptSearchString, setDeptSearchString,  departments} = useDepartmentSearch()
 
   const inviteUser = useMutation({
     mutationKey: ['invite-user'],

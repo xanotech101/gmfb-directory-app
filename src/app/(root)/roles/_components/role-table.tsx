@@ -47,6 +47,7 @@ export const RoleTable = ({ data }: RoleTableProps) => {
                   <DropdownMenuContent className="w-auto max-w-56">
                     <DropdownMenuItem
                       className={cn(
+                        'hidden',
                         r.is_default && 'opacity-50 cursor-not-allowed',
                       )}
                       onClick={(e) => {

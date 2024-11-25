@@ -4,11 +4,8 @@ import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import DOMPurify from 'dompurify'
-import { getRandomColor } from '@/lib/random-color'
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { Avatar } from '@/components/ui/avatar'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import { Package } from 'lucide-react'
+import { BuildingIcon, CalendarIcon, FileIcon, Package, UsersIcon } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
 import React, { Fragment } from 'react'
 import { Show } from 'react-smart-conditional'
@@ -23,17 +20,25 @@ export const Announcements = () => {
       }),
   })
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle className="flex flex-row justify-between items-center">
           Latest Announcements
         </CardTitle>
       </CardHeader>
-      <Show as={CardContent}>
+      <Show as={CardContent} className="relative flex-grow">
         <Show.If condition={data} as="ul" role="list" className="divide-y divide-gray-100">
           {data?.data?.items?.slice(0, 4)?.map((a: any) => (
-            <li key={a.id} className="flex gap-x-4 py-5">
+            <li key={a.id} className="gap-x-4 py-5">
               <div className="flex-auto">
                 <div className="flex items-baseline justify-between gap-x-4">
                   <p className="text-sm/6 font-semibold text-gray-900">{a.subject}</p>
@@ -44,27 +49,24 @@ export const Announcements = () => {
                 </div>
                 <div className="mt-1 line-clamp-2 text-sm/6 text-gray-600"
                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(a?.body ?? '') }} />
-                <div className="space-x-2 mt-4 items-center hidden">
-                  <Avatar
-                    className="size-8 flex-shrink-0 border-2 text-xs"
-                    style={{
-                      border: a.created_by_user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
-                    }}
-                  >
-                    <AvatarImage src={a?.created_by_user?.avatar} alt="user's avatar" />
-                    <AvatarFallback
-                      className="h-full w-full flex justify-center items-center"
-                      style={{
-                        backgroundColor: getRandomColor(0).background,
-                        color: getRandomColor(0).text,
-                      }}
-                    >
-                      {a?.created_by_user.first_name?.[0]}
-                      {a?.created_by_user.last_name?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm">{a?.created_by_user.first_name} {a?.created_by_user.last_name}</span>
-                </div>
+              </div>
+              <div className="flex items-center space-x-4 mt-2">
+                <span className="flex items-center text-sm text-muted-foreground">
+                  <CalendarIcon className="mr-1 h-4 w-4" />
+                  {formatDate(a.created_at)}
+                </span>
+                <span className="flex items-center text-sm text-muted-foreground">
+                  <UsersIcon className="mr-1 h-4 w-4" />
+                  {a.users?.length} users
+                </span>
+                <span className="flex items-center text-sm text-muted-foreground">
+                  <FileIcon className="mr-1 h-4 w-4" />
+                  {a.files?.length} files
+                </span>
+                <span className="flex items-center text-sm text-muted-foreground">
+                  <BuildingIcon className="mr-1 h-4 w-4" />
+                  {a.departments?.length} departments
+                </span>
               </div>
             </li>
           ))}
@@ -80,7 +82,7 @@ export const Announcements = () => {
 
 
       {data && data?.data?.items?.length > 0 && (
-        <CardFooter>
+        <CardFooter className="mt-auto">
           <Link href="/announcements" className="w-full">
             <Button className="w-full" variant="outline">View All</Button>
           </Link>

@@ -61,8 +61,8 @@ export function DocumentDetails({ id }: { id: string }) {
             <ScrollArea className="h-[calc(100vh-180px)] mt-6 pr-4">
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 flex items-center">
-                    <UserIcon className="mr-2 h-5 w-5" /> Recipients
+                  <h3 className="text-[14px] font-semibold mb-2 flex items-center">
+                    <UserIcon className="mr-2 h-5 w-5" /> Users
                   </h3>
                   <p className="text-muted-foreground">
                     {document.users?.map((user: any) => `${user.first_name} ${user.last_name}`).join(', ')}
@@ -70,7 +70,7 @@ export function DocumentDetails({ id }: { id: string }) {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 flex items-center text-[14px]">
+                  <h3 className="font-semibold mb-2 flex items-center text-[14px]">
                     <BuildingIcon className="mr-2 h-5 w-5" /> Departments
                   </h3>
                   <div className="flex flex-wrap gap-2">

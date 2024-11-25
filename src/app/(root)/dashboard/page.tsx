@@ -6,6 +6,7 @@ import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import { Documents } from './_components/documents'
 
 export default function Dashboard() {
   const { user } = useUser()
@@ -32,8 +33,7 @@ export default function Dashboard() {
       <Analytics />
       <div className="grid grid-cols-1 md:grid-cols-2 flex-grow mt-8 gap-4">
         <Announcements />
-        <Announcements />
-        {/*<Documents />*/}
+        <Documents />
       </div>
     </>
   )
