@@ -63,8 +63,7 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                       </div>
                       <div className="ml-2">
                         <div className="font-medium text-gray-900">
-                          {d.hod?.first_name}
-                          {d.hod?.last_name}
+                          {d.hod?.first_name} {d.hod?.last_name}
                         </div>
                         <div className="mt-0 text-gray-500">{d.hod.email}</div>
                       </div>

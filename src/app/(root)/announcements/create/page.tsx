@@ -18,6 +18,7 @@ import { post } from '@/lib/fetch'
 
 import 'react-quill/dist/quill.snow.css'
 import { toast } from '@/hooks/use-toast'
+import { useUser } from '@/providers/user.provider'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -28,11 +29,18 @@ const formSchema = z.object({
   body: z.string().min(2, {
     message: 'Body must be at least 2 characters.',
   }),
-  departments: z.array(z.string().min(1)).optional().default([]),
-  users: z.array(z.string().min(1)).optional().default([]),
+  departments: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+  })).min(1).optional().default([]),
+  users: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+  })).min(1).optional().default([]),
 })
 
 export default function CreateAnnouncement() {
+  const { user } = useUser()
   const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,7 +57,12 @@ export default function CreateAnnouncement() {
 
   const createAnnouncement = useMutation({
     mutationKey: ['create-department'],
-    mutationFn: async (payload: z.infer<typeof formSchema>) =>
+    mutationFn: async (payload: {
+      subject: string
+      body: string
+      departments: string[]
+      users: string[]
+    }) =>
       post(`/api/announcements`, {
         isClient: true,
         body: {
@@ -76,7 +89,11 @@ export default function CreateAnnouncement() {
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createAnnouncement.mutate(values)
+    createAnnouncement.mutate({
+      ...values,
+      departments: values.departments.map((d) => d.value),
+      users: values.users.map((u) => u.value),
+    })
   }
 
   return (
@@ -162,7 +179,7 @@ export default function CreateAnnouncement() {
                   <FormLabel>Users</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={users.data?.data?.items?.map((u: any) => ({
+                      options={users.data?.data?.items?.filter((u: any) => u.id !== user?.id)?.map((u: any) => ({
                         label: `${u.first_name} ${u.last_name}`,
                         value: u.id,
                       })) ?? []}

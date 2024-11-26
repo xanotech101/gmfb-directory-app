@@ -14,39 +14,19 @@ import { Pagination, PaginationProps, useFooterText } from '@/components/paginat
 import { Badge } from '@/components/ui/badge'
 import { getRandomColor } from '@/lib/random-color'
 import { UserDetailsModal } from './user-details-modal'
-import { useMutation } from '@tanstack/react-query'
-import { patch } from '@/lib/fetch'
-import { toast } from '@/hooks/use-toast'
+import { UseMutationResult } from '@tanstack/react-query'
+import { ManageDepartments } from '@/app/(root)/users/_components/manage-departments'
 
 interface UserTableProps {
   data: any
   pagination: PaginationProps
+  resetPassword: UseMutationResult<any, unknown, string, unknown>
+  manageDepartments: UseMutationResult<any, unknown, any, unknown>
 }
 
-export const UserTable = ({ data, pagination }: UserTableProps) => {
+export const UserTable = ({ data, pagination, resetPassword, manageDepartments }: UserTableProps) => {
   const { currentPage, totalItems, handlePageChange, itemsPerPage=25 } = pagination
   const getFooterText = useFooterText(currentPage, totalItems, itemsPerPage)
-
-  const resetPassword = useMutation({
-    mutationKey: ['reset-password'],
-    mutationFn: async (userId: string) =>
-      patch(`/api/users/${userId}/reset-password`, {
-        isClient: true,
-      }),
-    onSuccess: () => {
-      toast({
-        title: 'Success',
-        description: 'Password reset link sent to user',
-      })
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        variant: 'destructive',
-        description: error.message ?? 'An error occurred',
-      })
-    },
-  })
 
   return (
     <>
@@ -123,15 +103,21 @@ export const UserTable = ({ data, pagination }: UserTableProps) => {
                         <EllipsisVertical size={16} className="flex-shrink-0" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-auto max-w-56">
-                      <DropdownMenuItem onClick={(e) => {
+                    <DropdownMenuContent className="w-auto max-w-56 text-[13px]">
+                      <DropdownMenuItem className="text-[13px]" onClick={(e) => {
                         e.stopPropagation()
                         e.preventDefault()
                       }}>
                         <UserDetailsModal user={user} />
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="text-[13px]">
                         <button onClick={() => resetPassword.mutate(user.id)}>Reset Password</button>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-[13px]" onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                      }}>
+                      <ManageDepartments user={user} manageDepartments={manageDepartments} />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

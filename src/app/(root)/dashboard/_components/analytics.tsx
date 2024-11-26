@@ -7,8 +7,11 @@ import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
+import { useUser } from '@/providers/user.provider'
 
 export const Analytics = () => {
+  const {user} = useUser()
+  console.log(user)
   const { data, isFetching } = useQuery<any>({
     queryKey: ['analytics'],
     queryFn: async () =>
@@ -27,7 +30,7 @@ export const Analytics = () => {
       <Show.If condition={data} className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0">
         <Metric label="Departments" href="departments" value={data?.data?.departments} Icon={UsersIcon} />
         <Metric label="Documents" href="documents" value={data?.data?.documents ?? 0} Icon={DocumentDuplicateIcon} />
-        <Metric label="Users" href="users" value={data?.data?.users} Icon={UserGroupIcon} />
+        {user?.meta?.is_admin && <Metric label="Users" href="users" value={data?.data?.users} Icon={UserGroupIcon} />}
         <Metric label="Announcements" href="announcements" value={data?.data?.announcements} Icon={BellAlertIcon} />
       </Show.If>
     </Show>

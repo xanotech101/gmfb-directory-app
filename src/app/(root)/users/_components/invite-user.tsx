@@ -37,7 +37,10 @@ const formSchema = z.object({
   gender: z.string().min(1, {
     message: 'Please select your gender.',
   }),
-  departments: z.array(z.string()).optional().default([]),
+  departments: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+  })).optional().default([]),
 })
 
 interface InviteUserProps {
@@ -46,9 +49,8 @@ interface InviteUserProps {
   onCompleted?: (message?: string) => void,
 }
 
-export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) => {
+export const InviteUser = ({ onSuccess, onError, onCompleted }: InviteUserProps) => {
   const [open, setOpen] = useState(false)
-  useDepartmentSearch()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,20 +62,20 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
       departments: [],
     },
   })
-  
+
   const roles = useQuery<any>({
     queryKey: ['roles'],
     queryFn: async () =>
-      get("/api/roles", {
+      get('/api/roles', {
         isClient: true,
       }),
   })
 
-  const { deptSearchString, setDeptSearchString,  departments} = useDepartmentSearch()
+  const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
 
   const inviteUser = useMutation({
     mutationKey: ['invite-user'],
-    mutationFn: async (payload: z.infer<typeof formSchema>) =>
+    mutationFn: async (payload: any) =>
       post(`/api/users`, {
         isClient: true,
         body: payload,
@@ -89,17 +91,20 @@ export const InviteUser = ({onSuccess, onError, onCompleted}: InviteUserProps) =
     onError: (error) => {
       onError?.()
       toast({
-        title: 'Success',
-        variant: "destructive",
+        title: 'Error',
+        variant: 'destructive',
         description: 'Invite sent successfully.',
       })
     },
     onSettled: () => {
       onCompleted?.()
-    }
+    },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => inviteUser.mutate(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => inviteUser.mutate({
+    ...values,
+    departments: values.departments.map(({ value }) => value),
+  })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

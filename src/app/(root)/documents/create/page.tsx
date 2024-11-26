@@ -16,8 +16,9 @@ import { toast } from '@/hooks/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
+import { useUser } from '@/providers/user.provider'
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 10MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 
 const formSchema = z.object({
   subject: z.string().min(1, 'Subject is required'),
@@ -26,13 +27,20 @@ const formSchema = z.object({
       .refine((file) => file instanceof File, 'Please select a file')
       .refine((file) => file.size <= MAX_FILE_SIZE, `File size should be less than 5MB`),
   })).min(1, 'At least one file is required'),
-  departments: z.array(z.string().min(1)).optional().default([]),
-  users: z.array(z.string().min(1)).optional().default([]),
+  departments: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+  })).min(1).optional().default([]),
+  users: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+  })).min(1).optional().default([]),
 })
 
 type FormValues = z.infer<typeof formSchema>
 
 export default function CreateDocument() {
+  const { user } = useUser()
   const [isUploadingFile, setIsUploadingFile] = React.useState(false)
   const router = useRouter()
   const form = useForm<FormValues>({
@@ -50,8 +58,8 @@ export default function CreateDocument() {
     control: form.control,
   })
 
-  const { deptSearchString, setDeptSearchString,  departments} = useDepartmentSearch()
-  const { userSearchString, setUserSearchString, users} = useUserSearch()
+  const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
+  const { userSearchString, setUserSearchString, users } = useUserSearch()
 
   const createDocument = useMutation({
     mutationKey: ['create-department'],
@@ -94,7 +102,7 @@ export default function CreateDocument() {
         toast({
           title: 'Failed to upload files',
           duration: 5000,
-          variant: 'destructive'
+          variant: 'destructive',
         })
         throw new Error('Failed to upload files')
       }
@@ -115,6 +123,8 @@ export default function CreateDocument() {
     createDocument.mutate({
       ...data,
       status: 'published',
+      users: data.users.map(({ value }) => value),
+      departments: data.departments.map(({ value }) => value),
       files: uploadedFiles.map((file) => {
         return {
           url: file?.data?.url,
@@ -187,7 +197,7 @@ export default function CreateDocument() {
                   <FormLabel>Users</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={users.data?.data?.items?.map((u: any) => ({
+                      options={users.data?.data?.items?.filter((u: any) => u.id !== user?.id)?.map((u: any) => ({
                         label: `${u.first_name} ${u.last_name}`,
                         value: u.id,
                       })) ?? []}

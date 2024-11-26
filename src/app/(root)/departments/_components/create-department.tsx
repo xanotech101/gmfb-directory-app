@@ -20,12 +20,14 @@ import { useDebounce } from 'use-debounce'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/hooks/use-toast'
 
-
 const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Subject must be at least 2 characters.',
   }),
-  hod: z.array(z.string().min(1)).optional(),
+  hod: z.array(z.object({
+    label: z.string(),
+    value: z.string()
+  })).min(1).optional()
 })
 
 export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
@@ -72,8 +74,7 @@ export const CreateDepartment = ({ onSuccess }: { onSuccess?(): void }) => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    createDepartment.mutate({name: values.name, hod_id: values?.hod?.[0]})
+    createDepartment.mutate({name: values.name, hod_id: values?.hod?.[0]?.value})
   }
 
   return (

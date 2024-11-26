@@ -48,7 +48,7 @@ export default function Documents() {
         </Show.If>
         <Show.If condition={data} as={Fragment}>
           <Show as={Fragment}>
-            <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
+            <Show.If condition={data?.data?.items?.length === 0} className="bg-white">
               <EmptyState
                 icon={Package}
                 title="No Documents"

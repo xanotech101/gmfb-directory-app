@@ -53,11 +53,11 @@ export default function Departments() {
                 }}
               />
             </Show.If>
-            <Show.Else as={Fragment}>
+            <Show.Else className="bg-white">
               <EmptyState
                 icon={Package}
-                title="No Documents"
-                description="Get started by creating a new document."
+                title="No Departments"
+                description="Get started by creating a new department."
                 className="w-full"
               />
             </Show.Else>

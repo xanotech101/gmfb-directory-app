@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import React, { Fragment } from 'react'
 import { Show } from 'react-smart-conditional'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 export const Announcements = () => {
   const { data } = useQuery<any>({
@@ -35,8 +36,10 @@ export const Announcements = () => {
           Latest Announcements
         </CardTitle>
       </CardHeader>
-      <Show as={CardContent} className="relative flex-grow">
-        <Show.If condition={data} as="ul" role="list" className="divide-y divide-gray-100">
+      <Show as={CardContent} className={cn("relative flex-grow", {
+        'h-[200px]': !data?.data?.items?.length,
+      })}>
+        <Show.If condition={data?.data?.items?.length > 0}  as="ul" role="list" className="divide-y divide-gray-100">
           {data?.data?.items?.slice(0, 4)?.map((a: any) => (
             <li key={a.id} className="gap-x-4 py-5">
               <div className="flex-auto">
@@ -74,8 +77,9 @@ export const Announcements = () => {
         <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
           <EmptyState
             icon={Package}
+            className="h-[180px]"
             title="No Announcements"
-            description="Get started by creating a new announcement."
+           description="There are no announcements to display."
           />
         </Show.If>
       </Show>

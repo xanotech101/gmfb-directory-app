@@ -9,7 +9,7 @@ import { get, patch } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { useParams, useRouter } from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
-import { toast } from 'sonner'
+import { toast } from '@/hooks/use-toast'
 
 export default function Permissions() {
   const params = useParams()
@@ -55,11 +55,17 @@ export default function Permissions() {
         body: {permissions: Object.values(selectedPermissions).flat()},
       }),
     onSuccess: () => {
-      toast.success('Permissions Updated Successfully.')
+      toast({
+        title: "Success",
+        description: "Permissions Updated Successfully.",
+      })
     },
     onError: (error) => {
-      console.log(error)
-      toast.error(error.message)
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: error.message ?? "Something went wrong.",
+      })
     },
     onSettled: () => {
       refetch()

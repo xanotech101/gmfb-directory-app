@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles } from 'lucide-react'
+import { CheckIcon, ChevronDown, XCircle, XIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -41,11 +40,17 @@ const multiSelectVariants = cva(
   },
 )
 
+
+interface CommonProps {
+  label: string,
+  value: string
+}
+
 /**
  * Props for MultiSelect component
  */
 interface MultiSelectProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'defaultValue'>,
     VariantProps<typeof multiSelectVariants> {
   /**
    * An array of option objects to be displayed in the multi-select component.
@@ -68,10 +73,10 @@ interface MultiSelectProps
    * Callback function triggered when the selected values change.
    * Receives an array of the new selected values.
    */
-  onValueChange: (value: string[]) => void
+  onValueChange: (value: CommonProps[]) => void
 
   /** The default selected values when the component mounts. */
-  defaultValue?: string[]
+  defaultValue?: CommonProps[]
 
   /**
    * Placeholder text to be displayed when no values are selected.
@@ -133,7 +138,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     },
     ref,
   ) => {
-    const [selectedValues, setSelectedValues] = React.useState<string[]>(defaultValue)
+    const [selectedValues, setSelectedValues] = React.useState<{label: string, value: string}[]>(defaultValue)
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
     const [isAnimating] = React.useState(false)
 
@@ -148,9 +153,9 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
       }
     }
 
-    const toggleOption = (option: string) => {
-      const newSelectedValues = selectedValues.includes(option)
-        ? selectedValues.filter((value) => value !== option)
+    const toggleOption = (option: CommonProps) => {
+      const newSelectedValues = selectedValues.some((value) => value.value === option.value)
+        ? selectedValues.filter((value) => value.value !== option.value)
         : [...selectedValues, option]
       setSelectedValues(newSelectedValues)
       onValueChange(newSelectedValues)
@@ -187,19 +192,16 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
-                    const option = options.find((o) => o.value === value)
-                    const IconComponent = option?.icon
                     return (
                       <Badge
-                        key={value}
+                        key={value.value}
                         className={cn(
                           isAnimating ? 'animate-bounce' : '',
                           multiSelectVariants({ variant }),
                         )}
                         style={{ animationDuration: `${animation}s` }}
                       >
-                        {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
-                        {option?.label}
+                        {value?.label}
                         <XCircle
                           className="ml-2 h-4 w-4 cursor-pointer"
                           onClick={(event) => {
@@ -261,11 +263,11 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               {!options.length && <p className="py-6 text-center text-sm">No results found.</p>}
               <CommandGroup className="my-2">
                 {options.map((option) => {
-                  const isSelected = selectedValues.includes(option.value)
+                  const isSelected = selectedValues.some((value) => value.value === option.value)
                   return (
                     <CommandItem
                       key={option.value}
-                      onSelect={() => toggleOption(option.value)}
+                      onSelect={() => toggleOption(option)}
                       className="cursor-pointer"
                     >
                       <div

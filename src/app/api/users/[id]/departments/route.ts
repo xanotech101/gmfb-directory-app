@@ -5,7 +5,8 @@ import { patch } from '@/lib/fetch'
 import { NextResponse } from 'next/server'
 import { handleServerError } from '@/lib/handle-server-error'
 
-export async function PATCH(_request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+  const body = await request.json()
   const { accessToken } = await getTokens()
 
   if(!params.id) {
@@ -13,8 +14,8 @@ export async function PATCH(_request: Request, { params }: { params: { id: strin
   }
 
   try {
-    const response = await patch<any>(`/api/v1/users/${params.id}/reset-password`, {
-      body: {},
+    const response = await patch<any>(`/api/v1/users/${params.id}`, {
+      body,
       options: {
         headers: {
           Authorization: `Bearer ${accessToken}`

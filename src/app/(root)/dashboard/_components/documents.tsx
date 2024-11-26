@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import React, { Fragment } from 'react'
 import { Show } from 'react-smart-conditional'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 export const Documents = () => {
   const { data, isFetching } = useQuery<any>({
@@ -34,8 +35,10 @@ export const Documents = () => {
           Latest Documents
         </CardTitle>
       </CardHeader>
-      <Show as={CardContent} className="relative flex-grow">
-        <Show.If condition={data} as="ul" role="list" className="divide-y divide-gray-100">
+      <Show as={CardContent} className={cn("relative flex-grow", {
+        'h-[200px]': !data?.data?.items?.length,
+      })}>
+        <Show.If condition={data?.data?.items?.length > 0} as="ul" role="list" className="divide-y divide-gray-100">
           {data?.data?.items?.slice(0, 4)?.map((doc: any) => (
             <li key={doc.id} className="gap-x-4 py-5">
               <div className="flex-auto">
@@ -71,8 +74,9 @@ export const Documents = () => {
         <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
           <EmptyState
             icon={Package}
-            title="No Announcements"
-            description="Get started by creating a new announcement."
+            className="h-[180px]"
+            title="No Documents"
+            description="There are no documents to display."
           />
         </Show.If>
       </Show>
