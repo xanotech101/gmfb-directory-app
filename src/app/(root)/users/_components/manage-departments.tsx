@@ -48,8 +48,6 @@ export const ManageDepartments = ({ user, manageDepartments }: ManageDepartments
     },
   })
 
-
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     return manageDepartments.mutateAsync({
       userId: user.id,
@@ -75,7 +73,7 @@ export const ManageDepartments = ({ user, manageDepartments }: ManageDepartments
         </DialogHeader>
 
         <Form {...form}>
-          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+          <form className="space-y-8">
             <FormField
               control={form.control}
               name="departments"
@@ -103,9 +101,7 @@ export const ManageDepartments = ({ user, manageDepartments }: ManageDepartments
                 </FormItem>
               )}
             />
-            <Button type="submit" onClick={() => {
-              form.handleSubmit(onSubmit)()
-            }} className="w-full" isLoading={manageDepartments.status === 'pending'}>
+            <Button type="submit" onClick={form.handleSubmit(onSubmit)} className="w-full" isLoading={manageDepartments.status === 'pending'}>
               Update
             </Button>
           </form>

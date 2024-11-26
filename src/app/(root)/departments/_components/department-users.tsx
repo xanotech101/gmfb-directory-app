@@ -65,8 +65,8 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger>
-        View Users
+      <SheetTrigger asChild>
+        <button className="w-full text-left">View Users</button>
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px] bg-white">
         <SheetHeader>
@@ -95,7 +95,7 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
                   >
                     <AvatarImage src={user?.user?.avatar ?? undefined} alt="user's avatar" />
                     <AvatarFallback
-                      className="h-full w-full flex justify-center items-center"
+                      className="h-full w-full flex justify-center items-center text-[13px]"
                       style={{
                         backgroundColor: getRandomColor(i).background,
                         color: getRandomColor(i).text,

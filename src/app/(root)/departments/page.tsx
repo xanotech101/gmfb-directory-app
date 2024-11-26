@@ -33,7 +33,7 @@ export default function Departments() {
           <p className="mt-2 text-sm text-gray-700">A list of all the departments</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateDepartment onSuccess={refetch} />
+          <CreateDepartment onCreate={refetch} />
         </div>
       </div>
       <Show as="div" className="mt-8 flow-root">
@@ -45,6 +45,7 @@ export default function Departments() {
             <Show.If condition={data?.data?.items?.length > 0} as={Fragment}>
               <DepartmentTable
                 data={data?.data?.items ?? []}
+                onUpdate={refetch}
                 pagination={{
                   currentPage,
                   totalItems: data?.data?.meta?.total ?? 0,

@@ -7,37 +7,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import React, { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { DepartmentForm } from '@/app/(root)/departments/_components/department-form'
-import { post } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
+import { DepartmentForm } from '@/app/(root)/departments/_components/department-form'
+import { put } from '@/lib/fetch'
 
-interface CreateDepartmentProps {
-  onCreate: () => void
+interface UpdateDepartmentProps {
+  id: string
+  name: string
+  hod: Record<string, string> | undefined
+  onUpdate: () => void
 }
 
-export const CreateDepartment = ({ onCreate }: CreateDepartmentProps) => {
+export const UpdateDepartment = ({ id, name, hod, onUpdate }: UpdateDepartmentProps) => {
   const [open, setOpen] = useState(false)
 
-  const createDepartment = useMutation({
-    mutationKey: ['create-department'],
+  const updateDepartment = useMutation({
+    mutationKey: ['update-department'],
     mutationFn: async ({ name, hod_id }: { name: string, hod_id?: string }) =>
-      post(`/api/departments`, {
+      put(`/api/departments/${id}`, {
         isClient: true,
         body: { name, hod_id },
       }),
     onSuccess: () => {
       toast({
-        title: 'Department created successfully.',
+        title: 'Department updated successfully.',
         variant: 'default',
       })
-      onCreate()
+      onUpdate()
+      setOpen(false)
     },
     onError: (error) => {
       toast({
-        title: error?.message ?? 'Department creation failed.',
+        title: error?.message ?? 'Department update failed.',
         variant: 'destructive',
       })
     },
@@ -46,18 +49,24 @@ export const CreateDepartment = ({ onCreate }: CreateDepartmentProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create Department</Button>
+        <button className="w-full text-left">Update</button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#fff]" onPointerDownOutside={(e) => e.preventDefault()}>
+      <DialogContent className="sm:max-w-[425px] bg-[#fff]" onPointerDownOutside={(e) => e.preventDefault() }>
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
-            Update department
+            Update Department
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-700">
-            Fill the form to update department
+            Fill in the form below to create a new department
           </DialogDescription>
         </DialogHeader>
-        <DepartmentForm onSubmit={createDepartment} />
+        <DepartmentForm
+          onSubmit={updateDepartment}
+          defaultValues={{
+            name,
+            hod: hod ? [{ label: `${hod.first_name} ${hod.last_name}`, value: hod.id }] : [],
+          }}
+        />
       </DialogContent>
     </Dialog>
   )

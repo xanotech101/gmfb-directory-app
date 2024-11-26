@@ -12,15 +12,17 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
-import { DepartmentUsers } from '@/app/(root)/departments/_components/department-users'
+import { DepartmentUsers } from './department-users'
+import { UpdateDepartment } from './update-department'
 
 interface DepartmentTableProps {
   data: any
   pagination: PaginationProps
+  onUpdate(): void
 }
 
-export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
-  const { currentPage, totalItems, handlePageChange, itemsPerPage= 25 } = pagination
+export const DepartmentTable = ({ data, pagination, onUpdate }: DepartmentTableProps) => {
+  const { currentPage, totalItems, handlePageChange, itemsPerPage = 25 } = pagination
   const getFooterText = useFooterText(currentPage, totalItems, itemsPerPage)
 
   return (
@@ -46,14 +48,14 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                       <div className="size-9 flex-shrink-0">
                         <Avatar
                           className="size-8 text-sm"
-                          style={{ border: d?.hod?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`}}
+                          style={{ border: d?.hod?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}` }}
                         >
                           <AvatarImage src={d.hod.avatar} alt="profile image" />
                           <AvatarFallback
                             className="h-full w-full flex justify-center items-center"
                             style={{
                               backgroundColor: getRandomColor(index).background,
-                              color: getRandomColor(index).text
+                              color: getRandomColor(index).text,
                             }}
                           >
                             {d.hod.first_name[0]}
@@ -74,18 +76,23 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                 </TableCell>
                 <TableCell>{d?.users_count ?? '--'}</TableCell>
                 <TableCell>
-                  <DropdownMenu>
+                  <DropdownMenu modal>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="w-8 flex items-center justify-center">
                         <EllipsisVertical size={16} className="flex-shrink-0" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
-                      <DropdownMenuItem onClick={(e) => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                      }}>
+                      <DropdownMenuItem className="text-[13px]" onClick={(e) => e.preventDefault()}>
                         <DepartmentUsers name={d.name} id={d.id} />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-[13px]" onClick={(e) => e.preventDefault()}>
+                        <UpdateDepartment
+                          id={d.id}
+                          name={d.name}
+                          hod={d.hod}
+                          onUpdate={onUpdate}
+                        />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
