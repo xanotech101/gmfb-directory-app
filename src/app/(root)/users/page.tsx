@@ -12,8 +12,12 @@ import React, { Fragment } from 'react'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
+import { useUser } from '@/providers/user.provider'
 
 export default function Users() {
+  const {hasPermission} = useUser()
+  const canViewUsers = hasPermission('can_view_users')
+  const canInviteUser = hasPermission('can_invite_user')
   const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
@@ -25,6 +29,7 @@ export default function Users() {
       get(`/api/users?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
+    enabled: canViewUsers,
   })
 
   const resetPassword = useMutation({
@@ -83,19 +88,29 @@ export default function Users() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <InviteUser onCompleted={() => {
-            if (currentPage === 1) {
-              return refetch()
-            } else {
-              return setCurrentPage(1)
-            }
-          }}
-          />
+          {canInviteUser && (
+            <InviteUser onCompleted={() => {
+              if (currentPage === 1) {
+                return refetch()
+              } else {
+                return setCurrentPage(1)
+              }
+            }}
+            />
+          )}
         </div>
       </div>
       <Show as="div" className="mt-8">
         <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
+        </Show.If>
+        <Show.If condition={!canViewUsers} className="bg-white">
+          <EmptyState
+            icon={Package}
+            title="Permission Denied"
+            description="You do not have permission to view users."
+            className="w-full"
+          />
         </Show.If>
         <Show.If condition={data} as={Fragment}>
           <Show as={Fragment}>

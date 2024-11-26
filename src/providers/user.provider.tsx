@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useCallback, useContext } from 'react'
 import { QueryObserverResult, RefetchOptions, useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 
 interface UserContextValue {
   user: any
   refetchUser: (options?: RefetchOptions) => Promise<QueryObserverResult<any, Error>>
+  hasPermission: (permissions: string) => boolean
 }
 
 const UserContext = createContext<UserContextValue>({
   user: null,
   refetchUser: () => Promise.resolve({} as any),
+  hasPermission: () => false,
 })
 
 export const UserContextProvider = ({children}: {children: ReactNode}) => {
@@ -23,8 +25,12 @@ export const UserContextProvider = ({children}: {children: ReactNode}) => {
     staleTime: 0,
   })
 
+  const hasPermission = useCallback((permission: string) => {
+    return data?.data?.role?.permissions?.some?.((p: {name: string}) => p.name === permission)
+  }, [data])
+
   return (
-    <UserContext.Provider value={{user: data?.data, refetchUser}}>
+    <UserContext.Provider value={{user: data?.data, refetchUser, hasPermission}}>
       {children}
     </UserContext.Provider>
   )

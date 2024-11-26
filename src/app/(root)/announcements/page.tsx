@@ -12,9 +12,13 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { AnnouncementsTable } from './_components/announcement-table'
+import { useUser } from '@/providers/user.provider'
 
 
 export default function Announcements() {
+  const {hasPermission} = useUser()
+  const canCreateAnnouncements = hasPermission('can_create_announcements')
+  const canViewAnnouncements = hasPermission('can_view_announcements')
   const router = useRouter()
   const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
@@ -40,17 +44,26 @@ export default function Announcements() {
               </p>
             </div>
             <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-              <Link href="/announcements/create">
-                <Button>Create Announcement</Button>
-              </Link>
+              {canCreateAnnouncements && (
+                <Link href="/announcements/create">
+                  <Button>Create Announcement</Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </div>
-
       <Show as="div" className="mt-8">
         <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
+        </Show.If>
+        <Show.If condition={!canViewAnnouncements} className="bg-white">
+          <EmptyState
+            icon={Package}
+            title="Permission Denied"
+            description="You do not have permission to view departments."
+            className="w-full"
+          />
         </Show.If>
         <Show.If condition={data} as={Fragment}>
           <Show as={Fragment}>

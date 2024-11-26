@@ -12,8 +12,13 @@ import { Package } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { DocumentsTable } from './_components/documents-table'
+import { useUser } from '@/providers/user.provider'
 
 export default function Documents() {
+  const {hasPermission} = useUser()
+  const canViewDocuments = hasPermission('can_view_documents')
+  const canCreateDocuments = hasPermission('can_create_documents')
+
   const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
@@ -25,6 +30,7 @@ export default function Documents() {
       get(`/api/documents?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
+    enabled: canViewDocuments,
   })
 
   return (
@@ -37,14 +43,24 @@ export default function Documents() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <Link href="/documents/create">
-            <Button>Create Document</Button>
-          </Link>
+          {canCreateDocuments && (
+            <Link href="/documents/create">
+              <Button>Create Document</Button>
+            </Link>
+          )}
         </div>
       </div>
       <Show as="div" className="mt-8">
         <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
+        </Show.If>
+        <Show.If condition={!canViewDocuments} className="bg-white">
+          <EmptyState
+            icon={Package}
+            title="Permission Denied"
+            description="You do not have permission to view documents."
+            className="w-full"
+          />
         </Show.If>
         <Show.If condition={data} as={Fragment}>
           <Show as={Fragment}>

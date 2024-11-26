@@ -10,8 +10,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { DepartmentTable } from './_components/department-table'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
+import { useUser } from '@/providers/user.provider'
 
 export default function Departments() {
+  const {hasPermission} = useUser()
+  const canViewDepartments = hasPermission('can_view_departments')
+  const canCreateDepartments = hasPermission('can_create_departments')
+
   const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
     parse: (value) => Number(value),
@@ -23,6 +28,7 @@ export default function Departments() {
       get(`/api/departments?page=${currentPage}&limit=${25}`, {
         isClient: true,
       }),
+    enabled: canViewDepartments,
   })
 
   return (
@@ -33,12 +39,20 @@ export default function Departments() {
           <p className="mt-2 text-sm text-gray-700">A list of all the departments</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <CreateDepartment onCreate={refetch} />
+          {canCreateDepartments && <CreateDepartment onCreate={refetch} />}
         </div>
       </div>
       <Show as="div" className="mt-8 flow-root">
         <Show.If condition={isFetching} as={Fragment}>
           <Skeleton className="h-[200px] w-full rounded-xl" />
+        </Show.If>
+        <Show.If condition={!canViewDepartments} className="bg-white">
+          <EmptyState
+            icon={Package}
+            title="Permission Denied"
+            description="You do not have permission to view departments."
+            className="w-full"
+          />
         </Show.If>
         <Show.If condition={data} as={Fragment}>
           <Show as={Fragment}>
