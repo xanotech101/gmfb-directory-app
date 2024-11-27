@@ -15,7 +15,7 @@ import { useUser } from '@/providers/user.provider'
 export default function Departments() {
   const {hasPermission} = useUser()
   const canViewDepartments = hasPermission('can_view_departments')
-  const canCreateDepartments = hasPermission('can_create_departments')
+  const canCreateDepartments = hasPermission('can_create_department')
 
   const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,

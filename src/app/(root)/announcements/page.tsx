@@ -17,7 +17,7 @@ import { useUser } from '@/providers/user.provider'
 
 export default function Announcements() {
   const {hasPermission} = useUser()
-  const canCreateAnnouncements = hasPermission('can_create_announcements')
+  const canCreateAnnouncements = hasPermission('can_create_announcement')
   const canViewAnnouncements = hasPermission('can_view_announcements')
   const router = useRouter()
   const [currentPage, setCurrentPage] = useQueryState('page', {
