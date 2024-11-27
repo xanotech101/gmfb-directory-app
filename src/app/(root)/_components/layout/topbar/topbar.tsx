@@ -42,8 +42,8 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
           <div aria-hidden="true" className="h-6 w-px bg-gray-200 lg:hidden" />
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="relative flex flex-1 items-center">
-              <Breadcrumb>
+            <div className="relative flex-1 items-center">
+              <Breadcrumb className="opacity-0">
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink href="/public" className="hover:text-[#891C69]">
