@@ -30,11 +30,11 @@ const formSchema = z.object({
   departments: z.array(z.object({
     label: z.string(),
     value: z.string(),
-  })).min(1).optional().default([]),
+  })).optional().default([]),
   users: z.array(z.object({
     label: z.string(),
     value: z.string(),
-  })).min(1).optional().default([]),
+  })).optional().default([]),
 })
 
 type FormValues = z.infer<typeof formSchema>

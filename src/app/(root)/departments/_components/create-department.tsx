@@ -33,6 +33,7 @@ export const CreateDepartment = ({ onCreate }: CreateDepartmentProps) => {
         title: 'Department created successfully.',
         variant: 'default',
       })
+      setOpen(false)
       onCreate()
     },
     onError: (error) => {
