@@ -15,7 +15,7 @@ import { Package } from 'lucide-react'
 export default function Roles() {
   const {hasPermission} = useUser()
   const canViewRoles = hasPermission('can_view_roles')
-  const canCreateRoles = hasPermission('can_create_roles')
+  const canCreateRoles = hasPermission('can_create_role')
 
   const { isFetching, data, refetch } = useQuery<any>({
     queryKey: ['roles'],
