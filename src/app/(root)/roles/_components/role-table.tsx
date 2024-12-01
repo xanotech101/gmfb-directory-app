@@ -9,16 +9,16 @@ import {
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
-import { EditRoleModal } from '@/app/(root)/roles/_components/create-edit-role/edit-role-modal'
 import { cn } from '@/lib/utils'
+import { EditRole } from './edit-role'
 
 
 interface RoleTableProps {
   data: any
+  onEditSuccess: () => void
 }
 
-export const RoleTable = ({ data }: RoleTableProps) => {
+export const RoleTable = ({ data, onEditSuccess }: RoleTableProps) => {
   return (
     <div className="border overflow-hidden rounded-lg">
       <Table className="rounded-lg overflow-hidden shadow-sm">
@@ -47,17 +47,14 @@ export const RoleTable = ({ data }: RoleTableProps) => {
                   <DropdownMenuContent className="w-auto max-w-56">
                     <DropdownMenuItem
                       className={cn(
-                        'hidden',
                         r.is_default && 'opacity-50 cursor-not-allowed',
                       )}
                       onClick={(e) => {
-                        if (r.is_default) {
                           e.stopPropagation()
                           e.preventDefault()
-                        }
                       }}
                     >
-                      {r.is_default ? 'Edit role' : <EditRoleModal />}
+                      {r.is_default ? 'Edit role' : <EditRole defaultValues={r} onSuccess={onEditSuccess} roleId={r.id} />}
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Link href={`/roles/${r.id}`}>Manage Permissions</Link>

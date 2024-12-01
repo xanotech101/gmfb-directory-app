@@ -78,7 +78,7 @@ export default function Permissions() {
         <div className="flex items-center justify-between sm:flex-auto ">
           <div className="flex flex-col">
             <h1 className="text-left font-semibold leading-6 text-gray-900 capitalize">{roleData?.data?.name}</h1>
-            <p className="mt-2 text-center text-sm text-gray-700">
+            <p className="mt-2 text-sm text-gray-700">
               {roleData?.data?.description}
             </p>
           </div>
