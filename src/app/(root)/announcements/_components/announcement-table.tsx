@@ -9,7 +9,15 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
@@ -24,7 +32,6 @@ interface AnnouncementsTableProps {
 export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps) => {
   const { currentPage, totalItems, handlePageChange, itemsPerPage = 25 } = pagination
   const getFooterText = useFooterText(currentPage, totalItems, itemsPerPage)
-
 
   return (
     <>
@@ -48,10 +55,15 @@ export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps
                     <Avatar
                       className="size-8 flex-shrink-0 border-2 text-sm"
                       style={{
-                        border: announcement?.created_by?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`,
+                        border: announcement?.created_by?.avatar
+                          ? 'none'
+                          : `2px solid ${getRandomColor(index).border}`,
                       }}
                     >
-                      <AvatarImage src={announcement?.created_by?.avatar} alt={`${announcement.created_by.first_name} ${announcement.created_by.last_name}`} />
+                      <AvatarImage
+                        src={announcement?.created_by?.avatar}
+                        alt={`${announcement.created_by.first_name} ${announcement.created_by.last_name}`}
+                      />
                       <AvatarFallback
                         className="h-full w-full flex justify-center items-center"
                         style={{
@@ -59,23 +71,29 @@ export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps
                           color: getRandomColor(index).text,
                         }}
                       >
-                        {announcement.created_by_user?.first_name?.[0]}{announcement.created_by_user?.last_name?.[0]}
+                        {announcement.created_by_user?.first_name?.[0]}
+                        {announcement.created_by_user?.last_name?.[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div className="ml-2">
                       <div className="font-medium text-gray-900">
-                        {announcement?.created_by_user?.first_name} {announcement?.created_by_user?.last_name}
+                        {announcement?.created_by_user?.first_name}{' '}
+                        {announcement?.created_by_user?.last_name}
                       </div>
-                      <div className="mt-0 text-gray-500">{announcement?.created_by_user?.email}</div>
+                      <div className="mt-0 text-gray-500">
+                        {announcement?.created_by_user?.email}
+                      </div>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="w-[40%]">{announcement?.subject}</TableCell>
                 <TableCell>
-                  {announcement.departments.length}
+                  {announcement.metadata.send_to_all_departments
+                    ? 'All'
+                    : announcement.departments?.length}
                 </TableCell>
                 <TableCell>
-                  {announcement.users.length}
+                  {announcement.metadata.send_to_all_users ? 'All' : announcement.users?.length}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu modal={false}>
@@ -86,12 +104,14 @@ export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps
                     </DropdownMenuTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuContent className="w-auto max-w-56 overflow-auto">
-                          <DropdownMenuItem onClick={(e) => {
+                        <DropdownMenuItem
+                          onClick={(e) => {
                             e.stopPropagation()
                             e.preventDefault()
-                          }}>
-                            <AnnouncementDetails id={announcement.id} />
-                          </DropdownMenuItem>
+                          }}
+                        >
+                          <AnnouncementDetails id={announcement.id} />
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenuPortal>
                   </DropdownMenu>

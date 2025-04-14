@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Button } from '@/components/ui/button'
@@ -27,6 +27,8 @@ import { post } from '@/lib/fetch'
 import 'react-quill/dist/quill.snow.css'
 import { toast } from '@/hooks/use-toast'
 import { useUser } from '@/providers/user.provider'
+import { Switch } from '@/components/ui/switch'
+import { useMemo } from 'react'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -55,6 +57,8 @@ const formSchema = z.object({
     )
     .optional()
     .default([]),
+  send_to_all_departments: z.boolean().optional(),
+  send_to_all_users: z.boolean().optional(),
 })
 
 export default function CreateAnnouncement() {
@@ -67,6 +71,8 @@ export default function CreateAnnouncement() {
       body: '',
       departments: [],
       users: [],
+      send_to_all_departments: false,
+      send_to_all_users: false,
     },
   })
 
@@ -75,17 +81,12 @@ export default function CreateAnnouncement() {
 
   const createAnnouncement = useMutation({
     mutationKey: ['create-department'],
-    mutationFn: async (payload: {
-      subject: string
-      body: string
-      departments: string[]
-      users: string[]
-    }) =>
+    mutationFn: async (payload: Record<string, unknown>) =>
       post(`/api/announcements`, {
         isClient: true,
         body: {
           ...payload,
-          body: DOMPurify.sanitize(payload.body),
+          body: DOMPurify.sanitize(payload.body as string),
           status: 'published',
         },
       }),
@@ -105,13 +106,28 @@ export default function CreateAnnouncement() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     createAnnouncement.mutate({
-      ...values,
-      departments: values.departments.map((d) => d.value),
-      users: values.users.map((u) => u.value),
+      ...data,
+      metadata: {
+        send_to_all_departments: data.send_to_all_departments,
+        send_to_all_users: data.send_to_all_users,
+      },
+      users: data.send_to_all_users ? [] : data.users.map(({ value }) => value),
+      departments: data.send_to_all_departments ? [] : data.departments.map(({ value }) => value),
     })
   }
+
+  const usersOptions = useMemo(() => {
+    return users.data?.data?.items
+      ?.filter((u: any) => u.id !== user?.id)
+      ?.map((u: any) => ({
+        label: `${u.first_name} ${u.last_name}`,
+        value: u.id,
+      }))
+  }, [users.data, user?.id])
+
+  const { send_to_all_departments, send_to_all_users } = form.watch()
 
   return (
     <div className="sm:px-6 lg:px-0">
@@ -159,70 +175,117 @@ export default function CreateAnnouncement() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="departments"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Department</FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      options={
-                        departments.data?.data?.items?.map((d: any) => ({
-                          label: d.name,
-                          value: d.id,
-                        })) ?? []
-                      }
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      placeholder="Select departments"
-                      variant="inverted"
-                      animation={2}
-                      maxCount={5}
-                      filterValue={deptSearchString}
-                      onFilterChange={setDeptSearchString}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Select the department(s) to share the announcement with.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+            <div className="border p-4 rounded-lg space-y-4">
+              <FormField
+                control={form.control}
+                name="send_to_all_departments"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between">
+                    <div className="space-y-0.5">
+                      <FormLabel>Send to all departments</FormLabel>
+                      <FormDescription>Toggle on to share with all departments</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked)
+                          if (checked) {
+                            form.setValue('departments', [])
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {!send_to_all_departments && (
+                <FormField
+                  control={form.control}
+                  name="departments"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Department(s)</FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={
+                            departments.data?.data?.items?.map((d: any) => ({
+                              label: d.name,
+                              value: d.id,
+                            })) ?? []
+                          }
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          placeholder="Select departments"
+                          variant="inverted"
+                          animation={2}
+                          maxCount={5}
+                          filterValue={deptSearchString}
+                          onFilterChange={setDeptSearchString}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Select the department(s) to share the announcement with.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               )}
-            />
-            <FormField
-              control={form.control}
-              name="users"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Users</FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      options={
-                        users.data?.data?.items
-                          ?.filter((u: any) => u.id !== user?.id)
-                          ?.map((u: any) => ({
-                            label: `${u.first_name} ${u.last_name}`,
-                            value: u.id,
-                          })) ?? []
-                      }
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      placeholder="Select users"
-                      variant="inverted"
-                      animation={2}
-                      maxCount={6}
-                      filterValue={userSearchString}
-                      onFilterChange={setUserSearchString}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Select the user(s) to share the announcement with.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+            </div>
+            <div className="border p-4 rounded-lg space-y-4">
+              <FormField
+                control={form.control}
+                name="send_to_all_users"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between">
+                    <div className="space-y-0.5">
+                      <FormLabel>Send to all users</FormLabel>
+                      <FormDescription>Toggle on to share with all users</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked)
+                          if (checked) {
+                            form.setValue('departments', [])
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {!send_to_all_users && (
+                <FormField
+                  control={form.control}
+                  name="users"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select User(s)</FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={usersOptions ?? []}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          placeholder="Select users"
+                          variant="inverted"
+                          animation={2}
+                          maxCount={6}
+                          filterValue={userSearchString}
+                          onFilterChange={setUserSearchString}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Select the user(s) to share the announcement with.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               )}
-            />
+            </div>
             <Button type="submit" isLoading={createAnnouncement.isPending}>
               Create Announcement
             </Button>
