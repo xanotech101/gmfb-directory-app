@@ -40,9 +40,8 @@ const multiSelectVariants = cva(
   },
 )
 
-
 interface CommonProps {
-  label: string,
+  label: string
   value: string
 }
 
@@ -138,7 +137,8 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     },
     ref,
   ) => {
-    const [selectedValues, setSelectedValues] = React.useState<{label: string, value: string}[]>(defaultValue)
+    const [selectedValues, setSelectedValues] =
+      React.useState<{ label: string; value: string }[]>(defaultValue)
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
     const [isAnimating] = React.useState(false)
 
@@ -258,7 +258,13 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
         >
           <Command shouldFilter={false}>
-            <CommandInput placeholder="Search..." onKeyDown={handleInputKeyDown} value={filterValue} onValueChange={onFilterChange} className="m-3 my-4" />
+            <CommandInput
+              placeholder="Search..."
+              onKeyDown={handleInputKeyDown}
+              value={filterValue}
+              onValueChange={onFilterChange}
+              className="m-3 my-4"
+            />
             <CommandList className="p-3">
               {!options.length && <p className="py-6 text-center text-sm">No results found.</p>}
               <CommandGroup className="my-2">

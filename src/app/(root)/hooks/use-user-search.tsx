@@ -4,7 +4,7 @@ import { useDebounce } from 'use-debounce'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 
-export function useUserSearch() {
+export function useSearchUsers() {
   const [searchString, setSearchString] = useState('')
   const [debouncedSearchString] = useDebounce(searchString, 500)
 
@@ -22,4 +22,3 @@ export function useUserSearch() {
     users,
   }
 }
-

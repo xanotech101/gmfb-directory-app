@@ -15,7 +15,7 @@ import { DocumentsTable } from './_components/documents-table'
 import { useUser } from '@/providers/user.provider'
 
 export default function Documents() {
-  const {hasPermission} = useUser()
+  const { hasPermission } = useUser()
   const canViewDocuments = hasPermission('can_view_documents')
   const canCreateDocuments = hasPermission('can_create_document')
 
@@ -51,39 +51,32 @@ export default function Documents() {
         </div>
       </div>
       <Show as="div" className="mt-8">
-        <Show.If condition={isFetching} as={Fragment}>
-          <Skeleton className="h-[200px] w-full rounded-xl" />
-        </Show.If>
-        <Show.If condition={!canViewDocuments} className="bg-white">
-          <EmptyState
-            icon={Package}
-            title="Permission Denied"
-            description="You do not have permission to view documents."
-            className="w-full"
-          />
-        </Show.If>
-        <Show.If condition={data} as={Fragment}>
-          <Show as={Fragment}>
-            <Show.If condition={data?.data?.items?.length === 0} className="bg-white">
-              <EmptyState
-                icon={Package}
-                title="No Documents"
-                description="Get started by creating a new document."
-                className="w-full"
-              />
-            </Show.If>
-            <Show.Else as={Fragment}>
-              <DocumentsTable
-                data={data?.data?.items ?? []}
-                pagination={{
-                  currentPage,
-                  totalItems: data?.data?.meta?.total ?? 0,
-                  handlePageChange: setCurrentPage,
-                }}
-              />
-            </Show.Else>
-          </Show>
-        </Show.If>
+        <Show.If condition={isFetching} as={Skeleton} className="h-[200px] w-full rounded-xl" />
+        <Show.If
+          condition={!canViewDocuments}
+          className="bg-white w-full"
+          as={EmptyState}
+          icon={Package}
+          title="Permission Denied"
+          description="You do not have permission to view documents."
+        />
+        <Show.If
+          condition={data?.data?.items?.length === 0}
+          as={EmptyState}
+          icon={Package}
+          title="No Documents"
+          description="Get started by creating a new document."
+          className="w-full"
+        />
+        <Show.Else
+          as={DocumentsTable}
+          data={data?.data?.items ?? []}
+          pagination={{
+            currentPage,
+            totalItems: data?.data?.meta?.total ?? 0,
+            handlePageChange: setCurrentPage,
+          }}
+        />
       </Show>
     </>
   )

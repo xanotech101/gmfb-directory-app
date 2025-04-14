@@ -2,8 +2,21 @@
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
@@ -18,7 +31,6 @@ interface UserTableProps {
 export const DocumentsTable = ({ data, pagination }: UserTableProps) => {
   const { currentPage, totalItems, handlePageChange, itemsPerPage = 25 } = pagination
   const getFooterText = useFooterText(currentPage, totalItems, itemsPerPage)
-
 
   return (
     <>
@@ -43,10 +55,15 @@ export const DocumentsTable = ({ data, pagination }: UserTableProps) => {
                     <Avatar
                       className="size-8 flex-shrink-0 border-2 text-sm"
                       style={{
-                        border: doc?.created_by?.avatar ? 'none' : `2px solid ${getRandomColor(index).border}`,
+                        border: doc?.created_by?.avatar
+                          ? 'none'
+                          : `2px solid ${getRandomColor(index).border}`,
                       }}
                     >
-                      <AvatarImage src={doc?.created_by?.avatar} alt={`${doc.created_by.first_name} ${doc.created_by.last_name}`} />
+                      <AvatarImage
+                        src={doc?.created_by?.avatar}
+                        alt={`${doc.created_by.first_name} ${doc.created_by.last_name}`}
+                      />
                       <AvatarFallback
                         className="h-full w-full flex justify-center items-center"
                         style={{
@@ -54,7 +71,8 @@ export const DocumentsTable = ({ data, pagination }: UserTableProps) => {
                           color: getRandomColor(index).text,
                         }}
                       >
-                        {doc.created_by?.first_name[0]}{doc.created_by?.last_name[0]}
+                        {doc.created_by?.first_name[0]}
+                        {doc.created_by?.last_name[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div className="ml-2">
@@ -67,14 +85,10 @@ export const DocumentsTable = ({ data, pagination }: UserTableProps) => {
                 </TableCell>
                 <TableCell className="w-[40%]">{doc?.subject}</TableCell>
                 <TableCell>
-                  {doc.departments.length}
+                  {doc.metadata.send_to_all_departments ? 'All' : doc.departments?.length}
                 </TableCell>
-                <TableCell>
-                  {doc.users.length}
-                </TableCell>
-                <TableCell>
-                  {doc.files.length}
-                </TableCell>
+                <TableCell>{doc.metadata.send_to_all_users ? 'All' : doc.users?.length}</TableCell>
+                <TableCell>{doc.files.length}</TableCell>
                 <TableCell>
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
@@ -83,10 +97,12 @@ export const DocumentsTable = ({ data, pagination }: UserTableProps) => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
-                      <DropdownMenuItem onClick={(e) => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                      }}>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                        }}
+                      >
                         <DocumentDetails id={doc.id} />
                       </DropdownMenuItem>
                     </DropdownMenuContent>

@@ -13,7 +13,7 @@ import { Package } from 'lucide-react'
 import { useUser } from '@/providers/user.provider'
 
 export default function Departments() {
-  const {hasPermission} = useUser()
+  const { hasPermission } = useUser()
   const canViewDepartments = hasPermission('can_view_departments')
   const canCreateDepartments = hasPermission('can_create_department')
 
@@ -43,41 +43,34 @@ export default function Departments() {
         </div>
       </div>
       <Show as="div" className="mt-8 flow-root">
-        <Show.If condition={isFetching} as={Fragment}>
-          <Skeleton className="h-[200px] w-full rounded-xl" />
-        </Show.If>
-        <Show.If condition={!canViewDepartments} className="bg-white">
-          <EmptyState
-            icon={Package}
-            title="Permission Denied"
-            description="You do not have permission to view departments."
-            className="w-full"
-          />
-        </Show.If>
-        <Show.If condition={data} as={Fragment}>
-          <Show as={Fragment}>
-            <Show.If condition={data?.data?.items?.length > 0} as={Fragment}>
-              <DepartmentTable
-                data={data?.data?.items ?? []}
-                onUpdate={refetch}
-                pagination={{
-                  currentPage,
-                  totalItems: data?.data?.meta?.total ?? 0,
-                  itemsPerPage: 25,
-                  handlePageChange: (page) => setCurrentPage(page),
-                }}
-              />
-            </Show.If>
-            <Show.Else className="bg-white">
-              <EmptyState
-                icon={Package}
-                title="No Departments"
-                description="Get started by creating a new department."
-                className="w-full"
-              />
-            </Show.Else>
-          </Show>
-        </Show.If>
+        <Show.If condition={isFetching} as={Skeleton} className="h-[200px] w-full rounded-xl" />
+        <Show.If
+          condition={!canViewDepartments}
+          className="bg-white w-full"
+          as={EmptyState}
+          icon={Package}
+          title="Permission Denied"
+          description="You do not have permission to view departments."
+        />
+        <Show.If
+          condition={data?.data?.items?.length > 0}
+          as={DepartmentTable}
+          data={data?.data?.items ?? []}
+          onUpdate={refetch}
+          pagination={{
+            currentPage,
+            totalItems: data?.data?.meta?.total ?? 0,
+            itemsPerPage: 25,
+            handlePageChange: (page) => setCurrentPage(page),
+          }}
+        />
+        <Show.Else
+          className="bg-white w-full"
+          as={EmptyState}
+          icon={Package}
+          title="No Departments"
+          description="Get started by creating a new department."
+        />
       </Show>
     </>
   )

@@ -32,7 +32,7 @@ export const EditRole = ({onSuccess, defaultValues, roleId}: CreateRoleProps ) =
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: 'The role has been created successfully',
+        description: 'The role has been updated successfully',
       })
       onSuccess()
       setIsOpen(false)

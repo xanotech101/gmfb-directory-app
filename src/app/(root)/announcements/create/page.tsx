@@ -7,13 +7,21 @@ import { z } from 'zod'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import dynamic from 'next/dynamic'
 import DOMPurify from 'dompurify'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useDepartmentSearch } from '@/app/(root)/hooks/use-department-search'
-import { useUserSearch } from '@/app/(root)/hooks/use-user-search'
+import { useSearchUsers } from '@/app/(root)/hooks/use-user-search'
 import { post } from '@/lib/fetch'
 
 import 'react-quill/dist/quill.snow.css'
@@ -29,14 +37,24 @@ const formSchema = z.object({
   body: z.string().min(2, {
     message: 'Body must be at least 2 characters.',
   }),
-  departments: z.array(z.object({
-    label: z.string(),
-    value: z.string(),
-  })).optional().default([]),
-  users: z.array(z.object({
-    label: z.string(),
-    value: z.string(),
-  })).optional().default([]),
+  departments: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
+    )
+    .optional()
+    .default([]),
+  users: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
+    )
+    .optional()
+    .default([]),
 })
 
 export default function CreateAnnouncement() {
@@ -53,7 +71,7 @@ export default function CreateAnnouncement() {
   })
 
   const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
-  const { userSearchString, setUserSearchString, users } = useUserSearch()
+  const { userSearchString, setUserSearchString, users } = useSearchUsers()
 
   const createAnnouncement = useMutation({
     mutationKey: ['create-department'],
@@ -86,7 +104,6 @@ export default function CreateAnnouncement() {
       })
     },
   })
-
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createAnnouncement.mutate({
@@ -150,10 +167,12 @@ export default function CreateAnnouncement() {
                   <FormLabel>Department</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={departments.data?.data?.items?.map((d: any) => ({
-                        label: d.name,
-                        value: d.id,
-                      })) ?? []}
+                      options={
+                        departments.data?.data?.items?.map((d: any) => ({
+                          label: d.name,
+                          value: d.id,
+                        })) ?? []
+                      }
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       placeholder="Select departments"
@@ -179,10 +198,14 @@ export default function CreateAnnouncement() {
                   <FormLabel>Users</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={users.data?.data?.items?.filter((u: any) => u.id !== user?.id)?.map((u: any) => ({
-                        label: `${u.first_name} ${u.last_name}`,
-                        value: u.id,
-                      })) ?? []}
+                      options={
+                        users.data?.data?.items
+                          ?.filter((u: any) => u.id !== user?.id)
+                          ?.map((u: any) => ({
+                            label: `${u.first_name} ${u.last_name}`,
+                            value: u.id,
+                          })) ?? []
+                      }
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       placeholder="Select users"
