@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { ExternalLinkIcon, FileIcon } from 'lucide-react'
+import { DeleteIcon, ExternalLinkIcon, FileIcon, Trash2Icon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface FileCardProps {
@@ -22,15 +22,26 @@ export function FileCard({ file }: FileCardProps) {
             {fileName}
           </span>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => window.open(file.url, '_blank')}
-          title="Open file"
-        >
-          <ExternalLinkIcon className="h-4 w-4" />
-          <span className="sr-only">Open file</span>
-        </Button>
+        <div className="flex space-x-3">
+          <Button
+            variant="ghost"
+            className="p-0"
+            onClick={() => window.open(file.url, '_blank')}
+            title="Open file"
+          >
+            <Trash2Icon className="h-4 w-4 text-red-600" />
+            <span className="sr-only">Delete file</span>
+          </Button>
+          <Button
+            variant="ghost"
+            className="p-0"
+            onClick={() => window.open(file.url, '_blank')}
+            title="Open file"
+          >
+            <ExternalLinkIcon className="h-4 w-4" />
+            <span className="sr-only">Open file</span>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

@@ -36,22 +36,28 @@ export const Announcements = () => {
           Latest Announcements
         </CardTitle>
       </CardHeader>
-      <Show as={CardContent} className={cn("relative flex-grow", {
-        'h-[200px]': !data?.data?.items?.length,
-      })}>
-        <Show.If condition={data?.data?.items?.length > 0}  as="ul" role="list" className="divide-y divide-gray-100">
+      <Show
+        as={CardContent}
+        className={cn('relative flex-grow', {
+          'h-[200px]': !data?.data?.items?.length,
+        })}
+      >
+        <Show.If
+          condition={data?.data?.items?.length > 0}
+          as="ul"
+          role="list"
+          className="divide-y divide-gray-100"
+        >
           {data?.data?.items?.slice(0, 4)?.map((a: any) => (
             <li key={a.id} className="gap-x-4 py-5">
               <div className="flex-auto">
                 <div className="flex items-baseline justify-between gap-x-4">
                   <p className="text-sm/6 font-semibold text-gray-900">{a.subject}</p>
-                  <p className="flex-none text-xs text-muted-foreground font-normal">
-                    {a.created_at && <time
-                      dateTime={a.created_at}>{formatDistanceToNow(parseISO(a.created_at), { addSuffix: true })}</time>}
-                  </p>
                 </div>
-                <div className="mt-1 line-clamp-2 text-sm/6 text-gray-600"
-                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(a?.body ?? '') }} />
+                <div
+                  className="mt-1 line-clamp-2 text-sm/6 text-gray-600"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(a?.body ?? '') }}
+                />
               </div>
               <div className="flex items-center space-x-4 mt-2">
                 <span className="flex items-center text-sm text-muted-foreground">
@@ -60,17 +66,25 @@ export const Announcements = () => {
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
                   <UsersIcon className="mr-1 h-4 w-4" />
-                  {a.users?.length} users
+                  {a.metadata?.send_to_all_departments ? 'All' : a.departments?.length} user(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
                   <FileIcon className="mr-1 h-4 w-4" />
-                  {a.files?.length} files
+                  {a.files?.length} file(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
                   <BuildingIcon className="mr-1 h-4 w-4" />
-                  {a.departments?.length} departments
+                  {a.metadata?.send_to_all_departments ? 'All' : a.departments?.length}{' '}
+                  department(s)
                 </span>
               </div>
+              <p className="flex-none text-xs text-muted-foreground font-normal mt-4">
+                {a.created_at && (
+                  <time dateTime={a.created_at}>
+                    {formatDistanceToNow(parseISO(a.created_at), { addSuffix: true })}
+                  </time>
+                )}
+              </p>
             </li>
           ))}
         </Show.If>
@@ -79,16 +93,17 @@ export const Announcements = () => {
             icon={Package}
             className="h-[180px]"
             title="No Announcements"
-           description="There are no announcements to display."
+            description="There are no announcements to display."
           />
         </Show.If>
       </Show>
 
-
       {data && data?.data?.items?.length > 0 && (
         <CardFooter className="mt-auto">
           <Link href="/announcements" className="w-full">
-            <Button className="w-full" variant="outline">View All</Button>
+            <Button className="w-full" variant="outline">
+              View All
+            </Button>
           </Link>
         </CardFooter>
       )}

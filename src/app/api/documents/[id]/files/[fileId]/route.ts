@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getTokens } from '@/lib/get-tokens'
-import { get } from '@/lib/fetch'
+import { del, get } from '@/lib/fetch'
 import { NextResponse } from 'next/server'
 import { handleServerError } from '@/lib/handle-server-error'
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _request: Request,
+  { params }: { params: { id: string; fileId: string } },
+) {
+  const { id, fileId } = params
   try {
-    if (!params.id) {
+    if (!id) {
       return NextResponse.json('Document ID is required', { status: 400 })
     }
+
+    if (!fileId) {
+      return NextResponse.json('File ID is required', { status: 400 })
+    }
+
     const { accessToken } = await getTokens()
-    const response = await get<any>(`/api/v1/documents/${params.id}`, {
+    const response = await del<any>(`/api/v1/documents/${params.id}/files/${fileId}`, {
       options: {
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -35,39 +35,51 @@ export const Documents = () => {
           Latest Documents
         </CardTitle>
       </CardHeader>
-      <Show as={CardContent} className={cn("relative flex-grow", {
-        'h-[200px]': !data?.data?.items?.length,
-      })}>
-        <Show.If condition={data?.data?.items?.length > 0} as="ul" role="list" className="divide-y divide-gray-100">
+      <Show
+        as={CardContent}
+        className={cn('relative flex-grow', {
+          'h-[200px]': !data?.data?.items?.length,
+        })}
+      >
+        <Show.If
+          condition={data?.data?.items?.length > 0}
+          as="ul"
+          role="list"
+          className="divide-y divide-gray-100"
+        >
           {data?.data?.items?.slice(0, 4)?.map((doc: any) => (
             <li key={doc.id} className="gap-x-4 py-5">
               <div className="flex-auto">
                 <div className="flex items-baseline justify-between gap-x-4">
                   <p className="text-sm/6 font-semibold text-gray-900">{doc.subject}</p>
-                  <p className="flex-none text-xs text-muted-foreground font-normal">
-                    {doc.created_at && <time
-                      dateTime={doc.created_at}>{formatDistanceToNow(parseISO(doc.created_at), { addSuffix: true })}</time>}
-                  </p>
                 </div>
               </div>
               <div className="flex items-center space-x-4 mt-2">
-                  <span className="flex items-center text-sm text-muted-foreground">
-                    <CalendarIcon className="mr-1 h-4 w-4" />
-                    {formatDate(doc.created_at)}
-                  </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                    <UsersIcon className="mr-1 h-4 w-4" />
-                  {doc.users?.length} users
-                  </span>
+                  <CalendarIcon className="mr-1 h-4 w-4" />
+                  {formatDate(doc.created_at)}
+                </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                    <FileIcon className="mr-1 h-4 w-4" />
-                  {doc.files?.length} files
-                  </span>
+                  <UsersIcon className="mr-1 h-4 w-4" />
+                  {doc.metadata?.send_to_all_departments ? 'All' : doc.departments?.length} user(s)
+                </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                    <BuildingIcon className="mr-1 h-4 w-4" />
-                  {doc.departments?.length} departments
-                  </span>
+                  <FileIcon className="mr-1 h-4 w-4" />
+                  {doc.files?.length} file(s)
+                </span>
+                <span className="flex items-center text-sm text-muted-foreground">
+                  <BuildingIcon className="mr-1 h-4 w-4" />
+                  {doc.metadata?.send_to_all_departments ? 'All' : doc.departments?.length}{' '}
+                  department(s)
+                </span>
               </div>
+              <p className="flex-none text-xs text-muted-foreground font-normal mt-4">
+                {doc.created_at && (
+                  <time dateTime={doc.created_at}>
+                    {formatDistanceToNow(parseISO(doc.created_at), { addSuffix: true })}
+                  </time>
+                )}
+              </p>
             </li>
           ))}
         </Show.If>
@@ -83,7 +95,9 @@ export const Documents = () => {
       {data && data?.data?.items?.length > 0 && (
         <CardFooter className="mt-auto">
           <Link href="/documents" className="w-full">
-            <Button className="w-full" variant="outline">View All</Button>
+            <Button className="w-full" variant="outline">
+              View All
+            </Button>
           </Link>
         </CardFooter>
       )}

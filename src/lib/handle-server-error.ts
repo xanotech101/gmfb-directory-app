@@ -7,6 +7,6 @@ export const handleServerError = async (error: any) => {
       message: error.message || 'Failed to process the request',
       details: error.errors || [],
     },
-    { status: error.code || 500 }
-  );
+    { status: error.code || 500 },
+  )
 }

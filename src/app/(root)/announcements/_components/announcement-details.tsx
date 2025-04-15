@@ -1,12 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import React, { useState } from 'react'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { Badge } from '@/components/ui/badge'
-import { BuildingIcon, CalendarIcon, CheckCircleIcon, ClockIcon, RefreshCwIcon, UserIcon } from 'lucide-react'
+import {
+  BuildingIcon,
+  CalendarIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  RefreshCwIcon,
+  UserIcon,
+} from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
 export function AnnouncementDetails({ id }: { id: string }) {
@@ -38,46 +52,56 @@ export function AnnouncementDetails({ id }: { id: string }) {
       <SheetTrigger asChild>
         <button className="w-full text-sm">View details</button>
       </SheetTrigger>
-      <SheetContent className="max-w-[80%] md:max-w-[40%] bg-white text-[14px]" aria-describedby={undefined}>
+      <SheetContent
+        className="max-w-[80%] md:max-w-[40%] bg-white text-[14px]"
+        aria-describedby={undefined}
+      >
         <SheetHeader className="space-y-4">
           <SheetTitle className="text-xl font-bold">{announcement.subject}</SheetTitle>
           <SheetDescription className="flex items-center text-[14px]">
-            <UserIcon className="mr-2 h-4 w-4" />
-            {announcement.created_by_user?.first_name} {announcement.created_by_user?.last_name}
+            Created By:{' '}
+            <span className="text-gray-900 ml-2">
+              {announcement.created_by_user?.first_name} {announcement.created_by_user?.last_name}
+            </span>
           </SheetDescription>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-180px)] mt-6 pr-4">
           <div className="space-y-8">
-            <div className="prose max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: announcement.body }} />
+            <div>
+              <h3 className="font-semibold mb-2 flex items-center text-[14px]">Body</h3>
+              <div className="prose max-w-none">
+                <div dangerouslySetInnerHTML={{ __html: announcement.body }} />
+              </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-2 flex items-center text-[14px]">
-                <UserIcon className="mr-2 h-5 w-5" /> Users
-              </h3>
+              <h3 className="font-semibold mb-2 flex items-center text-[14px]">Users</h3>
               <p className="text-muted-foreground">
-                {announcement.users?.map((user: any) => `${user?.first_name} ${user?.last_name}`).join(', ')}
+                {announcement.metadata?.send_to_all_users && (
+                  <span className="text-muted-foreground">All users</span>
+                )}
+              </p>
+              <p className="text-muted-foreground">
+                {announcement.users
+                  ?.map((user: any) => `${user?.first_name} ${user?.last_name}`)
+                  .join(', ')}
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2 flex items-center text-[14px]">
-                <BuildingIcon className="mr-2 h-5 w-5" /> Departments
-              </h3>
+              <h3 className="font-semibold mb-2 flex items-center text-[14px]">Departments</h3>
               <div className="flex flex-wrap gap-2">
+                {announcement.metadata?.send_to_all_departments && (
+                  <span className="text-muted-foreground">All departments</span>
+                )}
                 {announcement.departments?.map((dept: any) => (
-                  <Badge key={dept.id}>
-                    {dept?.name}
-                  </Badge>
+                  <Badge key={dept.id}>{dept?.name}</Badge>
                 ))}
               </div>
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-semibold flex items-center text-[14px]">
-                <CalendarIcon className="mr-2 h-5 w-5" /> Details
-              </h3>
-              <div className="bg-neutral-100 rounded-lg p-4 space-y-4">
+              <h3 className="font-semibold flex items-center text-[14px]">Details</h3>
+              <div className="bg-gray-50/70 rounded-lg p-4 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <CheckCircleIcon className="h-5 w-5 text-primary" />
@@ -87,7 +111,7 @@ export function AnnouncementDetails({ id }: { id: string }) {
                     {announcement?.status}
                   </Badge>
                 </div>
-                <Separator />
+                <Separator className="bg-gray-200/70" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <ClockIcon className="h-5 w-5 text-primary" />
@@ -95,7 +119,7 @@ export function AnnouncementDetails({ id }: { id: string }) {
                   </div>
                   <span className="text-sm">{formatDate(announcement?.created_at)}</span>
                 </div>
-                <Separator />
+                <Separator className="bg-gray-200/70" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <RefreshCwIcon className="h-5 w-5 text-primary" />
@@ -111,4 +135,3 @@ export function AnnouncementDetails({ id }: { id: string }) {
     </Sheet>
   )
 }
-

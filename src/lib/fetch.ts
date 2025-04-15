@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const BASE_URL = process.env.API_BASE_URL as string
 
 const baseHeaders: HeadersInit = {
@@ -17,7 +18,6 @@ interface RequestParams {
   body?: unknown
   options?: RequestInit
   isClient?: boolean
-
 }
 
 const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE') =>
@@ -36,6 +36,19 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
       ...(body !== undefined && { body: formattedBody }),
     })
 
+    if (method === 'DELETE') {
+      if (!body) {
+        delete (mergedOptions.headers as any)['Content-Type']
+      }
+    }
+
+    if ((method === 'POST' || method === 'PUT') && body instanceof FormData) {
+      mergedOptions.headers = {
+        ...mergedOptions.headers,
+        'Content-Type': 'multipart/form-data',
+      }
+    }
+
     try {
       const response = await fetch(url, mergedOptions)
 
@@ -44,7 +57,7 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
         throw error
       }
 
-      return await response.json() as T
+      return (await response.json()) as T
     } catch (error) {
       throw error
     }
