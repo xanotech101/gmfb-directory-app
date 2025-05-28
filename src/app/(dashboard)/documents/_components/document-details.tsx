@@ -164,7 +164,7 @@ export function DocumentDetails({ id }: { id: string }) {
                             <CardContent className="p-4 flex items-center justify-between">
                               <div className="flex items-center space-x-3">
                                 <FileIcon className="h-6 w-6 text-primary" />
-                                <span className="font-medium truncate" title={fileName}>
+                                <span className="font-medium truncate max-w-[60%]" title={fileName}>
                                   {fileName}
                                 </span>
                               </div>
