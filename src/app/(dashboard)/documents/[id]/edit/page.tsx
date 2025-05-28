@@ -65,10 +65,12 @@ export default function EditDocument() {
             ...file,
             file: file.url,
           })),
-          users: document.users.map((user: { id: string; name: string }) => ({
-            label: user.name,
-            value: user.id,
-          })),
+          users: document.users.map(
+            (user: { id: string; first_name: string; last_name: string }) => ({
+              label: user.first_name + ' ' + user.last_name,
+              value: user.id,
+            }),
+          ),
           departments: document.departments.map((dept: { id: string; name: string }) => ({
             label: dept.name,
             value: dept.id,
