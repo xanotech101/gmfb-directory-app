@@ -1,0 +1,83 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { put } from '@/lib/fetch'
+import { toast } from '@/hooks/use-toast'
+import { useRouter, useParams } from 'next/navigation'
+import { DocumentForm } from '../../_components/document-form/document-form'
+
+export default function EditDocument() {
+  const router = useRouter()
+  const { id } = useParams()
+
+  const updateDocument = useMutation({
+    mutationKey: ['update-document'],
+    mutationFn: async (payload: Record<string, unknown>) =>
+      put(`/api/documents/${id}`, {
+        isClient: true,
+        body: payload,
+      }),
+    onSuccess: () => {
+      toast({
+        title: 'Document updated',
+        description: 'The document has been successfully updated',
+      })
+      router.push('/documents')
+    },
+    onError: (error) => {
+      toast({
+        title: error?.message ?? 'An error occurred',
+        description: 'An error occurred while updating the document',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['document-details', id],
+    queryFn: async () => {
+      const res = await fetch(`/api/documents/${id}`)
+      if (!res.ok) {
+        throw new Error('Failed to fetch document')
+      }
+      return res.json()
+    },
+  })
+
+  if (isLoading) {
+    return <p>Loading document...</p>
+  }
+
+  if (isError) {
+    return <p>Error loading document details.</p>
+  }
+
+  const document = data.data
+
+  return (
+    <>
+      <h1 className="text-base font-semibold leading-6 text-gray-900">Edit Document</h1>
+      <p className="mt-1 text-sm text-gray-700">Update the document details below.</p>
+      <DocumentForm
+        defaultValues={{
+          subject: document.subject,
+          files: document.files?.map((file: { url: string }) => ({
+            ...file,
+            file: file.url,
+          })),
+          users: document.users.map((user: { id: string; name: string }) => ({
+            label: user.name,
+            value: user.id,
+          })),
+          departments: document.departments.map((dept: { id: string; name: string }) => ({
+            label: dept.name,
+            value: dept.id,
+          })),
+          send_to_all_users: document.metadata?.send_to_all_users || false,
+          send_to_all_departments: document.metadata?.send_to_all_departments || false,
+        }}
+        onSubmit={updateDocument.mutate}
+      />
+    </>
+  )
+}

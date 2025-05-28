@@ -3,11 +3,12 @@ import { get, post } from '@/lib/fetch'
 import { NextRequest, NextResponse } from 'next/server'
 import { getTokens } from '@/lib/get-tokens'
 import { handleServerError } from '@/lib/handle-server-error'
+import { ITEMS_PER_PAGE } from '@/constants'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const page = searchParams.get('page') || '1'
-  const limit = searchParams.get('limit') || '2'
+  const limit = searchParams.get('limit') || ITEMS_PER_PAGE
   try {
     const { accessToken } = await getTokens()
     const response = await get<any>(`/api/v1/announcements?page=${page}&limit=${limit}`, {

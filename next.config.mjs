@@ -9,11 +9,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
+        hostname: 'groomingmfb.com',
       },
       {
         protocol: 'https',
-        hostname: 'groomingmfb.com',
+        hostname: 'gmfb.s3.amazonaws.com',
       },
     ],
     dangerouslyAllowSVG: true,

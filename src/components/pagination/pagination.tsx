@@ -1,5 +1,6 @@
 import ReactPaginate from 'react-paginate'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import { ITEMS_PER_PAGE } from '@/constants'
 
 export interface PaginationProps {
   itemsPerPage?: number
@@ -8,9 +9,12 @@ export interface PaginationProps {
   currentPage: number
 }
 
-const PER_PAGE = 50
-
-function Pagination({ itemsPerPage = PER_PAGE, totalItems, handlePageChange, currentPage,}: PaginationProps): JSX.Element | null {
+function Pagination({
+  itemsPerPage = ITEMS_PER_PAGE,
+  totalItems,
+  handlePageChange,
+  currentPage,
+}: PaginationProps): JSX.Element | null {
   const pageCount = Math.ceil(totalItems / itemsPerPage)
 
   return totalItems > itemsPerPage ? (
@@ -33,7 +37,7 @@ function Pagination({ itemsPerPage = PER_PAGE, totalItems, handlePageChange, cur
   ) : null
 }
 
-const useFooterText = (currentPage: number, totalItems: number, itemsPerPage: number) => {
+const useFooterText = (currentPage: number, totalItems: number, itemsPerPage = ITEMS_PER_PAGE) => {
   if (totalItems > 0) {
     const start = (currentPage - 1) * itemsPerPage + 1
     const end = Math.min(currentPage * itemsPerPage, totalItems)
@@ -42,7 +46,4 @@ const useFooterText = (currentPage: number, totalItems: number, itemsPerPage: nu
   return null
 }
 
-export {
-  Pagination,
-  useFooterText,
-}
+export { Pagination, useFooterText }
