@@ -39,8 +39,8 @@ export default function Roles() {
           condition={data?.data?.length === 0}
           as={EmptyState}
           icon={Package}
-          title="No Documents"
-          description="Get started by creating a new document."
+          title="No Folders Found"
+          description="Get started by creating a new folder."
           className="w-full"
         />
         <Show.If condition={data} as={Fragment}>
