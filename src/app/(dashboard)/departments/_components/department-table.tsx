@@ -30,8 +30,8 @@ interface DepartmentTableProps {
 }
 
 export const DepartmentTable = ({ data, pagination, onUpdate }: DepartmentTableProps) => {
-  //   const { currentPage, totalItems, handlePageChange } = pagination
-  //   const getFooterText = useFooterText(currentPage, totalItems)
+  const { currentPage, totalItems, handlePageChange } = pagination
+  const getFooterText = useFooterText(currentPage, totalItems)
 
   return (
     <>
@@ -109,7 +109,7 @@ export const DepartmentTable = ({ data, pagination, onUpdate }: DepartmentTableP
           </TableBody>
         </Table>
       </div>
-      {/* <div className="flex items-center justify-between px-3 py-5 rounded-b-lg mt-4">
+      <div className="flex items-center justify-between px-3 py-5 rounded-b-lg mt-4">
         <div className="text-[14px] text-gray-500 flex-1">{getFooterText}</div>
         <div className="text-center flex-1 flex justify-center">
           <Pagination
@@ -119,7 +119,7 @@ export const DepartmentTable = ({ data, pagination, onUpdate }: DepartmentTableP
           />
         </div>
         <span className="flex-1" />
-      </div> */}
+      </div>
     </>
   )
 }
