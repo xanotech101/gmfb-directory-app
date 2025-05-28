@@ -162,7 +162,7 @@ export function DocumentDetails({ id }: { id: string }) {
                         return (
                           <Card className="overflow-hidden" key={file.id}>
                             <CardContent className="p-4 flex items-center justify-between">
-                              <div className="flex items-center space-x-3">
+                              <div className="flex items-center space-x-3 max-w-[80%]">
                                 <FileIcon className="h-6 w-6 text-primary" />
                                 <span className="font-medium truncate max-w-[60%]" title={fileName}>
                                   {fileName}
