@@ -36,7 +36,7 @@ export default function Roles() {
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
         <Show.If
-          condition={data?.data?.items?.length === 0}
+          condition={data?.data?.length === 0}
           as={EmptyState}
           icon={Package}
           title="No Documents"
