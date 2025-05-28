@@ -66,7 +66,7 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
       />
       <div className="lg:pl-72">
         <Topbar setSidebarOpen={() => setSidebarOpen(true)} />
-        <main className="py-10">
+        <main className="py-10 overflow-y-scroll h-screen pb-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
