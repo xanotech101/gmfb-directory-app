@@ -50,9 +50,10 @@ export default function EditDocument() {
       <DocumentForm
         defaultValues={{
           subject: document.subject,
-          files: document.files?.map((file: { url: string }) => ({
+          files: document.files?.map((file: any) => ({
             ...file,
             file: file.url,
+            folder_id: file.folder?.id || null,
           })),
           users: document.users.map(
             (user: { id: string; first_name: string; last_name: string }) => ({

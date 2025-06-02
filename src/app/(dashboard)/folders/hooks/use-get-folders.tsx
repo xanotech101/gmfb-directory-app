@@ -13,6 +13,6 @@ export const useGetFolders = () => {
 
   return {
     isFetching,
-    data,
+    folders: data?.data || [],
   }
 }

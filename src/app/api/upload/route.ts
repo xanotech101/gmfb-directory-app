@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 10MB limit
+    if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json({ error: 'File size exceeds 10MB limit' }, { status: 400 })
     }
 
@@ -20,12 +20,15 @@ export async function POST(request: NextRequest) {
       body: formData,
     })
 
-    if(!response.ok) {
+    if (!response.ok) {
       throw await response.json()
     }
 
     const data = await response.json()
-    return NextResponse.json(data)
+    return NextResponse.json({
+      ...data,
+      folder_id: formData.get('folder_id') || null,
+    })
   } catch (error) {
     return handleServerError(error)
   }

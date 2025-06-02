@@ -53,7 +53,7 @@ const FilePreview = ({ file, type }: FilePreviewProps) => {
         <div className="mb-2">{getFileIcon()}</div>
       )}
 
-      <p className="text-sm font-medium text-gray-900 text-center truncate w-full whitespace-break-spaces line-clamp-1">
+      <p className="text-sm font-medium text-gray-900 text-center break-all line-clamp-1">
         {getFileName(file)}
       </p>
     </div>

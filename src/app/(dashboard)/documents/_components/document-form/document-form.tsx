@@ -8,13 +8,12 @@ import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/hooks/use-toast'
 import { Label } from '@/components/ui/label'
@@ -25,17 +24,33 @@ import { formSchema, type FormValues } from './schema'
 import FilePicker, { type FileItem } from '@/components/file-picker/file-picker'
 import FilePreview from '@/components/file-preview/file-preview'
 import { Trash2 } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useGetFolders } from '@/app/(dashboard)/folders/hooks/use-get-folders'
 
+interface FileWithItemFolder extends FileItem {
+  folder_id?: string
+}
 interface DocumentFormProps {
   onSubmit: (data: any) => void
   defaultValues?: Partial<FormValues> & {
-    files?: { file: string; type: string; id: string }[]
+    files?: FileWithItemFolder[]
   }
 }
 
 export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
-  const [isUploadingFile, setIsUploadingFile] = React.useState(false)
-  const [files, setFiles] = useState<FileItem[]>(defaultValues?.files ?? [])
+  const { folders } = useGetFolders()
+  const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
+  const { userSearchString, setUserSearchString, users } = useSearchUsers()
+  const [isUploadingFile, setIsUploadingFile] = useState(false)
+  const [files, setFiles] = useState<FileWithItemFolder[]>(defaultValues?.files ?? [])
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -44,16 +59,14 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
     },
   })
 
-  const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
-  const { userSearchString, setUserSearchString, users } = useSearchUsers()
-
   //   @todo: move this to a reuseable hook
-  const uploadFiles = async (files: File[]) => {
+  const uploadFiles = async (files: { file: File; folder_id?: string }[]) => {
     setIsUploadingFile(true)
     try {
       const promises = files.map((file) => {
         const formData = new FormData()
-        formData.append('file', file)
+        formData.append('file', file.file)
+        formData.append('folder_id', file.folder_id ?? '')
         return fetch('/api/upload', {
           method: 'POST',
           body: formData,
@@ -81,11 +94,11 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
   const submitForm: SubmitHandler<FormValues> = async (data) => {
     const filesToUpload = files
       .filter((file) => file.file instanceof File)
-      .map((file) => file.file as File)
+      .map((file) => ({ file: file.file as File, folder_id: file.folder_id }))
 
     const urlFiles = files
       .filter((file) => typeof file.file === 'string')
-      .map((file) => ({ url: file.file, type: file.type }))
+      .map((file) => ({ url: file.file, type: file.type, folder_id: file.folder_id || null }))
 
     const uploadedFiles = await uploadFiles(filesToUpload)
 
@@ -103,6 +116,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
           return {
             url: file?.data?.url,
             type: file.data?.mimeType,
+            folder_id: file.folder_id || null,
           }
         })
         .concat(urlFiles),
@@ -231,17 +245,41 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
             <Label className="text-base font-medium hidden" htmlFor="files">
               Attachments
             </Label>
-            <div className="grid grid-cols-8 gap-4 mb-4">
+            <div className="grid grid-cols-6 gap-4 mb-4">
               {files.map((file) => (
                 <div
-                  className="relative border p-4 rounded-lg bg-gray-50 flex flex-col items-center"
                   key={file.id}
+                  className="relative border p-4 rounded-lg bg-gray-50 flex flex-col items-center gap-3"
                 >
-                  <FilePreview file={file.file} type={file.type} />
+                  <div className="border p-2 rounded-lg bg-white">
+                    <FilePreview file={file.file} type={file.type} />
+                  </div>
+                  <Select
+                    onValueChange={(value) => {
+                      setFiles((prev) =>
+                        prev.map((f) => (f.id === file.id ? { ...f, folder_id: value } : f)),
+                      )
+                    }}
+                    defaultValue={file.folder_id}
+                  >
+                    <SelectTrigger className="bg-white">
+                      <SelectValue placeholder="Select a folder" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Folders</SelectLabel>
+                        {folders?.map((folder: { id: string; name: string }) => (
+                          <SelectItem key={folder.id} value={folder.id}>
+                            {folder.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute -top-4 -right-2 z-10 m-0 !bg-transparent"
+                    className="absolute -top-5 -right-3 z-10 m-0 !bg-transparent"
                     onClick={() => setFiles((prev) => prev.filter((f) => f.id !== file.id))}
                   >
                     <Trash2 className="h-4 w-4" />

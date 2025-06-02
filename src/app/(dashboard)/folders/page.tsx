@@ -9,7 +9,7 @@ import { CreateFolder } from './_components/form/create-folder'
 import { useGetFolders } from './hooks/use-get-folders'
 
 export default function Folders() {
-  const { isFetching, data } = useGetFolders()
+  const { isFetching, folders } = useGetFolders()
   return (
     <>
       <div className="sm:flex sm:items-center">
@@ -26,14 +26,14 @@ export default function Folders() {
           <Skeleton className="h-[200px] w-full rounded-xl" />
         </Show.If>
         <Show.If
-          condition={data?.data?.length === 0}
+          condition={folders.length === 0}
           as={EmptyState}
           icon={Package}
           title="No Folders Found"
           description="Get started by creating a new folder."
           className="w-full"
         />
-        <Show.If condition={data} as={FoldersTable} data={data?.data ?? []} />
+        <Show.If condition={folders.length > 0} as={FoldersTable} data={folders} />
       </Show>
     </>
   )
