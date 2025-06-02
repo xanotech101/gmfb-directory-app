@@ -5,10 +5,12 @@ import { put } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
 import { useRouter, useParams } from 'next/navigation'
 import { DocumentForm } from '../../_components/document-form/document-form'
+import { useGetDocument } from '../../hooks/use-get-document'
 
 export default function EditDocument() {
   const router = useRouter()
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
+  const { data: document, isLoading, isError } = useGetDocument(id)
 
   const updateDocument = useMutation({
     mutationKey: ['update-document'],
@@ -33,17 +35,6 @@ export default function EditDocument() {
     },
   })
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['document-details', id],
-    queryFn: async () => {
-      const res = await fetch(`/api/documents/${id}`)
-      if (!res.ok) {
-        throw new Error('Failed to fetch document')
-      }
-      return res.json()
-    },
-  })
-
   if (isLoading) {
     return <p>Loading document...</p>
   }
@@ -51,8 +42,6 @@ export default function EditDocument() {
   if (isError) {
     return <p>Error loading document details.</p>
   }
-
-  const document = data.data
 
   return (
     <>

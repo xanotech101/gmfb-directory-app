@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,9 +23,7 @@ import { post } from '@/lib/fetch'
 
 import 'react-quill/dist/quill.snow.css'
 import { toast } from '@/hooks/use-toast'
-import { useUser } from '@/providers/user.provider'
 import { Switch } from '@/components/ui/switch'
-import { useMemo } from 'react'
 import { useDepartmentSearch } from '@/hooks/use-department-search'
 import { useSearchUsers } from '@/hooks/use-user-search'
 
@@ -62,7 +59,6 @@ const formSchema = z.object({
 })
 
 export default function CreateAnnouncement() {
-  const { user } = useUser()
   const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -117,15 +113,6 @@ export default function CreateAnnouncement() {
       departments: data.send_to_all_departments ? [] : data.departments.map(({ value }) => value),
     })
   }
-
-  const usersOptions = useMemo(() => {
-    return users.data?.data?.items
-      ?.filter((u: any) => u.id !== user?.id)
-      ?.map((u: any) => ({
-        label: `${u.first_name} ${u.last_name}`,
-        value: u.id,
-      }))
-  }, [users.data, user?.id])
 
   const { send_to_all_departments, send_to_all_users } = form.watch()
 
@@ -207,12 +194,7 @@ export default function CreateAnnouncement() {
                       </FormLabel>
                       <FormControl>
                         <MultiSelect
-                          options={
-                            departments.data?.data?.items?.map((d: any) => ({
-                              label: d.name,
-                              value: d.id,
-                            })) ?? []
-                          }
+                          options={departments}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                           placeholder="Select departments"
@@ -261,7 +243,7 @@ export default function CreateAnnouncement() {
                       <FormLabel>Select the user(s) to share the announcement with.</FormLabel>
                       <FormControl>
                         <MultiSelect
-                          options={usersOptions ?? []}
+                          options={users}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                           placeholder="Select users"

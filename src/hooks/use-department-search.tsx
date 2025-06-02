@@ -19,6 +19,10 @@ export function useDepartmentSearch() {
   return {
     deptSearchString: searchString,
     setDeptSearchString: setSearchString,
-    departments,
+    departments: (departments?.data?.data?.items || []).map((d: any) => ({
+      ...d,
+      label: d.name,
+      value: d.id,
+    })),
   }
 }

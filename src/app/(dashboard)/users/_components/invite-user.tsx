@@ -238,12 +238,7 @@ export const InviteUser = ({ onSuccess, onError, onCompleted }: InviteUserProps)
                   <FormLabel>Department</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={
-                        departments.data?.data?.items?.map((d: any) => ({
-                          label: d.name,
-                          value: d.id,
-                        })) ?? []
-                      }
+                      options={departments}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       placeholder="Select departments"

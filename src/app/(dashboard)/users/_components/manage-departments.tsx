@@ -94,12 +94,7 @@ export const ManageDepartments = ({ user, manageDepartments }: ManageDepartments
                   <FormControl>
                     <MultiSelect
                       modalPopover={true}
-                      options={
-                        departments.data?.data?.items?.map((d: any) => ({
-                          label: d.name,
-                          value: d.id,
-                        })) ?? []
-                      }
+                      options={departments}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       placeholder="Select departments"

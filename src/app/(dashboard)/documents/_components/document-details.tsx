@@ -28,19 +28,11 @@ import { Button } from '@/components/ui/button'
 import { ConfirmAction } from '@/components/confirm-action/confirm-action'
 import { toast } from '@/hooks/use-toast'
 import { formatDate } from '@/lib/format-date'
+import { useGetDocument } from '../hooks/use-get-document'
 
 export function DocumentDetails({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false)
-
-  //todo: move to a hook so it can be reused
-  const { data, isFetching, refetch } = useQuery<any>({
-    queryKey: ['document-details', id],
-    queryFn: async () =>
-      get(`/api/documents/${id}`, {
-        isClient: true,
-      }),
-    enabled: !!id,
-  })
+  const { data: document, isFetching, refetch } = useGetDocument(id)
 
   const deleteFile = useMutation({
     mutationKey: ['delete-document-file'],
@@ -64,8 +56,6 @@ export function DocumentDetails({ id }: { id: string }) {
       })
     },
   })
-
-  const document = data?.data ?? {}
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>

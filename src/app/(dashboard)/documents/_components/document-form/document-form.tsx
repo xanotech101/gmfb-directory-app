@@ -17,7 +17,6 @@ import {
 import React, { useMemo, useState } from 'react'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/hooks/use-toast'
-import { useUser } from '@/providers/user.provider'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { useDepartmentSearch } from '../../../../../hooks/use-department-search'
@@ -35,7 +34,6 @@ interface DocumentFormProps {
 }
 
 export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
-  const { user } = useUser()
   const [isUploadingFile, setIsUploadingFile] = React.useState(false)
   const [files, setFiles] = useState<FileItem[]>(defaultValues?.files ?? [])
 
@@ -111,15 +109,6 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
     })
   }
 
-  const usersOptions = useMemo(() => {
-    return users.data?.data?.items
-      ?.filter((u: any) => u.id !== user?.id)
-      ?.map((u: any) => ({
-        label: `${u.first_name} ${u.last_name}`,
-        value: u.id,
-      }))
-  }, [users.data, user?.id])
-
   const { send_to_all_departments, send_to_all_users } = form.watch()
 
   return (
@@ -171,12 +160,10 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
                     <FormLabel>Select the department(s) to share the announcement with.</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={
-                          departments.data?.data?.items?.map((d: { name: string; id: string }) => ({
-                            label: d.name,
-                            value: d.id,
-                          })) ?? []
-                        }
+                        options={departments.map((d: any) => ({
+                          label: d.name,
+                          value: d.id,
+                        }))}
                         onValueChange={field.onChange}
                         defaultValue={defaultValues?.departments ?? []}
                         placeholder="Select departments"
@@ -224,7 +211,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
                     <FormLabel>Select the user(s) to share the announcement with.</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={usersOptions ?? []}
+                        options={users}
                         onValueChange={field.onChange}
                         defaultValue={defaultValues?.users ?? []}
                         placeholder="Select users"

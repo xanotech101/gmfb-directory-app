@@ -1,25 +1,15 @@
 'use client'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fragment } from 'react'
-import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useQuery } from '@tanstack/react-query'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { FoldersTable } from './_components/folders-table'
 import { CreateFolder } from './_components/form/create-folder'
+import { useGetFolders } from './hooks/use-get-folders'
 
-export default function Roles() {
-  const { isFetching, data } = useQuery<any>({
-    queryKey: ['folders'],
-    queryFn: async () =>
-      get('/api/folders', {
-        isClient: true,
-      }),
-  })
-
+export default function Folders() {
+  const { isFetching, data } = useGetFolders()
   return (
     <>
       <div className="sm:flex sm:items-center">
@@ -43,9 +33,7 @@ export default function Roles() {
           description="Get started by creating a new folder."
           className="w-full"
         />
-        <Show.If condition={data} as={Fragment}>
-          <FoldersTable data={data?.data ?? []} />
-        </Show.If>
+        <Show.If condition={data} as={FoldersTable} data={data?.data ?? []} />
       </Show>
     </>
   )

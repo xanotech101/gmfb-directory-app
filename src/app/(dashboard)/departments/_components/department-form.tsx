@@ -76,12 +76,7 @@ export const DepartmentForm = ({ onSubmit, defaultValues }: DepartmentFormProps)
               <FormLabel>Hod</FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={
-                    users.data?.data?.items?.map((u: any) => ({
-                      label: `${u.first_name} ${u.last_name}`,
-                      value: u.id,
-                    })) ?? []
-                  }
+                  options={users}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   modalPopover
