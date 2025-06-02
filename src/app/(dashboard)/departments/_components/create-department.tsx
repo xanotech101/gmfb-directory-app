@@ -9,16 +9,13 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import React, { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
-import { DepartmentForm } from './department-form'
+import { DepartmentForm } from './form/department-form'
 
-interface CreateDepartmentProps {
-  onCreate: () => void
-}
-
-export const CreateDepartment = ({ onCreate }: CreateDepartmentProps) => {
+export const CreateDepartment = () => {
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
   const createDepartment = useMutation({
@@ -33,8 +30,8 @@ export const CreateDepartment = ({ onCreate }: CreateDepartmentProps) => {
         title: 'Department created successfully.',
         variant: 'default',
       })
+      queryClient.invalidateQueries({ queryKey: ['departments'] })
       setOpen(false)
-      onCreate()
     },
     onError: (error) => {
       toast({

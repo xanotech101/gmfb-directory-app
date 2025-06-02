@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { CreateDepartment } from './_components/create-department'
 import { useQueryState } from 'nuqs'
 import { get } from '@/lib/fetch'
@@ -22,7 +22,7 @@ export default function Departments() {
     parse: (value) => Number(value),
   })
 
-  const { isFetching, data, refetch } = useQuery<any>({
+  const { isFetching, data } = useQuery<any>({
     queryKey: ['departments', currentPage],
     queryFn: async () =>
       get(`/api/departments?page=${currentPage}`, {
@@ -39,7 +39,7 @@ export default function Departments() {
           <p className="mt-2 text-sm text-gray-700">A list of all the departments</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          {canCreateDepartments && <CreateDepartment onCreate={refetch} />}
+          {canCreateDepartments && <CreateDepartment />}
         </div>
       </div>
       <Show as="div" className="mt-8 flow-root">
@@ -56,7 +56,6 @@ export default function Departments() {
           condition={data?.data?.items?.length > 0}
           as={DepartmentTable}
           data={data?.data?.items ?? []}
-          onUpdate={refetch}
           pagination={{
             currentPage,
             totalItems: data?.data?.meta?.total ?? 0,

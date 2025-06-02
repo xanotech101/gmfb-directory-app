@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,12 +34,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useGetFolders } from '@/app/(dashboard)/folders/hooks/use-get-folders'
+import { UseMutateAsyncFunction } from '@tanstack/react-query'
 
 interface FileWithItemFolder extends FileItem {
   folder_id?: string
 }
 interface DocumentFormProps {
-  onSubmit: (data: any) => void
+  onSubmit: UseMutateAsyncFunction<unknown, Error, Record<string, unknown>, unknown>
   defaultValues?: Partial<FormValues> & {
     files?: FileWithItemFolder[]
   }
@@ -102,7 +103,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
 
     const uploadedFiles = await uploadFiles(filesToUpload)
 
-    onSubmit({
+    await onSubmit({
       subject: data.subject,
       metadata: {
         send_to_all_departments: data.send_to_all_departments,
@@ -294,7 +295,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
               accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
             />
           </div>
-          <Button type="submit" isLoading={isUploadingFile}>
+          <Button type="submit" isLoading={isUploadingFile || form.formState.isSubmitting}>
             {defaultValues ? 'Update Document' : 'Create Document'}
           </Button>
         </form>

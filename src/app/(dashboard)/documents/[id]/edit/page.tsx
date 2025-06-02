@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { put } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
 import { useRouter, useParams } from 'next/navigation'
-import { DocumentForm } from '../../_components/document-form/document-form'
+import { DocumentForm } from '../../_components/form/document-form'
 import { useGetDocument } from '../../hooks/use-get-document'
 
 export default function EditDocument() {
@@ -68,7 +68,7 @@ export default function EditDocument() {
           send_to_all_users: document.metadata?.send_to_all_users || false,
           send_to_all_departments: document.metadata?.send_to_all_departments || false,
         }}
-        onSubmit={updateDocument.mutate}
+        onSubmit={updateDocument.mutateAsync}
       />
     </>
   )

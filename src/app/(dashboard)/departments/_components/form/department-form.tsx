@@ -9,36 +9,22 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { UseMutationResult } from '@tanstack/react-query'
 import { useSearchUsers } from '@/hooks/use-user-search'
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Subject must be at least 2 characters.',
-  }),
-  hod: z
-    .array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-      }),
-    )
-    .optional(),
-})
+import { formSchema, FormValues } from './schema'
 
 interface DepartmentFormProps {
   onSubmit: UseMutationResult<any, unknown, any, unknown>
-  defaultValues?: z.infer<typeof formSchema>
+  defaultValues?: FormValues
 }
 
 export const DepartmentForm = ({ onSubmit, defaultValues }: DepartmentFormProps) => {
   const { userSearchString, setUserSearchString, users } = useSearchUsers()
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: defaultValues?.name ?? '',
@@ -46,7 +32,7 @@ export const DepartmentForm = ({ onSubmit, defaultValues }: DepartmentFormProps)
     },
   })
 
-  const submitForm = async (values: z.infer<typeof formSchema>) => {
+  const submitForm = async (values: FormValues) => {
     onSubmit.mutate({ name: values.name, hod_id: values?.hod?.[0]?.value })
   }
 

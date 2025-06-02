@@ -8,19 +8,19 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import React, { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '@/hooks/use-toast'
 import { put } from '@/lib/fetch'
-import { DepartmentForm } from './department-form'
+import { DepartmentForm } from './form/department-form'
 
 interface UpdateDepartmentProps {
   id: string
   name: string
   hod: Record<string, string> | undefined
-  onUpdate: () => void
 }
 
-export const UpdateDepartment = ({ id, name, hod, onUpdate }: UpdateDepartmentProps) => {
+export const UpdateDepartment = ({ id, name, hod }: UpdateDepartmentProps) => {
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
   const updateDepartment = useMutation({
@@ -35,7 +35,7 @@ export const UpdateDepartment = ({ id, name, hod, onUpdate }: UpdateDepartmentPr
         title: 'Department updated successfully.',
         variant: 'default',
       })
-      onUpdate()
+      queryClient.invalidateQueries({ queryKey: ['departments'] })
       setOpen(false)
     },
     onError: (error) => {

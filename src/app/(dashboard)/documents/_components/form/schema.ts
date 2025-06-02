@@ -3,18 +3,6 @@ import * as z from 'zod'
 export const MAX_FILE_SIZE = 10 * 1024 * 1024 // 5MB
 export const formSchema = z.object({
   subject: z.string().min(1, 'Subject is required'),
-  //   files: z
-  //     .array(
-  //       z.object({
-  //         url: z.string().url('Invalid file URL').optional(),
-  //         file: z
-  //           .custom<File>()
-  //           .refine((file) => file instanceof File, 'Please select a file')
-  //           .refine((file) => file.size <= MAX_FILE_SIZE, `File size should be less than 10 MB`)
-  //           .optional(),
-  //       }),
-  //     )
-  //     .min(1, 'At least one file is required'),
   departments: z
     .array(
       z.object({

@@ -26,10 +26,9 @@ import { UpdateDepartment } from './update-department'
 interface DepartmentTableProps {
   data: any
   pagination: PaginationProps
-  onUpdate(): void
 }
 
-export const DepartmentTable = ({ data, pagination, onUpdate }: DepartmentTableProps) => {
+export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
   const getFooterText = useFooterText(currentPage, totalItems)
 
@@ -99,7 +98,7 @@ export const DepartmentTable = ({ data, pagination, onUpdate }: DepartmentTableP
                         <DepartmentUsers name={d.name} id={d.id} />
                       </DropdownMenuItem>
                       <DropdownMenuItem className="text-[13px]" onClick={(e) => e.preventDefault()}>
-                        <UpdateDepartment id={d.id} name={d.name} hod={d.hod} onUpdate={onUpdate} />
+                        <UpdateDepartment id={d.id} name={d.name} hod={d.hod} />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
