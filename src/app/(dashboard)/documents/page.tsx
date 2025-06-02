@@ -8,7 +8,7 @@ import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
-import { Package } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { DocumentsTable } from './_components/documents-table'
@@ -45,7 +45,10 @@ export default function Documents() {
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           {canCreateDocuments && (
             <Link href="/documents/create">
-              <Button>Create Document</Button>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Create Document
+              </Button>
             </Link>
           )}
         </div>
@@ -56,14 +59,12 @@ export default function Documents() {
           condition={!canViewDocuments}
           className="bg-white w-full"
           as={EmptyState}
-          icon={Package}
           title="Permission Denied"
           description="You do not have permission to view documents."
         />
         <Show.If
           condition={data?.data?.items?.length === 0}
           as={EmptyState}
-          icon={Package}
           title="No Documents"
           description="Get started by creating a new document."
           className="w-full"

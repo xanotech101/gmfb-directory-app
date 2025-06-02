@@ -50,8 +50,9 @@ const navigation = [
 export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
   const isActive = (href: string) => {
-    return pathname === href
+    return pathname === href || pathname.startsWith(href + '/')
   }
 
   return (
