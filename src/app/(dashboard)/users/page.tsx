@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { InviteUser } from './_components/invite-user'
 import { UserTable } from './_components/user-table'
 import { get, patch } from '@/lib/fetch'
-import { useQueryState } from 'nuqs'
+import { parseAsFloat, parseAsString, useQueryStates } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import React, { Fragment } from 'react'
@@ -16,17 +16,23 @@ import { useUser } from '@/providers/user.provider'
 
 export default function Users() {
   const { hasPermission } = useUser()
+
   const canViewUsers = hasPermission('can_view_users')
   const canInviteUser = hasPermission('can_invite_user')
-  const [currentPage, setCurrentPage] = useQueryState('page', {
-    defaultValue: 1,
-    parse: (value) => Number(value),
-  })
+  const [filters, setFilters] = useQueryStates(
+    {
+      page: parseAsFloat.withDefault(1),
+      search: parseAsString.withDefault(''),
+    },
+    {
+      history: 'push',
+    },
+  )
 
   const { isFetching, data, refetch } = useQuery<any>({
-    queryKey: ['users', currentPage],
+    queryKey: ['users', filters.page, filters.search],
     queryFn: async () =>
-      get(`/api/users?page=${currentPage}`, {
+      get(`/api/users?page=${filters.page}&search=${filters.search}`, {
         isClient: true,
       }),
     enabled: canViewUsers,
@@ -91,10 +97,10 @@ export default function Users() {
           {canInviteUser && (
             <InviteUser
               onCompleted={() => {
-                if (currentPage === 1) {
+                if (filters.page === 1) {
                   return refetch()
                 } else {
-                  return setCurrentPage(1)
+                  return setFilters((prev) => ({ ...prev, page: 1 }))
                 }
               }}
             />
@@ -111,29 +117,27 @@ export default function Users() {
           title="Permission Denied"
           description="You do not have permission to view users."
         />
-        <Show.If condition={data} as={Fragment}>
-          <Show as={Fragment}>
-            <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
-              <EmptyState
-                icon={Package}
-                title="No Users"
-                description="Get started by creating a new document."
-                className="w-full"
-              />
-            </Show.If>
-            <Show.Else
-              as={UserTable}
-              data={data?.data?.items ?? []}
-              pagination={{
-                currentPage,
-                totalItems: data?.data?.meta?.total ?? 0,
-                handlePageChange: setCurrentPage,
-              }}
-              resetPassword={resetPassword}
-              manageDepartments={manageDepartments}
-            />
-          </Show>
-        </Show.If>
+        <Show.If
+          condition={data}
+          as={UserTable}
+          data={data?.data?.items ?? []}
+          pagination={{
+            currentPage: filters.page,
+            totalItems: data?.data?.meta?.total ?? 0,
+            handlePageChange: (page: number) => {
+              setFilters((prev) => ({ ...prev, page }))
+            },
+          }}
+          resetPassword={resetPassword}
+          manageDepartments={manageDepartments}
+          filters={{
+            onSearch: (searchString: string) => {
+              setFilters((prev) => ({ ...prev, search: searchString }))
+            },
+            searchString: filters.search,
+          }}
+        />
+        {/* todo: maybe render error state here */}
       </Show>
     </>
   )

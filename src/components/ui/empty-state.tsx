@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { type LucideIcon } from 'lucide-react'
+import { Package, type LucideIcon } from 'lucide-react'
 
 interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
-  icon: LucideIcon
+  icon?: LucideIcon
   title: string
   description: string
   actionLabel?: string
@@ -12,7 +12,7 @@ interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function EmptyState({
-  icon: Icon,
+  icon: Icon = Package,
   title,
   description,
   actionLabel,
@@ -20,7 +20,7 @@ export function EmptyState({
   onAction,
   className,
   ...props
-} : EmptyStateProps) {
+}: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -29,7 +29,7 @@ export function EmptyState({
       )}
       {...props}
     >
-      <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
+      <div className="mx-auto flex max-w-lg flex-col items-center justify-center text-center">
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
           <Icon className="h-10 w-10 text-muted-foreground" />
         </div>
@@ -48,4 +48,3 @@ export function EmptyState({
     </div>
   )
 }
-

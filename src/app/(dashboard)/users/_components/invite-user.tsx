@@ -33,6 +33,7 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/hooks/use-toast'
 import { useState } from 'react'
 import { useDepartmentSearch } from '@/hooks/use-department-search'
+import { Plus } from 'lucide-react'
 
 const formSchema = z.object({
   first_name: z.string().min(1, {
@@ -128,7 +129,10 @@ export const InviteUser = ({ onSuccess, onError, onCompleted }: InviteUserProps)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Invite User</Button>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Invite User
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>
