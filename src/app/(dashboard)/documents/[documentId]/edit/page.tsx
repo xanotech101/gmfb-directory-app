@@ -9,13 +9,13 @@ import { useGetDocument } from '../../hooks/use-get-document'
 
 export default function EditDocument() {
   const router = useRouter()
-  const { id } = useParams<{ id: string }>()
-  const { data: document, isLoading, isError } = useGetDocument(id)
+  const { documentId } = useParams<{ documentId: string }>()
+  const { data: document, isLoading, isError } = useGetDocument(documentId)
 
   const updateDocument = useMutation({
     mutationKey: ['update-document'],
     mutationFn: async (payload: Record<string, unknown>) =>
-      put(`/api/documents/${id}`, {
+      put(`/api/documents/${documentId}`, {
         isClient: true,
         body: payload,
       }),
