@@ -63,12 +63,10 @@ const formSchema = z.object({
 })
 
 interface InviteUserProps {
-  onSuccess?: (message?: string) => void
-  onError?: (message?: string) => void
   onCompleted?: (message?: string) => void
 }
 
-export const InviteUser = ({ onSuccess, onError, onCompleted }: InviteUserProps) => {
+export const InviteUser = ({ onCompleted }: InviteUserProps) => {
   const [open, setOpen] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,7 +98,6 @@ export const InviteUser = ({ onSuccess, onError, onCompleted }: InviteUserProps)
         body: payload,
       }),
     onSuccess: () => {
-      onSuccess?.()
       setOpen(false)
       toast({
         title: 'Success',
@@ -108,7 +105,6 @@ export const InviteUser = ({ onSuccess, onError, onCompleted }: InviteUserProps)
       })
     },
     onError: (error) => {
-      onError?.()
       toast({
         title: 'Error',
         variant: 'destructive',
