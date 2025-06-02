@@ -132,7 +132,7 @@ export default function Users() {
           manageDepartments={manageDepartments}
           filters={{
             onSearch: (searchString: string) => {
-              setFilters((prev) => ({ ...prev, search: searchString }))
+              setFilters((prev) => ({ ...prev, search: searchString, page: 1 }))
             },
             searchString: filters.search,
           }}
