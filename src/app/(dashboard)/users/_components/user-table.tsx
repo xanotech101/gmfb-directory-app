@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -18,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EllipsisVertical, Search } from 'lucide-react'
+import { EllipsisVertical, KeyRoundIcon, Search } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { Badge } from '@/components/ui/badge'
 import { getRandomColor } from '@/lib/random-color'
@@ -27,6 +28,7 @@ import { UseMutationResult } from '@tanstack/react-query'
 import { ManageDepartments } from './manage-departments'
 import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/ui/empty-state'
+import { ConfirmAction } from '@/components/confirm-action/confirm-action'
 
 interface UserTableProps {
   data: any
@@ -159,7 +161,8 @@ export const UserTable = ({
                             <EllipsisVertical size={16} className="flex-shrink-0" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-auto max-w-56 text-[13px]">
+                        <DropdownMenuContent className="w-auto max-w-56">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem
                             className="text-[13px]"
                             onClick={(e) => {
@@ -169,10 +172,31 @@ export const UserTable = ({
                           >
                             <UserDetailsModal user={user} />
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-[13px]">
-                            <button onClick={() => resetPassword.mutate(user.id)}>
-                              Reset Password
-                            </button>
+                          <DropdownMenuItem
+                            className="text-[13px]"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              e.preventDefault()
+                            }}
+                          >
+                            <ConfirmAction
+                              trigger={
+                                <button className="w-full text-sm text-left flex items-center gap-1">
+                                  <KeyRoundIcon className="size-4" />
+                                  Reset Password
+                                </button>
+                              }
+                              title="Reset Password"
+                              description="Are you sure you want to reset this user's password?"
+                              actionProps={{
+                                action: () => resetPassword.mutateAsync(user.id),
+                                isLoading: resetPassword.isPending,
+                                buttonProps: {
+                                  variant: 'default',
+                                  children: 'Reset Password',
+                                },
+                              }}
+                            />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-[13px]"

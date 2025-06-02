@@ -14,6 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { getRandomColor } from '@/lib/random-color'
 import { formatDate } from '@/lib/format-date'
+import { UserCircle } from 'lucide-react'
 
 const randomIndex = Math.floor(Math.random())
 
@@ -22,7 +23,12 @@ export function UserDetailsModal({ user }: { user: any }) {
 
   return (
     <Dialog>
-      <DialogTrigger>View Profile</DialogTrigger>
+      <DialogTrigger asChild>
+        <button className="w-full text-sm text-left flex items-center gap-1">
+          <UserCircle className="size-4" />
+          View Profile
+        </button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle>User Details</DialogTitle>

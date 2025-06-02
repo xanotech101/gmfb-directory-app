@@ -23,6 +23,7 @@ import { UseMutationResult } from '@tanstack/react-query'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { useState } from 'react'
 import { useDepartmentSearch } from '@/hooks/use-department-search'
+import { Building } from 'lucide-react'
 
 const formSchema = z.object({
   departments: z.array(
@@ -71,7 +72,10 @@ export const ManageDepartments = ({ user, manageDepartments }: ManageDepartments
   return (
     <Dialog open={open} onOpenChange={setOpen} modal>
       <DialogTrigger asChild>
-        <button>Manage Departments</button>
+        <button className="w-full text-sm text-left flex items-center gap-1">
+          <Building className="size-4" />
+          Manage Departments
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>
