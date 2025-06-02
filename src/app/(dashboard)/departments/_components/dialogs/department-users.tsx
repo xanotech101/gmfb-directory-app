@@ -2,7 +2,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -10,6 +17,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { getRandomColor } from '@/lib/random-color'
 import { useDebounce } from 'use-debounce'
+import { UserCircle } from 'lucide-react'
 
 type User = {
   id: string
@@ -49,31 +57,37 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
   const [userSearchString, setUserSearchString] = useState('')
   const [debouncedSearchSearchString] = useDebounce(userSearchString, 500)
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } = useInfiniteQuery<ApiResponse>({
-    queryKey: ['department-users', id, debouncedSearchSearchString],
-    queryFn: ({ pageParam }) => get(`/api/departments/${id}/users?page=${pageParam}&search=${debouncedSearchSearchString}`, { isClient: true }),
-    getNextPageParam: (lastPage) => {
-      const { page, total, limit } = lastPage.data.meta
-      const totalPages = Math.ceil(total / limit)
-      return page < totalPages ? page + 1 : undefined
-    },
-    initialPageParam: 1,
-    enabled: !!id,
-  })
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } =
+    useInfiniteQuery<ApiResponse>({
+      queryKey: ['department-users', id, debouncedSearchSearchString],
+      queryFn: ({ pageParam }) =>
+        get(
+          `/api/departments/${id}/users?page=${pageParam}&search=${debouncedSearchSearchString}`,
+          { isClient: true },
+        ),
+      getNextPageParam: (lastPage) => {
+        const { page, total, limit } = lastPage.data.meta
+        const totalPages = Math.ceil(total / limit)
+        return page < totalPages ? page + 1 : undefined
+      },
+      initialPageParam: 1,
+      enabled: !!id,
+    })
 
   const users = data?.pages?.[0]?.data?.items ?? []
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button className="w-full text-left">View Users</button>
+        <button className="w-full text-sm text-left flex items-center gap-1">
+          <UserCircle className="size-4" />
+          View Users
+        </button>
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px] bg-white">
         <SheetHeader>
           <SheetTitle>{name} Department Users</SheetTitle>
-          <SheetDescription>
-            List of users in the {name} Department
-          </SheetDescription>
+          <SheetDescription>List of users in the {name} Department</SheetDescription>
         </SheetHeader>
         <div className="mt-6 space-y-4">
           <Input
@@ -106,7 +120,9 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-medium leading-none">{user?.user?.first_name} {user?.user?.last_name}</p>
+                    <p className="text-sm font-medium leading-none">
+                      {user?.user?.first_name} {user?.user?.last_name}
+                    </p>
                     <p className="text-sm text-muted-foreground">{user?.user?.email}</p>
                   </div>
                 </div>
@@ -118,4 +134,3 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
     </Sheet>
   )
 }
-

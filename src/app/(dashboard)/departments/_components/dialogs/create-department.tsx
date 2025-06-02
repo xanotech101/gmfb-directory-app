@@ -12,7 +12,7 @@ import React, { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
-import { DepartmentForm } from './form/department-form'
+import { DepartmentForm } from '../form/department-form'
 
 export const CreateDepartment = () => {
   const queryClient = useQueryClient()

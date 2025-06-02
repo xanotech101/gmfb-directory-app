@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import React from 'react'
-import { CreateDepartment } from './_components/create-department'
 import { useQueryState } from 'nuqs'
 import { get } from '@/lib/fetch'
 import { useQuery } from '@tanstack/react-query'
@@ -11,6 +10,7 @@ import { DepartmentTable } from './_components/department-table'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { useUser } from '@/providers/user.provider'
+import { CreateDepartment } from './_components/dialogs/create-department'
 
 export default function Departments() {
   const { hasPermission } = useUser()

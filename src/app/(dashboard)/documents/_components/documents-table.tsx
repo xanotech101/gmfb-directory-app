@@ -140,7 +140,7 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                           className="w-full text-sm text-left flex items-center gap-1"
                         >
                           <SquarePenIcon className="size-4" />
-                          Edit
+                          Edit Document
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={preventBubble}>
@@ -148,7 +148,7 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                           trigger={
                             <button className="w-full text-sm text-left flex items-center gap-1">
                               <Trash2Icon className="size-4" />
-                              Delete
+                              Delete Document
                             </button>
                           }
                           title="Delete Document"

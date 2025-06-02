@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -20,8 +21,8 @@ import {
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { getRandomColor } from '@/lib/random-color'
-import { DepartmentUsers } from './department-users'
-import { UpdateDepartment } from './update-department'
+import { DepartmentUsers } from './dialogs/department-users'
+import { UpdateDepartment } from './dialogs/update-department'
 
 interface DepartmentTableProps {
   data: any
@@ -94,6 +95,7 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem className="text-[13px]" onClick={(e) => e.preventDefault()}>
                         <DepartmentUsers name={d.name} id={d.id} />
                       </DropdownMenuItem>

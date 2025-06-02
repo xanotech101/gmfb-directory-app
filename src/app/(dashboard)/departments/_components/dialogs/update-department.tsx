@@ -11,7 +11,8 @@ import React, { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '@/hooks/use-toast'
 import { put } from '@/lib/fetch'
-import { DepartmentForm } from './form/department-form'
+import { DepartmentForm } from '../form/department-form'
+import { SquarePenIcon } from 'lucide-react'
 
 interface UpdateDepartmentProps {
   id: string
@@ -49,7 +50,10 @@ export const UpdateDepartment = ({ id, name, hod }: UpdateDepartmentProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="w-full text-left">Update</button>
+        <button className="w-full text-sm text-left flex items-center gap-1">
+          <SquarePenIcon className="size-4" />
+          Update department
+        </button>
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px] bg-[#fff]"

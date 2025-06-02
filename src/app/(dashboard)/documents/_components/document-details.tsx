@@ -62,7 +62,7 @@ export function DocumentDetails({ id }: { id: string }) {
       <SheetTrigger asChild>
         <button className="w-full text-sm text-left flex items-center gap-1">
           <ReceiptTextIcon className="size-4" />
-          View
+          View Details
         </button>
       </SheetTrigger>
       <SheetContent
