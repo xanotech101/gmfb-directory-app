@@ -16,6 +16,7 @@ import { getRandomColor } from '@/lib/random-color'
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { post } from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const userNavigation = [{ name: 'Your profile', href: 'settings' }]
 
@@ -111,12 +112,12 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                 >
                   {userNavigation.map((item) => (
                     <MenuItem key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </MenuItem>
                   ))}
                   <MenuItem>
