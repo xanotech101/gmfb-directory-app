@@ -52,6 +52,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
   const { userSearchString, setUserSearchString, users } = useSearchUsers()
   const [isUploadingFile, setIsUploadingFile] = useState(false)
   const [files, setFiles] = useState<FileWithItemFolder[]>(defaultValues?.files ?? [])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -102,7 +103,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
       .map((file) => ({ url: file.file, type: file.type, folder_id: file.folder_id || null }))
 
     const uploadedFiles = await uploadFiles(filesToUpload)
-
+    setIsSubmitting(true)
     await onSubmit({
       subject: data.subject,
       metadata: {
@@ -121,6 +122,8 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
           }
         })
         .concat(urlFiles),
+    }).finally(() => {
+      setIsSubmitting(false)
     })
   }
 
@@ -295,7 +298,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
               accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
             />
           </div>
-          <Button type="submit" isLoading={isUploadingFile || form.formState.isSubmitting}>
+          <Button type="submit" isLoading={isUploadingFile || isSubmitting}>
             {defaultValues ? 'Update Document' : 'Create Document'}
           </Button>
         </form>

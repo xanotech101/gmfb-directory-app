@@ -1,0 +1,73 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
+import { get } from '@/lib/fetch'
+import { useQuery } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
+import { Show } from 'react-smart-conditional'
+import { FileCard } from '../../documents/_components/file-card'
+import { Skeleton } from '@/components/ui/skeleton'
+
+export default function FolderDetails() {
+  const { folderId } = useParams<{ folderId: string }>()
+
+  const folder = useQuery<any>({
+    queryKey: ['folders', folderId],
+    queryFn: async () =>
+      get(`/api/folders/${folderId}`, {
+        isClient: true,
+      }),
+    enabled: !!folderId,
+  })
+
+  const files = useQuery<any>({
+    queryKey: ['folder-files', folderId],
+    queryFn: async () =>
+      get(`/api/folders/${folderId}/files`, {
+        isClient: true,
+      }),
+    enabled: !!folderId,
+  })
+
+  console.log('🚀 ~ FolderDetails ~ files:', files?.data?.data)
+
+  return (
+    <>
+      {folder.isFetching ? (
+        <div>Loading...</div>
+      ) : (
+        <h1 className="text-base font-semibold leading-6 text-gray-900">
+          {folder.data?.data?.name || 'Folder Details'}
+        </h1>
+      )}
+
+      <Show>
+        <Show.If condition={files.isFetching} as="div" className="grid grid-cols-4 gap-4 mt-4">
+          {new Array(8).fill(null).map((_, index) => (
+            <Skeleton key={index} className="h-[150px] w-full rounded-lg" />
+          ))}
+        </Show.If>
+        <Show.If
+          condition={files.data?.data?.meta?.total > 0}
+          as="ul"
+          className="grid grid-cols-4 gap-4 mt-8"
+        >
+          {files?.data?.data?.items?.map((file: any) => (
+            <FileCard
+              key={file.id}
+              file={{
+                id: file.id,
+                type: file.type,
+                url: file.url,
+              }}
+              documentId={file.document_id}
+            />
+          ))}
+        </Show.If>
+        <Show.Else>
+          <p className="mt-4">No files found in this folder.</p>
+        </Show.Else>
+      </Show>
+    </>
+  )
+}

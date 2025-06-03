@@ -8,7 +8,7 @@ interface FilePreviewProps {
 }
 
 const FilePreview = ({ file, type }: FilePreviewProps) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
     if (typeof file === 'string') {
@@ -41,7 +41,7 @@ const FilePreview = ({ file, type }: FilePreviewProps) => {
 
   return (
     <div title={getFileName(file)} className="flex items-center flex-col">
-      {type.startsWith('image/') && imageUrl ? (
+      {type.startsWith('image/') ? (
         <Image
           src={imageUrl}
           alt={typeof file === 'string' ? file : file.name}

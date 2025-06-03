@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -15,12 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EllipsisVertical } from 'lucide-react'
-import Link from 'next/link'
+import { EllipsisVertical, ReceiptTextIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getRandomColor } from '@/lib/random-color'
-import { EditFolder } from './form/edit-folder'
+import { EditFolder } from './dialog/edit-folder'
+import Link from 'next/link'
 
 export const FoldersTable = ({ data }: any) => {
   return (
@@ -81,14 +82,18 @@ export const FoldersTable = ({ data }: any) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-auto max-w-56">
-                    <DropdownMenuItem
-                      className={cn(folder.is_default && 'opacity-50 cursor-not-allowed')}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                      }}
-                    >
-                      {<EditFolder defaultValues={folder} folderId={folder.id} />}
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                      <EditFolder defaultValues={folder} folderId={folder.id} />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                      <Link
+                        href={`/folders/${folder.id}`}
+                        className="w-full text-sm text-left flex items-center gap-1"
+                      >
+                        <ReceiptTextIcon className="size-4" />
+                        View Details
+                      </Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

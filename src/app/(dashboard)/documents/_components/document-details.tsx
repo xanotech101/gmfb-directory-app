@@ -1,15 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import React, { useState } from 'react'
-import {
-  CheckCircleIcon,
-  ClockIcon,
-  ExternalLinkIcon,
-  FileIcon,
-  RefreshCwIcon,
-  Trash2Icon,
-  ReceiptTextIcon,
-} from 'lucide-react'
+import { CheckCircleIcon, ClockIcon, RefreshCwIcon, ReceiptTextIcon } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { del, get } from '@/lib/fetch'
@@ -23,12 +15,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ConfirmAction } from '@/components/confirm-action/confirm-action'
 import { toast } from '@/hooks/use-toast'
 import { formatDate } from '@/lib/format-date'
 import { useGetDocument } from '../hooks/use-get-document'
+import { FileCard } from './file-card'
 
 export function DocumentDetails({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -147,54 +137,14 @@ export function DocumentDetails({ id }: { id: string }) {
                       Attached Files
                     </h3>
                     <div className="space-y-2">
-                      {document.files.map((file: any) => {
-                        const fileName = file.url.split('/').pop() || 'Unnamed File'
-                        return (
-                          <Card className="overflow-hidden" key={file.id}>
-                            <CardContent className="p-4 flex items-center justify-between">
-                              <div className="flex items-center space-x-3 max-w-[80%]">
-                                <FileIcon className="h-6 w-6 text-primary" />
-                                <span className="font-medium truncate max-w-[60%]" title={fileName}>
-                                  {fileName}
-                                </span>
-                              </div>
-                              <div className="flex space-x-3">
-                                <ConfirmAction
-                                  trigger={
-                                    <Button variant="ghost" className="p-0" title="Open file">
-                                      <Trash2Icon className="h-4 w-4 text-red-600" />
-                                      <span className="sr-only">Delete file</span>
-                                    </Button>
-                                  }
-                                  title="Delete Document File"
-                                  description="Are you sure you want to delete this file? This action cannot be undone."
-                                  actionProps={{
-                                    action: () =>
-                                      deleteFile.mutateAsync({
-                                        documentId: document.id,
-                                        fileId: file.id,
-                                      }),
-                                    isLoading: deleteFile.isPending,
-                                    buttonProps: {
-                                      variant: 'destructive',
-                                      children: 'Delete',
-                                    },
-                                  }}
-                                />
-                                <Button
-                                  variant="ghost"
-                                  className="p-0"
-                                  onClick={() => window.open(file.url, '_blank')}
-                                  title="Open file"
-                                >
-                                  <ExternalLinkIcon className="h-4 w-4" />
-                                  <span className="sr-only">Open file</span>
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        )
-                      })}
+                      {document.files.map((file: any) => (
+                        <FileCard
+                          file={file}
+                          key={file.id}
+                          documentId={id}
+                          handleDelete={deleteFile.mutateAsync}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}

@@ -38,11 +38,6 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
   const getFooterText = useFooterText(currentPage, totalItems)
 
-  const preventBubble = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
-  }
-
   const deleteDocument = useMutation({
     mutationKey: ['delete-document'],
     mutationFn: async (documentId: string) =>
@@ -131,7 +126,7 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={preventBubble}>
+                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                         <DocumentDetails id={doc.id} />
                       </DropdownMenuItem>
                       <DropdownMenuItem>
@@ -143,7 +138,7 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                           Edit Document
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={preventBubble}>
+                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                         <ConfirmAction
                           trigger={
                             <button className="w-full text-sm text-left flex items-center gap-1">

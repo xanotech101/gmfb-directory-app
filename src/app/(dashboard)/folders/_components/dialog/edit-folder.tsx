@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react'
+import { ComponentPropsWithoutRef, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -8,27 +8,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { post } from '@/lib/fetch'
+import { put } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
-import { FolderForm } from './folder-form'
+import { FolderForm } from '../form/folder-form'
+import { SquarePenIcon } from 'lucide-react'
 
-export const CreateFolder = () => {
-  const [isOpen, setIsOpen] = useState(false)
+interface UpdateFolderProps
+  extends Omit<ComponentPropsWithoutRef<typeof FolderForm>, 'formAction'> {
+  folderId: string
+}
+
+export const EditFolder = ({ defaultValues, folderId }: UpdateFolderProps) => {
   const queryClient = useQueryClient()
+  const [isOpen, setIsOpen] = useState(false)
 
-  const createFolder = useMutation({
-    mutationKey: ['create-folder'],
+  const editFolder = useMutation({
+    mutationKey: ['edit-folder'],
     mutationFn: async (payload: { name: string }) =>
-      post(`/api/folders`, {
+      put(`/api/folders/${folderId}`, {
         isClient: true,
         body: payload,
       }),
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: 'The folder has been created successfully',
+        description: 'The folder has been updated successfully',
       })
       queryClient.invalidateQueries({ queryKey: ['folders'] })
       setIsOpen(false)
@@ -41,21 +46,25 @@ export const CreateFolder = () => {
       })
     },
   })
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className=" bg-[#891C69] hover:bg-[#974D7B]">Create Folder</Button>
+        <button className="flex gap-1 items-center">
+          <SquarePenIcon className="size-4" />
+          Edit Folder
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
-            Create Folder
+            Edit Folder
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-700">
-            Add the details of the new folder you want to create.
+            Change the details of the folder.
           </DialogDescription>
         </DialogHeader>
-        <FolderForm formAction={createFolder} />
+        <FolderForm formAction={editFolder} defaultValues={defaultValues} />
       </DialogContent>
     </Dialog>
   )
