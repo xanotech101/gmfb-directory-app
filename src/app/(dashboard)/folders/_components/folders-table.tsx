@@ -73,7 +73,7 @@ export const FoldersTable = ({ data }: any) => {
                 </div>
               </TableCell>
               <TableCell>{folder.name}</TableCell>
-              <TableCell>{0}</TableCell>
+              <TableCell>{folder?.files_count ?? 0}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

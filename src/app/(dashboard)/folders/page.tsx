@@ -22,16 +22,14 @@ export default function Folders() {
         </div>
       </div>
       <Show as="div" className="mt-8 flow-root">
-        <Show.If condition={isFetching} as={Fragment}>
-          <Skeleton className="h-[200px] w-full rounded-xl" />
-        </Show.If>
+        <Show.If condition={isFetching} as={Skeleton} className="h-[200px] w-full rounded-xl" />
         <Show.If
           condition={folders.length === 0}
           as={EmptyState}
           icon={Package}
           title="No Folders Found"
           description="Get started by creating a new folder."
-          className="w-full"
+          className="w-full bg-white"
         />
         <Show.If condition={folders.length > 0} as={FoldersTable} data={folders} />
       </Show>
