@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
 import { DepartmentForm } from '../form/department-form'
+import { Plus } from 'lucide-react'
 
 export const CreateDepartment = () => {
   const queryClient = useQueryClient()
@@ -44,7 +45,10 @@ export const CreateDepartment = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create Department</Button>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Create Department
+        </Button>
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px] bg-[#fff]"

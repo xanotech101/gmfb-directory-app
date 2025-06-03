@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query'
 import { post } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
 import { RoleForm } from './role-form'
+import { Plus } from 'lucide-react'
 
 interface CreateRoleProps {
   onSuccess: () => void
@@ -46,7 +47,10 @@ export const CreateRole = ({ onSuccess }: CreateRoleProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className=" bg-[#891C69] hover:bg-[#974D7B]">Create Role</Button>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Create Role
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>

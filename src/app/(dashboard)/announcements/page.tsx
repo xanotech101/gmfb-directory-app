@@ -9,7 +9,7 @@ import { useQueryState } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
-import { Package } from 'lucide-react'
+import { Package, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { AnnouncementsTable } from './_components/announcement-table'
 import { useUser } from '@/providers/user.provider'
@@ -45,7 +45,10 @@ export default function Announcements() {
             <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
               {canCreateAnnouncements && (
                 <Link href="/announcements/create">
-                  <Button>Create Announcement</Button>
+                  <Button>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Announcement
+                  </Button>
                 </Link>
               )}
             </div>
