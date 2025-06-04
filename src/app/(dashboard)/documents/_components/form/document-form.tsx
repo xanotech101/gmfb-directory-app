@@ -175,7 +175,7 @@ export function DocumentForm({ defaultValues, onSubmit }: DocumentFormProps) {
                 name="departments"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Select the department(s) to share the announcement with.</FormLabel>
+                    <FormLabel>Select the department(s) to share the document with.</FormLabel>
                     <FormControl>
                       <MultiSelect
                         options={departments.map((d: any) => ({
