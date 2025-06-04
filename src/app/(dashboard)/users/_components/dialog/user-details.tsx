@@ -18,7 +18,7 @@ import { UserCircle } from 'lucide-react'
 
 const randomIndex = Math.floor(Math.random())
 
-export function UserDetailsModal({ user }: { user: any }) {
+export function UserDetails({ user }: { user: any }) {
   if (!user) return null
 
   return (

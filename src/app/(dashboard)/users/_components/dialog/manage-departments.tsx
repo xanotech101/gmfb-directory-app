@@ -19,11 +19,13 @@ import {
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UseMutationResult } from '@tanstack/react-query'
+import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { useState } from 'react'
 import { useDepartmentSearch } from '@/hooks/use-department-search'
 import { Building } from 'lucide-react'
+import { patch } from '@/lib/fetch'
+import { toast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
   departments: z.array(
@@ -35,7 +37,6 @@ const formSchema = z.object({
 })
 
 interface ManageDepartmentsProps {
-  manageDepartments: UseMutationResult<any, unknown, any, unknown>
   user: {
     id: string
     departments: Record<string, string>[]
@@ -44,7 +45,8 @@ interface ManageDepartmentsProps {
   }
 }
 
-export const ManageDepartments = ({ user, manageDepartments }: ManageDepartmentsProps) => {
+export const ManageDepartments = ({ user }: ManageDepartmentsProps) => {
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const { deptSearchString, setDeptSearchString, departments } = useDepartmentSearch()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,16 +60,34 @@ export const ManageDepartments = ({ user, manageDepartments }: ManageDepartments
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    return manageDepartments
-      .mutateAsync({
-        userId: user.id,
-        departments: values.departments,
+  const manageDepartments = useMutation({
+    mutationKey: ['manage-departments'],
+    mutationFn: async (payload: z.infer<typeof formSchema>) =>
+      patch(`/api/users/${user.id}/departments`, {
+        isClient: true,
+        body: {
+          departments: payload.departments.map((d: any) => d.value),
+        },
+      }),
+    onSuccess: async () => {
+      toast({
+        title: 'Success',
+        description: 'Updated departments successfully',
       })
-      .then(() => {
-        setOpen(false)
+      await queryClient.invalidateQueries({ queryKey: ['users'] })
+      setOpen(false)
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        variant: 'destructive',
+        description: error?.message ?? 'An error occurred',
       })
-  }
+    },
+  })
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) =>
+    manageDepartments.mutateAsync({ departments: values.departments })
 
   return (
     <Dialog open={open} onOpenChange={setOpen} modal>
