@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { AvatarFallback } from '@radix-ui/react-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,7 +62,6 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                               : `2px solid ${getRandomColor(index).border}`,
                           }}
                         >
-                          <AvatarImage src={d.hod.avatar} alt="profile image" />
                           <AvatarFallback
                             className="h-full w-full flex justify-center items-center"
                             style={{

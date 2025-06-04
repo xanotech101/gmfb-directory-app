@@ -13,7 +13,7 @@ import {
 import { useUser } from '@/providers/user.provider'
 import { Avatar } from '@/components/ui/avatar'
 import { getRandomColor } from '@/lib/random-color'
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { AvatarFallback } from '@radix-ui/react-avatar'
 import { post } from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -81,7 +81,6 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                       border: user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
                     }}
                   >
-                    <AvatarImage src={user?.avatar} alt="user's avatar" />
                     <AvatarFallback
                       className="h-full w-full flex justify-center items-center"
                       style={{

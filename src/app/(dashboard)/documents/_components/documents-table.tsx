@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -88,10 +88,6 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                           : `2px solid ${getRandomColor(index).border}`,
                       }}
                     >
-                      <AvatarImage
-                        src={doc?.created_by?.avatar}
-                        alt={`${doc.created_by.first_name} ${doc.created_by.last_name}`}
-                      />
                       <AvatarFallback
                         className="h-full w-full flex justify-center items-center"
                         style={{

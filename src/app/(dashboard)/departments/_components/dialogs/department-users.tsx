@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { getRandomColor } from '@/lib/random-color'
@@ -107,7 +107,6 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
                       border: user?.user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
                     }}
                   >
-                    <AvatarImage src={user?.user?.avatar ?? undefined} alt="user's avatar" />
                     <AvatarFallback
                       className="h-full w-full flex justify-center items-center text-[13px]"
                       style={{

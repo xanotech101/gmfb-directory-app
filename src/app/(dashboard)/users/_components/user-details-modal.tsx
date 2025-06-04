@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -44,10 +44,6 @@ export function UserDetailsModal({ user }: { user: any }) {
                 border: user?.avatar ? 'none' : `2px solid ${getRandomColor(randomIndex).border}`,
               }}
             >
-              <AvatarImage
-                src={user.avatar || undefined}
-                alt={`${user.first_name} ${user.last_name}`}
-              />
               <AvatarFallback
                 className="h-full w-full flex justify-center items-center text-2xl"
                 style={{

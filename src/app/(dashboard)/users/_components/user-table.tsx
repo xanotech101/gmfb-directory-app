@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EllipsisVertical, KeyRoundIcon, Search } from 'lucide-react'
+import { EllipsisVertical, KeyRoundIcon, Search, Trash2Icon } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { Badge } from '@/components/ui/badge'
 import { getRandomColor } from '@/lib/random-color'
@@ -35,6 +35,7 @@ interface UserTableProps {
   pagination: PaginationProps
   resetPassword: UseMutationResult<any, unknown, string, unknown>
   manageDepartments: UseMutationResult<any, unknown, any, unknown>
+  deleteUser: UseMutationResult<any, unknown, string, unknown>
   filters: {
     onSearch: (searchString: string) => void
     searchString?: string
@@ -46,6 +47,7 @@ export const UserTable = ({
   pagination,
   resetPassword,
   manageDepartments,
+  deleteUser,
   filters: { onSearch, searchString = '' },
 }: UserTableProps) => {
   const [search, setSearch] = useState(searchString)
@@ -106,7 +108,6 @@ export const UserTable = ({
                               : `2px solid ${getRandomColor(index).border}`,
                           }}
                         >
-                          <AvatarImage src={user.avatar} alt="user's avatar" />
                           <AvatarFallback
                             className="h-full w-full flex justify-center items-center"
                             style={{
@@ -165,19 +166,13 @@ export const UserTable = ({
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem
                             className="text-[13px]"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              e.preventDefault()
-                            }}
+                            onClick={(e) => e.preventDefault()}
                           >
                             <UserDetailsModal user={user} />
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-[13px]"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              e.preventDefault()
-                            }}
+                            onClick={(e) => e.preventDefault()}
                           >
                             <ConfirmAction
                               trigger={
@@ -198,14 +193,28 @@ export const UserTable = ({
                               }}
                             />
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-[13px]"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              e.preventDefault()
-                            }}
-                          >
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                             <ManageDepartments user={user} manageDepartments={manageDepartments} />
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                            <ConfirmAction
+                              trigger={
+                                <button className="w-full text-sm flex items-center gap-1">
+                                  <Trash2Icon className="size-4" />
+                                  Delete User
+                                </button>
+                              }
+                              title="Delete User"
+                              description="Are you sure you want to delete this user? This action cannot be undone."
+                              actionProps={{
+                                action: () => deleteUser.mutateAsync(user.id),
+                                isLoading: deleteUser.isPending,
+                                buttonProps: {
+                                  variant: 'destructive',
+                                  children: 'Delete',
+                                },
+                              }}
+                            />
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

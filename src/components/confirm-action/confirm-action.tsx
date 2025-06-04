@@ -22,7 +22,7 @@ interface ConfirmActionProps {
   }
 }
 
-export const ConfirmAction = ({ trigger, actionProps }: ConfirmActionProps) => {
+export const ConfirmAction = ({ trigger, title, description, actionProps }: ConfirmActionProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -31,11 +31,9 @@ export const ConfirmAction = ({ trigger, actionProps }: ConfirmActionProps) => {
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
-            Are you absolutely sure?
+            {title}
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-700">
-            This action will permanently delete this file and cannot be undone.
-          </DialogDescription>
+          <DialogDescription className="text-sm text-gray-700">{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button

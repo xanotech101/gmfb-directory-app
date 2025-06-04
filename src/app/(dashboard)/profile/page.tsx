@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar'
+import { AvatarFallback, Avatar } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 
 export default function Profile() {
@@ -32,11 +32,6 @@ export default function Profile() {
       <div className="flex items-center space-x-4 mb-6 p-4 border border-gray-200 rounded-md">
         <div className="h-20 w-20 flex-shrink-0">
           <Avatar className="rounded-full h-20 w-20">
-            <AvatarImage
-              src={profile.avatar}
-              alt="profile image"
-              className="rounded-full h-20 w-20"
-            />
             <AvatarFallback className="h-full w-full bg-[#891C69] border border-[#974D7B] rounded-full flex items-center justify-center text-white">
               {profile.first_name[0]}
               {profile.last_name[0]}

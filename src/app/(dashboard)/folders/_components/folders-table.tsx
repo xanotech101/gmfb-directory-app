@@ -17,11 +17,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { EllipsisVertical, ReceiptTextIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { getRandomColor } from '@/lib/random-color'
 import { EditFolder } from './dialog/edit-folder'
 import Link from 'next/link'
+import { DeleteFolder } from './dialog/delete-folder'
 
 export const FoldersTable = ({ data }: any) => {
   return (
@@ -49,10 +49,6 @@ export const FoldersTable = ({ data }: any) => {
                         : `2px solid ${getRandomColor(index).border}`,
                     }}
                   >
-                    <AvatarImage
-                      src={folder?.created_by?.avatar}
-                      alt={`${folder.created_by.first_name} ${folder.created_by.last_name}`}
-                    />
                     <AvatarFallback
                       className="h-full w-full flex justify-center items-center"
                       style={{
@@ -85,6 +81,9 @@ export const FoldersTable = ({ data }: any) => {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                       <EditFolder defaultValues={folder} folderId={folder.id} />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                      <DeleteFolder folderId={folder.id} />
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                       <Link

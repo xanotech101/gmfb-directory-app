@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { AvatarFallback } from '@radix-ui/react-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,10 +60,6 @@ export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps
                           : `2px solid ${getRandomColor(index).border}`,
                       }}
                     >
-                      <AvatarImage
-                        src={announcement?.created_by?.avatar}
-                        alt={`${announcement.created_by.first_name} ${announcement.created_by.last_name}`}
-                      />
                       <AvatarFallback
                         className="h-full w-full flex justify-center items-center"
                         style={{

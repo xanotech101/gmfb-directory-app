@@ -11,10 +11,14 @@ interface PermissionCardProps {
   setSelectedPermissions(permissions: string[]): void
 }
 
-export const PermissionCard = ({ scope, scopePermissions, selectedPermissions = [], setSelectedPermissions }: PermissionCardProps) => {
-
+export const PermissionCard = ({
+  scope,
+  scopePermissions,
+  selectedPermissions = [],
+  setSelectedPermissions,
+}: PermissionCardProps) => {
   const handleCheckAll = (isChecked: boolean) => {
-    if(isChecked) {
+    if (isChecked) {
       setSelectedPermissions(scopePermissions.map((p) => p.id))
     } else {
       setSelectedPermissions([])
@@ -22,8 +26,8 @@ export const PermissionCard = ({ scope, scopePermissions, selectedPermissions = 
   }
 
   const handleCheckSingle = (isChecked: CheckedState, permissionId: string) => {
-    if(isChecked === true) {
-     setSelectedPermissions([...selectedPermissions, permissionId])
+    if (isChecked === true) {
+      setSelectedPermissions([...selectedPermissions, permissionId])
     } else {
       setSelectedPermissions(selectedPermissions.filter((id) => id !== permissionId))
     }
@@ -45,16 +49,13 @@ export const PermissionCard = ({ scope, scopePermissions, selectedPermissions = 
       <CardContent>
         <ul className="list-none divide-y divide-gray-200">
           {scopePermissions.map((permission, idx) => (
-            <li
-              key={idx}
-              className="flex items-center py-4 text-sm whitespace-nowrap"
-            >
+            <li key={idx} className="flex items-center py-4 text-sm whitespace-nowrap">
               <Checkbox
                 checked={selectedPermissions.includes(permission.id)}
                 onCheckedChange={(checked) => handleCheckSingle(checked, permission.id)}
                 className="mr-2"
               />
-              <span className="text-gray-600">{permission.name}</span>
+              <span className="text-gray-600">{permission.name.replace(/_/g, ' ')}</span>
             </li>
           ))}
         </ul>

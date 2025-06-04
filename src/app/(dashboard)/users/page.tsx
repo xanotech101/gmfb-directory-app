@@ -4,7 +4,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { InviteUser } from './_components/invite-user'
 import { UserTable } from './_components/user-table'
-import { get, patch } from '@/lib/fetch'
+import { del, get, patch } from '@/lib/fetch'
 import { parseAsFloat, parseAsString, useQueryStates } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -84,6 +84,28 @@ export default function Users() {
     },
   })
 
+  const deleteUser = useMutation({
+    mutationKey: ['delete-user'],
+    mutationFn: async (userId: string) =>
+      del(`/api/users/${userId}`, {
+        isClient: true,
+      }),
+    onSuccess: () => {
+      toast({
+        title: 'Success',
+        description: 'User deleted successfully',
+      })
+      refetch()
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        variant: 'destructive',
+        description: error?.message ?? 'An error occurred',
+      })
+    },
+  })
+
   return (
     <>
       <div className="sm:flex sm:items-center">
@@ -130,6 +152,7 @@ export default function Users() {
           }}
           resetPassword={resetPassword}
           manageDepartments={manageDepartments}
+          deleteUser={deleteUser}
           filters={{
             onSearch: (searchString: string) => {
               setFilters((prev) => ({ ...prev, search: searchString, page: 1 }))
