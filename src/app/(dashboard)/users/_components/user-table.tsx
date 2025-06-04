@@ -158,16 +158,10 @@ export const UserTable = ({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-auto max-w-56">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem
-                            className="text-[13px]"
-                            onClick={(e) => e.preventDefault()}
-                          >
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                             <UserDetails user={user} />
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-[13px]"
-                            onClick={(e) => e.preventDefault()}
-                          >
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                             <ResetPassword userId={user.id} />
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={(e) => e.preventDefault()}>

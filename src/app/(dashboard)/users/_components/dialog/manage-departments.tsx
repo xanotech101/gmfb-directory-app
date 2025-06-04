@@ -19,7 +19,7 @@ import {
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { useState } from 'react'
 import { useDepartmentSearch } from '@/hooks/use-department-search'
@@ -99,11 +99,14 @@ export const ManageDepartments = ({ user }: ManageDepartmentsProps) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#fff]">
         <DialogHeader>
-          <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
+          <DialogTitle className="text-base font-semibold leading-6 text-gray-900 ">
             Manage Departments
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-700">
-            Update departments for {user.first_name} {user.last_name}
+          <DialogDescription className="text-sm text-gray-700 !mt-1">
+            Update departments for{' '}
+            <strong>
+              {user.first_name} {user.last_name}
+            </strong>
           </DialogDescription>
         </DialogHeader>
 

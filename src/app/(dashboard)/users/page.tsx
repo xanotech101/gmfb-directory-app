@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { InviteUser } from './_components/dialog/invite-user'
 import { UserTable } from './_components/user-table'
-import { get, patch } from '@/lib/fetch'
+import { get } from '@/lib/fetch'
 import { parseAsFloat, parseAsString, useQueryStates } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
-import { toast } from '@/hooks/use-toast'
 import { useUser } from '@/providers/user.provider'
 
 export default function Users() {
@@ -35,31 +34,6 @@ export default function Users() {
         isClient: true,
       }),
     enabled: canViewUsers,
-  })
-
-  const manageDepartments = useMutation({
-    mutationKey: ['manage-departments'],
-    mutationFn: async (payload: any) =>
-      patch(`/api/users/${payload.userId}/departments`, {
-        isClient: true,
-        body: {
-          departments: payload.departments.map((d: any) => d.value),
-        },
-      }),
-    onSuccess: () => {
-      toast({
-        title: 'Success',
-        description: 'Updated departments successfully',
-      })
-      refetch()
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        variant: 'destructive',
-        description: error?.message ?? 'An error occurred',
-      })
-    },
   })
 
   return (
