@@ -15,33 +15,42 @@ const UserContext = createContext<UserContextValue>({
   hasPermission: () => false,
 })
 
-export const UserContextProvider = ({children}: {children: ReactNode}) => {
-  const { data, refetch: refetchUser } = useQuery<any>({
+export const UserContextProvider = ({ children }: { children: ReactNode }) => {
+  const {
+    data,
+    isLoading,
+    refetch: refetchUser,
+  } = useQuery<any>({
     queryKey: ['profile'],
     queryFn: async () =>
-      get("/api/users/profile", {
+      get('/api/users/profile', {
         isClient: true,
+      }).then((res: any) => {
+        return res.data
       }),
     staleTime: 0,
   })
 
-  const hasPermission = useCallback((permission: string) => {
-    return data?.data?.role?.permissions?.some?.((p: {name: string}) => p.name === permission)
-  }, [data])
+  const hasPermission = useCallback(
+    (permission: string) => {
+      return data?.role?.permissions?.some?.((p: { name: string }) => p.name === permission)
+    },
+    [data],
+  )
 
   return (
-    <UserContext.Provider value={{user: data?.data, refetchUser, hasPermission}}>
+    <UserContext.Provider value={{ user: data, refetchUser, hasPermission }}>
       {children}
     </UserContext.Provider>
   )
 }
 
 export const useUser = () => {
-  const context = useContext(UserContext);
+  const context = useContext(UserContext)
 
   if (!context) {
-    throw new Error('useUser must be used within a UserContextProvider');
+    throw new Error('useUser must be used within a UserContextProvider')
   }
 
-  return context;
-};
+  return context
+}

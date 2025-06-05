@@ -23,7 +23,13 @@ import { EditFolder } from './dialog/edit-folder'
 import Link from 'next/link'
 import { DeleteFolder } from './dialog/delete-folder'
 
-export const FoldersTable = ({ data }: any) => {
+interface FolderTableProps {
+  data: any[]
+  canUpdateFolders: boolean
+  canDeleteFolder: boolean
+}
+
+export const FolderTable = ({ data, canUpdateFolders, canDeleteFolder }: FolderTableProps) => {
   return (
     <div className="border overflow-hidden rounded-lg">
       <Table className="rounded-lg overflow-hidden shadow-sm">
@@ -79,12 +85,16 @@ export const FoldersTable = ({ data }: any) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-auto max-w-56">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                      <EditFolder defaultValues={folder} folderId={folder.id} />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                      <DeleteFolder folderId={folder.id} />
-                    </DropdownMenuItem>
+                    {canUpdateFolders && (
+                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                        <EditFolder defaultValues={folder} folderId={folder.id} />
+                      </DropdownMenuItem>
+                    )}
+                    {canDeleteFolder && (
+                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                        <DeleteFolder folderId={folder.id} />
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                       <Link
                         href={`/folders/${folder.id}`}
