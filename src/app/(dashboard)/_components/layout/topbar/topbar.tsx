@@ -11,12 +11,10 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { useUser } from '@/providers/user.provider'
-import { Avatar } from '@/components/ui/avatar'
-import { getRandomColor } from '@/lib/random-color'
-import { AvatarFallback } from '@radix-ui/react-avatar'
 import { post } from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 const userNavigation = [{ name: 'Your profile', href: 'settings' }]
 
@@ -75,23 +73,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
               <Menu as="div" className="relative">
                 <MenuButton className="-m-1.5 flex items-center p-1.5">
                   <span className="sr-only">Open user menu</span>
-                  <Avatar
-                    className="size-7 flex-shrink-0 border-2 text-sm"
-                    style={{
-                      border: user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
-                    }}
-                  >
-                    <AvatarFallback
-                      className="h-full w-full flex justify-center items-center"
-                      style={{
-                        backgroundColor: getRandomColor(0).background,
-                        color: getRandomColor(0).text,
-                      }}
-                    >
-                      {user?.first_name[0]}
-                      {user?.last_name[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar firstName={user?.first_name} lastName={user?.last_name} />
                   <span className="hidden lg:flex lg:items-center">
                     <span
                       aria-hidden="true"

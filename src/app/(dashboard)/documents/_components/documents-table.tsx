@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,14 +18,13 @@ import {
 } from '@/components/ui/table'
 import { EllipsisVertical, SquarePenIcon, Trash2Icon } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
-import { getRandomColor } from '@/lib/random-color'
-import * as React from 'react'
 import Link from 'next/link'
 import { DocumentDetails } from './document-details'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { del } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
 import { ConfirmAction } from '@/components/confirm-action/confirm-action'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 interface DocumentsTableProps {
   data: any
@@ -80,25 +78,10 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
               <TableRow key={doc.id}>
                 <TableCell>
                   <div className="flex items-basline">
-                    <Avatar
-                      className="size-8 flex-shrink-0 border-2 text-sm"
-                      style={{
-                        border: doc?.created_by?.avatar
-                          ? 'none'
-                          : `2px solid ${getRandomColor(index).border}`,
-                      }}
-                    >
-                      <AvatarFallback
-                        className="h-full w-full flex justify-center items-center"
-                        style={{
-                          backgroundColor: getRandomColor(index).background,
-                          color: getRandomColor(index).text,
-                        }}
-                      >
-                        {doc.created_by?.first_name[0]}
-                        {doc.created_by?.last_name[0]}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar
+                      firstName={doc?.created_by?.first_name}
+                      lastName={doc?.created_by?.last_name}
+                    />
                     <div className="ml-2">
                       <div className="font-medium text-gray-900">
                         {doc?.created_by?.first_name} {doc?.created_by?.last_name}

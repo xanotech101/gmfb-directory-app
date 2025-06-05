@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
-import { Avatar } from '@/components/ui/avatar'
-import { AvatarFallback } from '@radix-ui/react-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +18,8 @@ import {
 } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
-import { getRandomColor } from '@/lib/random-color'
-import * as React from 'react'
 import { AnnouncementDetails } from './announcement-details'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 interface AnnouncementsTableProps {
   data: any
@@ -52,25 +49,10 @@ export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps
               <TableRow key={announcement.id}>
                 <TableCell>
                   <div className="flex items-basline">
-                    <Avatar
-                      className="size-8 flex-shrink-0 border-2 text-sm"
-                      style={{
-                        border: announcement?.created_by?.avatar
-                          ? 'none'
-                          : `2px solid ${getRandomColor(index).border}`,
-                      }}
-                    >
-                      <AvatarFallback
-                        className="h-full w-full flex justify-center items-center"
-                        style={{
-                          backgroundColor: getRandomColor(index).background,
-                          color: getRandomColor(index).text,
-                        }}
-                      >
-                        {announcement.created_by_user?.first_name?.[0]}
-                        {announcement.created_by_user?.last_name?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar
+                      firstName={announcement?.created_by_user?.first_name}
+                      lastName={announcement?.created_by_user?.last_name}
+                    />
                     <div className="ml-2">
                       <div className="font-medium text-gray-900">
                         {announcement?.created_by_user?.first_name}{' '}

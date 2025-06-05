@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
-import { Avatar } from '@/components/ui/avatar'
-import { AvatarFallback } from '@radix-ui/react-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +18,9 @@ import {
 } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
-import { getRandomColor } from '@/lib/random-color'
 import { DepartmentUsers } from './dialogs/department-users'
 import { UpdateDepartment } from './dialogs/update-department'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 interface DepartmentTableProps {
   data: any
@@ -47,33 +45,13 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
             </TableRow>
           </TableHeader>
           <TableBody className="bg-white">
-            {data.map((d: any, index: number) => (
+            {data.map((d: any) => (
               <TableRow key={d.id}>
                 <TableCell>{d.name}</TableCell>
                 <TableCell>
                   {d.hod ? (
                     <div className="flex items-start">
-                      <div className="size-9 flex-shrink-0">
-                        <Avatar
-                          className="size-8 text-sm"
-                          style={{
-                            border: d?.hod?.avatar
-                              ? 'none'
-                              : `2px solid ${getRandomColor(index).border}`,
-                          }}
-                        >
-                          <AvatarFallback
-                            className="h-full w-full flex justify-center items-center"
-                            style={{
-                              backgroundColor: getRandomColor(index).background,
-                              color: getRandomColor(index).text,
-                            }}
-                          >
-                            {d.hod.first_name[0]}
-                            {d.hod.last_name[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                      </div>
+                      <UserAvatar firstName={d.hod.first_name} lastName={d.hod.last_name} /> dd
                       <div className="ml-2">
                         <div className="font-medium text-gray-900">
                           {d.hod?.first_name} {d.hod?.last_name}

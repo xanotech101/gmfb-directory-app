@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +21,13 @@ import {
 import { EllipsisVertical, Search } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { Badge } from '@/components/ui/badge'
-import { getRandomColor } from '@/lib/random-color'
 import { UserDetails } from './dialog/user-details'
 import { ManageDepartments } from './dialog/manage-departments'
 import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ResetPassword } from './dialog/reset-password'
 import { DeleteUser } from './dialog/delete-user'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 interface UserTableProps {
   data: any
@@ -98,25 +97,7 @@ export const UserTable = ({
                   <TableRow key={user.email}>
                     <TableCell>
                       <div className="flex items-basline">
-                        <Avatar
-                          className="size-8 flex-shrink-0 border-2 text-sm"
-                          style={{
-                            border: user?.avatar
-                              ? 'none'
-                              : `2px solid ${getRandomColor(index).border}`,
-                          }}
-                        >
-                          <AvatarFallback
-                            className="h-full w-full flex justify-center items-center"
-                            style={{
-                              backgroundColor: getRandomColor(index).background,
-                              color: getRandomColor(index).text,
-                            }}
-                          >
-                            {user.first_name[0]}
-                            {user.last_name[0]}
-                          </AvatarFallback>
-                        </Avatar>
+                        <UserAvatar firstName={user.first_name} lastName={user.last_name} />
                         <div className="ml-2">
                           <div className="font-medium text-gray-900">
                             {user.first_name} {user.last_name}

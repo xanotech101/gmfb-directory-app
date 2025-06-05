@@ -12,12 +12,11 @@ import {
 } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
-import { getRandomColor } from '@/lib/random-color'
 import { useDebounce } from 'use-debounce'
 import { UserCircle } from 'lucide-react'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 type User = {
   id: string
@@ -101,23 +100,7 @@ export function DepartmentUsers({ name, id }: DepartmentUsersProps) {
             <div className="divide-y divide-gray-200">
               {users?.map((user, i) => (
                 <div key={user?.user_id} className="flex items-center space-x-4 py-4">
-                  <Avatar
-                    className="size-8 flex-shrink-0 border-2"
-                    style={{
-                      border: user?.user?.avatar ? 'none' : `2px solid ${getRandomColor(0).border}`,
-                    }}
-                  >
-                    <AvatarFallback
-                      className="h-full w-full flex justify-center items-center text-[13px]"
-                      style={{
-                        backgroundColor: getRandomColor(i).background,
-                        color: getRandomColor(i).text,
-                      }}
-                    >
-                      {user?.user?.first_name[0]}
-                      {user?.user?.last_name[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar firstName={user?.user?.first_name} lastName={user?.user?.last_name} />
                   <div>
                     <p className="text-sm font-medium leading-none">
                       {user?.user?.first_name} {user?.user?.last_name}

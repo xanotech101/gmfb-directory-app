@@ -17,11 +17,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { EllipsisVertical, ReceiptTextIcon } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { getRandomColor } from '@/lib/random-color'
 import { EditFolder } from './dialog/edit-folder'
 import Link from 'next/link'
 import { DeleteFolder } from './dialog/delete-folder'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 interface FolderTableProps {
   data: any[]
@@ -47,25 +46,10 @@ export const FolderTable = ({ data, canUpdateFolders, canDeleteFolder }: FolderT
             <TableRow key={folder.id}>
               <TableCell>
                 <div className="flex items-basline">
-                  <Avatar
-                    className="size-8 flex-shrink-0 border-2 text-sm"
-                    style={{
-                      border: folder?.created_by?.avatar
-                        ? 'none'
-                        : `2px solid ${getRandomColor(index).border}`,
-                    }}
-                  >
-                    <AvatarFallback
-                      className="h-full w-full flex justify-center items-center"
-                      style={{
-                        backgroundColor: getRandomColor(index).background,
-                        color: getRandomColor(index).text,
-                      }}
-                    >
-                      {folder.created_by?.first_name[0]}
-                      {folder.created_by?.last_name[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar
+                    firstName={folder?.created_by?.first_name}
+                    lastName={folder?.created_by?.last_name}
+                  />
                   <div className="ml-2">
                     <div className="font-medium text-gray-900">
                       {folder?.created_by?.first_name} {folder?.created_by?.last_name}

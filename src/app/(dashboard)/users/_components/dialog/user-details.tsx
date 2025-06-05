@@ -8,13 +8,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { getRandomColor } from '@/lib/random-color'
 import { formatDate } from '@/lib/format-date'
 import { UserCircle } from 'lucide-react'
+import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
 const randomIndex = Math.floor(Math.random())
 
@@ -38,23 +37,7 @@ export function UserDetails({ user }: { user: any }) {
         </DialogHeader>
         <ScrollArea className="max-h-[60vh] pr-4 [&_.scrollbar]:hidden">
           <div className="flex flex-col items-center space-y-4 pb-4">
-            <Avatar
-              className="size-20"
-              style={{
-                border: user?.avatar ? 'none' : `2px solid ${getRandomColor(randomIndex).border}`,
-              }}
-            >
-              <AvatarFallback
-                className="h-full w-full flex justify-center items-center text-2xl"
-                style={{
-                  backgroundColor: getRandomColor(randomIndex).background,
-                  color: getRandomColor(randomIndex).text,
-                }}
-              >
-                {user.first_name[0]}
-                {user.last_name[0]}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar firstName={user.first_name} lastName={user.last_name} />
             <div className="text-center">
               <h3 className="text-lg font-semibold">
                 {user.first_name} {user.last_name}

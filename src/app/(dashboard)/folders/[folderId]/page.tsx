@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation'
 import { Show } from 'react-smart-conditional'
 import { FileCard } from '../../documents/_components/file-card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export default function FolderDetails() {
   const { folderId } = useParams<{ folderId: string }>()
@@ -28,8 +29,6 @@ export default function FolderDetails() {
       }),
     enabled: !!folderId,
   })
-
-  console.log('🚀 ~ FolderDetails ~ files:', files?.data?.data)
 
   return (
     <>
@@ -64,8 +63,15 @@ export default function FolderDetails() {
             />
           ))}
         </Show.If>
+        <Show.If
+          condition={files?.data?.data?.meta?.total === 0}
+          className="bg-white w-full"
+          as={EmptyState}
+          title="No Files Found"
+          description="This folder is empty."
+        />
         <Show.Else>
-          <p className="mt-4">No files found in this folder.</p>
+          <p className="mt-4">An error occured while fetching files.</p>
         </Show.Else>
       </Show>
     </>
