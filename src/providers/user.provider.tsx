@@ -25,21 +25,19 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
     queryFn: async () =>
       get('/api/users/profile', {
         isClient: true,
-      }).then((res: any) => {
-        return res.data
       }),
     staleTime: 0,
   })
 
   const hasPermission = useCallback(
     (permission: string) => {
-      return data?.role?.permissions?.some?.((p: { name: string }) => p.name === permission)
+      return data?.data?.role?.permissions?.some?.((p: { name: string }) => p.name === permission)
     },
     [data],
   )
 
   return (
-    <UserContext.Provider value={{ user: data, refetchUser, hasPermission }}>
+    <UserContext.Provider value={{ user: data?.data, refetchUser, hasPermission }}>
       {children}
     </UserContext.Provider>
   )

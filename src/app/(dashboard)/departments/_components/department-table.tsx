@@ -51,7 +51,7 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                 <TableCell>
                   {d.hod ? (
                     <div className="flex items-start">
-                      <UserAvatar firstName={d.hod.first_name} lastName={d.hod.last_name} /> dd
+                      <UserAvatar firstName={d.hod.first_name} lastName={d.hod.last_name} />
                       <div className="ml-2">
                         <div className="font-medium text-gray-900">
                           {d.hod?.first_name} {d.hod?.last_name}
