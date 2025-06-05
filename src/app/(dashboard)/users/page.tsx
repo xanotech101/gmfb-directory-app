@@ -17,6 +17,9 @@ export default function Users() {
 
   const canViewUsers = hasPermission('can_view_users')
   const canInviteUser = hasPermission('can_invite_user')
+  const canUpdateUser = hasPermission('can_update_user')
+  const canDeleteUser = hasPermission('can_delete_user')
+
   const [filters, setFilters] = useQueryStates(
     {
       page: parseAsFloat.withDefault(1),
@@ -86,6 +89,8 @@ export default function Users() {
             },
             searchString: filters.search,
           }}
+          canUpdateUser={canUpdateUser}
+          canDeleteUser={canDeleteUser}
         />
         {/* todo: maybe render error state here */}
       </Show>

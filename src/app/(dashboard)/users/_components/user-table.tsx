@@ -37,12 +37,16 @@ interface UserTableProps {
     onSearch: (searchString: string) => void
     searchString?: string
   }
+  canUpdateUser: boolean
+  canDeleteUser: boolean
 }
 
 export const UserTable = ({
   data,
   pagination,
   filters: { onSearch, searchString = '' },
+  canUpdateUser,
+  canDeleteUser,
 }: UserTableProps) => {
   const [search, setSearch] = useState(searchString)
   const { currentPage, totalItems, handlePageChange, itemsPerPage } = pagination
@@ -161,15 +165,21 @@ export const UserTable = ({
                           <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                             <UserDetails user={user} />
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                            <ResetPassword userId={user.id} />
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                            <ManageDepartments user={user} />
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                            <DeleteUser userId={user.id} />
-                          </DropdownMenuItem>
+                          {canUpdateUser && (
+                            <>
+                              <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                                <ResetPassword userId={user.id} />
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                                <ManageDepartments user={user} />
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                          {canDeleteUser && (
+                            <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                              <DeleteUser userId={user.id} />
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
