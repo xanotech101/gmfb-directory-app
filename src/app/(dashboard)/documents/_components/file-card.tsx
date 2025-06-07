@@ -5,6 +5,7 @@ import { ConfirmAction } from '@/components/confirm-action/confirm-action'
 import { useState } from 'react'
 import { UseMutateAsyncFunction } from '@tanstack/react-query'
 import { FileIcon } from '@/components/file-icon/file-icon'
+import { FileViewer } from '@/components/file-viewer/file-viewer'
 
 interface FileCardProps {
   file: {
@@ -27,9 +28,10 @@ interface FileCardProps {
     type: string
   }
   documentId: string
+  canDeleteDocument?: boolean
 }
 
-export function FileCard({ file, handleDelete, documentId }: FileCardProps) {
+export function FileCard({ file, handleDelete, documentId, canDeleteDocument }: FileCardProps) {
   const fileName = file.url.split('/').pop() || 'Unnamed File'
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -43,7 +45,8 @@ export function FileCard({ file, handleDelete, documentId }: FileCardProps) {
           </span>
         </div>
         <div className="flex space-x-3">
-          {handleDelete && (
+          <FileViewer type={file.type} url={file.url} title={fileName} />
+          {handleDelete && canDeleteDocument && (
             <ConfirmAction
               trigger={
                 <Button variant="ghost" className="p-0 !bg-transparent" title="Open file">
@@ -69,15 +72,6 @@ export function FileCard({ file, handleDelete, documentId }: FileCardProps) {
               }}
             />
           )}
-          <Button
-            variant="ghost"
-            className="p-0 !bg-transparent"
-            onClick={() => window.open(file.url, '_blank')}
-            title="Open file"
-          >
-            <SquareArrowOutUpRight className="h-4 w-4" />
-            <span className="sr-only">Open file</span>
-          </Button>
         </div>
       </CardContent>
     </Card>

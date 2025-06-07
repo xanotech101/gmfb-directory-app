@@ -16,47 +16,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EllipsisVertical, SquarePenIcon, Trash2Icon } from 'lucide-react'
+import { EllipsisVertical, SquarePenIcon } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import Link from 'next/link'
-import { DocumentDetails } from './document-details'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { del } from '@/lib/fetch'
-import { toast } from '@/hooks/use-toast'
-import { ConfirmAction } from '@/components/confirm-action/confirm-action'
+import { DocumentDetails } from './dialog/document-details'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
+import { DeleteDocumentDialog } from './dialog/delete-document'
 
 interface DocumentsTableProps {
   data: any
   pagination: PaginationProps
+  permissions: {
+    canDeleteDocument?: boolean
+  }
 }
 
-export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
-  const queryClient = useQueryClient()
+export const DocumentsTable = ({ data, pagination, permissions }: DocumentsTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
   const getFooterText = useFooterText(currentPage, totalItems)
-
-  const deleteDocument = useMutation({
-    mutationKey: ['delete-document'],
-    mutationFn: async (documentId: string) =>
-      del(`/api/documents/${documentId}`, { isClient: true }),
-    onSuccess: () => {
-      toast({
-        title: 'Document deleted successfully',
-        description: 'The document has been deleted successfully.',
-        variant: 'default',
-      })
-      queryClient.invalidateQueries({ queryKey: ['documents'] })
-    },
-
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        variant: 'destructive',
-        description: error.message ?? 'An error occurred',
-      })
-    },
-  })
 
   return (
     <>
@@ -106,7 +83,10 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                     <DropdownMenuContent className="w-auto max-w-56">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                        <DocumentDetails id={doc.id} />
+                        <DocumentDetails
+                          id={doc.id}
+                          canDeleteDocument={permissions.canDeleteDocument}
+                        />
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Link
@@ -118,24 +98,7 @@ export const DocumentsTable = ({ data, pagination }: DocumentsTableProps) => {
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                        <ConfirmAction
-                          trigger={
-                            <button className="w-full text-sm text-left flex items-center gap-1">
-                              <Trash2Icon className="size-4" />
-                              Delete Document
-                            </button>
-                          }
-                          title="Delete Document"
-                          description={`Are you sure you want to delete the document? This action cannot be undone.`}
-                          actionProps={{
-                            action: () => deleteDocument.mutateAsync(doc.id),
-                            isLoading: deleteDocument.isPending,
-                            buttonProps: {
-                              variant: 'destructive',
-                              children: 'Delete',
-                            },
-                          }}
-                        />
+                        <DeleteDocumentDialog docId={doc.id} />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

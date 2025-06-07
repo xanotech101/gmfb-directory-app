@@ -17,10 +17,15 @@ import {
 } from '@/components/ui/sheet'
 import { toast } from '@/hooks/use-toast'
 import { formatDate } from '@/lib/format-date'
-import { useGetDocument } from '../hooks/use-get-document'
-import { FileCard } from './file-card'
+import { useGetDocument } from '../../hooks/use-get-document'
+import { FileCard } from '../file-card'
 
-export function DocumentDetails({ id }: { id: string }) {
+interface DocumentDetailsProps {
+  id: string
+  canDeleteDocument?: boolean
+}
+
+export function DocumentDetails({ id, canDeleteDocument }: DocumentDetailsProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { data: document, isFetching, refetch } = useGetDocument(id)
 
@@ -143,6 +148,7 @@ export function DocumentDetails({ id }: { id: string }) {
                           key={file.id}
                           documentId={id}
                           handleDelete={deleteFile.mutateAsync}
+                          canDeleteDocument={canDeleteDocument}
                         />
                       ))}
                     </div>

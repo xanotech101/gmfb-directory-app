@@ -18,6 +18,7 @@ export default function Documents() {
   const { hasPermission } = useUser()
   const canViewDocuments = hasPermission('can_view_documents')
   const canCreateDocuments = hasPermission('can_create_document')
+  const canDeleteDocument = hasPermission('can_delete_document')
 
   const [currentPage, setCurrentPage] = useQueryState('page', {
     defaultValue: 1,
@@ -77,6 +78,7 @@ export default function Documents() {
             totalItems: data?.data?.meta?.total ?? 0,
             handlePageChange: setCurrentPage,
           }}
+          permissions={{ canDeleteDocument }}
         />
       </Show>
     </>
