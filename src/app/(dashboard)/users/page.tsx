@@ -30,7 +30,7 @@ export default function Users() {
     },
   )
 
-  const { isFetching, data, refetch } = useQuery<any>({
+  const { isLoading, data, refetch } = useQuery<any>({
     queryKey: ['users', filters.page, filters.search],
     queryFn: async () =>
       get(`/api/users?page=${filters.page}&search=${filters.search}`, {
@@ -63,7 +63,7 @@ export default function Users() {
         </div>
       </div>
       <Show as="div" className="mt-8">
-        <Show.If condition={isFetching} as={Skeleton} className="h-[200px] w-full rounded-xl" />
+        <Show.If condition={isLoading} as={Skeleton} className="h-[200px] w-full rounded-xl" />
         <Show.If
           condition={!canViewUsers}
           as={EmptyState}
@@ -89,8 +89,10 @@ export default function Users() {
             },
             searchString: filters.search,
           }}
-          canUpdateUser={canUpdateUser}
-          canDeleteUser={canDeleteUser}
+          permissions={{
+            canUpdate: canUpdateUser,
+            canDelete: canDeleteUser,
+          }}
         />
         {/* todo: maybe render error state here */}
       </Show>

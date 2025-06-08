@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-
-import React, { Fragment } from 'react'
-import { useQueryState } from 'nuqs'
+import { parseAsFloat, parseAsString, useQueryState, useQueryStates } from 'nuqs'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
@@ -20,15 +18,20 @@ export default function Documents() {
   const canCreateDocuments = hasPermission('can_create_document')
   const canDeleteDocument = hasPermission('can_delete_document')
 
-  const [currentPage, setCurrentPage] = useQueryState('page', {
-    defaultValue: 1,
-    parse: (value) => Number(value),
-  })
+  const [filters, setFilters] = useQueryStates(
+    {
+      page: parseAsFloat.withDefault(1),
+      search: parseAsString.withDefault(''),
+    },
+    {
+      history: 'push',
+    },
+  )
 
   const { isFetching, data } = useQuery<any>({
-    queryKey: ['documents', currentPage],
+    queryKey: ['documents', filters.page, filters.search],
     queryFn: async () =>
-      get(`/api/documents?page=${currentPage}`, {
+      get(`/api/documents?page=${filters.page}&search=${filters.search}`, {
         isClient: true,
       }),
     enabled: canViewDocuments,
@@ -64,21 +67,23 @@ export default function Documents() {
           description="You do not have permission to view documents."
         />
         <Show.If
-          condition={data?.data?.items?.length === 0}
-          as={EmptyState}
-          title="No Documents"
-          description="Get started by creating a new document."
-          className="w-full"
-        />
-        <Show.Else
+          condition={data}
           as={DocumentsTable}
           data={data?.data?.items ?? []}
           pagination={{
-            currentPage,
+            currentPage: filters.page,
             totalItems: data?.data?.meta?.total ?? 0,
-            handlePageChange: setCurrentPage,
+            handlePageChange: (page: number) => {
+              setFilters((prev) => ({ ...prev, page }))
+            },
           }}
           permissions={{ canDeleteDocument }}
+          filters={{
+            onSearch: (searchString: string) => {
+              setFilters((prev) => ({ ...prev, search: searchString, page: 1 }))
+            },
+            searchString: filters.search,
+          }}
         />
       </Show>
     </>

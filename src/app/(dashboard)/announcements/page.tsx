@@ -81,8 +81,11 @@ export default function Announcements() {
           icon={Package}
           title="No Announcements"
           description="Get started by creating a new announcement."
-          actionLabel="Add Announcement"
-          onAction={() => router.push('/announcements/create')}
+          actionProps={{
+            label: 'Create Announcement',
+            className: 'mt-4',
+            onClick: () => router.push('/announcements/create'),
+          }}
         />
       </Show>
     </>

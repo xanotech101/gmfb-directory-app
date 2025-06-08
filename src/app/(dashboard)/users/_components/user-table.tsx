@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,61 +16,47 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EllipsisVertical, Search } from 'lucide-react'
+import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { Badge } from '@/components/ui/badge'
 import { UserDetails } from './dialog/user-details'
 import { ManageDepartments } from './dialog/manage-departments'
-import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ResetPassword } from './dialog/reset-password'
 import { DeleteUser } from './dialog/delete-user'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
+import { SearchInput } from '@/components/search-input/search-input'
 
 interface UserTableProps {
-  data: any
+  data: Record<string, unknown>[]
   pagination: PaginationProps
   filters: {
     onSearch: (searchString: string) => void
-    searchString?: string
+    searchString: string
   }
-  canUpdateUser: boolean
-  canDeleteUser: boolean
+  permissions: {
+    canUpdate: boolean
+    canDelete: boolean
+  }
 }
 
 export const UserTable = ({
   data,
   pagination,
-  filters: { onSearch, searchString = '' },
-  canUpdateUser,
-  canDeleteUser,
+  filters: { onSearch, searchString },
+  permissions: { canUpdate, canDelete },
 }: UserTableProps) => {
-  const [search, setSearch] = useState(searchString)
   const { currentPage, totalItems, handlePageChange, itemsPerPage } = pagination
   const getFooterText = useFooterText(currentPage, totalItems, itemsPerPage)
-
-  const debouncedSearch = useDebouncedCallback((value: string) => {
-    onSearch(value)
-  }, 900)
-
   return (
     <>
-      <div className="w-auto mb-4 relative max-w-xs">
-        <Input
-          className="pl-8"
-          aria-label="Search users by name or email"
-          placeholder="Search by name or email"
-          type="search"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value)
-            debouncedSearch(e.target.value)
-          }}
-        />
-        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">
-          <Search size={16} />
-        </span>
-      </div>
+      <SearchInput
+        value={searchString}
+        onSearch={onSearch}
+        debounce
+        placeholder="Search by name or email"
+        aria-label="Search users by name or email"
+      />
       {data.length === 0 ? (
         <EmptyState
           title="No Users"
@@ -146,7 +130,7 @@ export const UserTable = ({
                           <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                             <UserDetails user={user} />
                           </DropdownMenuItem>
-                          {canUpdateUser && (
+                          {canUpdate && (
                             <>
                               <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                                 <ResetPassword userId={user.id} />
@@ -156,7 +140,7 @@ export const UserTable = ({
                               </DropdownMenuItem>
                             </>
                           )}
-                          {canDeleteUser && (
+                          {canDelete && (
                             <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                               <DeleteUser userId={user.id} />
                             </DropdownMenuItem>
