@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ForwardRefExoticComponent, RefAttributes, SVGProps } from 'react'
-import { LogOut } from 'lucide-react'
+import { Power } from 'lucide-react'
 import { post } from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
 
@@ -66,13 +66,12 @@ export const DesktopSidebar = ({
             </li>
             <li className="mt-auto">
               <button
-                onClick={() => post('/api/auth/logout', {isClient: true}).finally(() => router.push('/login'))}
-                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-brand w-full"
+                onClick={() =>
+                  post('/api/auth/logout', { isClient: true }).finally(() => router.push('/login'))
+                }
+                className="group -mx-2 flex gap-x-3 p-2 text-sm font-semibold leading-6 bg-gray-100 w-full rounded-lg hover:text-[#891C69] hover:bg-gray-200 text-gray-500 hover:shadow-sm"
               >
-                <LogOut
-                  aria-hidden="true"
-                  className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-[#891C69]"
-                />
+                <Power aria-hidden="true" className="h-6 w-6 shrink-0" />
                 Logout
               </button>
             </li>
