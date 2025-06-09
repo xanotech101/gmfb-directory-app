@@ -9,15 +9,19 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const page = searchParams.get('page') || '1'
   const limit = searchParams.get('limit') || ITEMS_PER_PAGE
+  const search = searchParams.get('search') || ''
   try {
     const { accessToken } = await getTokens()
-    const response = await get<any>(`/api/v1/announcements?page=${page}&limit=${limit}`, {
-      options: {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+    const response = await get<any>(
+      `/api/v1/announcements?page=${page}&limit=${limit}&search=${search}`,
+      {
+        options: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
       },
-    })
+    )
     return NextResponse.json(response)
   } catch (error) {
     return handleServerError(error)

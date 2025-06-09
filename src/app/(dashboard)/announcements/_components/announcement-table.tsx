@@ -18,20 +18,39 @@ import {
 } from '@/components/ui/table'
 import { EllipsisVertical } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
-import { AnnouncementDetails } from './announcement-details'
+import { AnnouncementDetails } from './dialog/announcement-details'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
+import { SearchInput } from '@/components/search-input/search-input'
+import { EmptyState } from '@/components/ui/empty-state'
+import { useRouter } from 'next/navigation'
 
 interface AnnouncementsTableProps {
   data: any
   pagination: PaginationProps
+  filters: {
+    onSearch: (searchString: string) => void
+    searchString: string
+  }
 }
 
-export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps) => {
+export const AnnouncementsTable = ({
+  data,
+  pagination,
+  filters: { onSearch, searchString },
+}: AnnouncementsTableProps) => {
+  const router = useRouter()
   const { currentPage, totalItems, handlePageChange } = pagination
   const getFooterText = useFooterText(currentPage, totalItems)
 
   return (
     <>
+      <SearchInput
+        value={searchString}
+        onSearch={onSearch}
+        debounce
+        placeholder="Search by subject or created by"
+        aria-label="Search users by subject or created by"
+      />
       <div className="border overflow-hidden rounded-lg">
         <Table>
           <TableCaption className="sr-only">A list of users.</TableCaption>
@@ -99,6 +118,18 @@ export const AnnouncementsTable = ({ data, pagination }: AnnouncementsTableProps
           </TableBody>
         </Table>
       </div>
+      {data.length === 0 && (
+        <EmptyState
+          title="No Announcements"
+          description="Looks like you don't have any announcements yet. Create some announcements to get started."
+          className="w-full bg-white mt-2"
+          actionProps={{
+            label: 'Create Announcement',
+            className: 'mt-4',
+            onClick: () => router.push('/announcements/create'),
+          }}
+        />
+      )}
       <div className="flex items-center justify-between px-3 py-5 rounded-b-lg mt-4">
         <div className="text-[14px] text-gray-500 flex-1">{getFooterText}</div>
         <div className="text-center flex-1 flex justify-center">
