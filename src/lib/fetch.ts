@@ -57,6 +57,10 @@ const createHttpRequestFunction = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'D
         throw error
       }
 
+      if (response.status === 204) {
+        return {} as T
+      }
+
       return (await response.json()) as T
     } catch (error) {
       throw error

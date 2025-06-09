@@ -21,21 +21,49 @@ import { Pagination, PaginationProps, useFooterText } from '@/components/paginat
 import { DepartmentUsers } from './dialogs/department-users'
 import { UpdateDepartment } from './dialogs/update-department'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
+import { SearchInput } from '@/components/search-input/search-input'
+import { EmptyState } from '@/components/ui/empty-state'
+import { DeleteDepartment } from './dialogs/delete-department'
 
 interface DepartmentTableProps {
   data: any
   pagination: PaginationProps
+  filters: {
+    onSearch: (searchString: string) => void
+    searchString: string
+  }
+  permissions: {
+    canEdit: boolean
+    canDelete: boolean
+  }
 }
 
-export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
+export const DepartmentTable = ({
+  data,
+  pagination,
+  filters: { onSearch, searchString },
+  permissions: { canEdit, canDelete },
+}: DepartmentTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
   const getFooterText = useFooterText(currentPage, totalItems)
 
+  console.log('DepartmentTable data:', data)
+
   return (
     <>
+      <SearchInput
+        value={searchString}
+        onSearch={onSearch}
+        debounce
+        placeholder="Search by name"
+        aria-label="Search users by name"
+      />
       <div className="border overflow-hidden rounded-lg">
         <Table className="rounded-lg overflow-hidden shadow-sm">
-          <TableCaption className="sr-only">A list of your recent invoices.</TableCaption>
+          <TableCaption className="sr-only">
+            A list of all the departments in the system. You can view, edit, and manage users in
+            each department.
+          </TableCaption>
           <TableHeader className="bg-neutral-100">
             <TableRow>
               <TableHead>Name</TableHead>
@@ -73,12 +101,19 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem className="text-[13px]" onClick={(e) => e.preventDefault()}>
+                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                         <DepartmentUsers name={d.name} id={d.id} />
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-[13px]" onClick={(e) => e.preventDefault()}>
-                        <UpdateDepartment id={d.id} name={d.name} hod={d.hod} />
-                      </DropdownMenuItem>
+                      {canEdit && (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                          <UpdateDepartment id={d.id} name={d.name} hod={d.hod} />
+                        </DropdownMenuItem>
+                      )}
+                      {canDelete && (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                          <DeleteDepartment departmentId={d.id} />
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -87,6 +122,13 @@ export const DepartmentTable = ({ data, pagination }: DepartmentTableProps) => {
           </TableBody>
         </Table>
       </div>
+      {data.length === 0 && (
+        <EmptyState
+          className="mt-2 bg-white"
+          title="No Departments Found"
+          description="There are no departments available. You can create a new department to get started."
+        />
+      )}
       <div className="flex items-center justify-between px-3 py-5 rounded-b-lg mt-4">
         <div className="text-[14px] text-gray-500 flex-1">{getFooterText}</div>
         <div className="text-center flex-1 flex justify-center">

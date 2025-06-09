@@ -57,7 +57,6 @@ export const UserTable = ({
         placeholder="Search by name or email"
         aria-label="Search users by name or email"
       />
-
       <div className="border overflow-hidden rounded-lg">
         <Table>
           <TableCaption className="sr-only">A list of users.</TableCaption>
