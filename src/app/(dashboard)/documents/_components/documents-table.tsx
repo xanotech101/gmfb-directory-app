@@ -33,7 +33,8 @@ interface DocumentsTableProps {
     searchString: string
   }
   permissions: {
-    canDeleteDocument?: boolean
+    canDelete?: boolean
+    canEdit?: boolean
   }
 }
 
@@ -102,23 +103,24 @@ export const DocumentsTable = ({
                     <DropdownMenuContent className="w-auto max-w-56">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                        <DocumentDetails
-                          id={doc.id}
-                          canDeleteDocument={permissions.canDeleteDocument}
-                        />
+                        <DocumentDetails id={doc.id} canDeleteDocument={permissions.canDelete} />
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link
-                          href={`/documents/${doc.id}/edit`}
-                          className="w-full text-sm text-left flex items-center gap-1"
-                        >
-                          <SquarePenIcon className="size-4" />
-                          Edit Document
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                        <DeleteDocumentDialog docId={doc.id} />
-                      </DropdownMenuItem>
+                      {permissions.canEdit && (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                          <Link
+                            href={`/documents/${doc.id}/edit`}
+                            className="w-full text-sm text-left flex items-center gap-1"
+                          >
+                            <SquarePenIcon className="size-4" />
+                            Edit Document
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                      {permissions.canDelete && (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                          <DeleteDocumentDialog docId={doc.id} />
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
