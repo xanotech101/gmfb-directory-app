@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import React, { Fragment } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
@@ -9,15 +8,18 @@ import { parseAsFloat, parseAsString, useQueryStates } from 'nuqs'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
-import { Package, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { AnnouncementsTable } from './_components/announcement-table'
 import { useUser } from '@/providers/user.provider'
 
 export default function Announcements() {
   const { hasPermission } = useUser()
 
+  const canViewAnnouncement = hasPermission('can_view_announcement')
   const canCreateAnnouncements = hasPermission('can_create_announcement')
   const canViewAnnouncements = hasPermission('can_view_announcements')
+  const canEditAnnouncement = hasPermission('can_update_announcement')
+  const canDeleteAnnouncement = hasPermission('can_delete_announcement')
 
   const [filters, setFilters] = useQueryStates(
     {
@@ -34,6 +36,7 @@ export default function Announcements() {
       get(`/api/announcements?page=${filters.page}&search=${filters.search}`, {
         isClient: true,
       }),
+    enabled: canViewAnnouncements,
   })
 
   return (
@@ -66,7 +69,6 @@ export default function Announcements() {
           condition={!canViewAnnouncements}
           className="bg-white w-full"
           as={EmptyState}
-          icon={Package}
           title="Permission Denied"
           description="You do not have permission to view departments."
         />
@@ -86,6 +88,11 @@ export default function Announcements() {
               setFilters((prev) => ({ ...prev, search: searchString, page: 1 }))
             },
             searchString: filters.search,
+          }}
+          permissions={{
+            canEdit: canEditAnnouncement,
+            canView: canViewAnnouncement,
+            canDelete: canDeleteAnnouncement,
           }}
         />
       </Show>

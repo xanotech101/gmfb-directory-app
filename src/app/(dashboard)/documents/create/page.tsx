@@ -21,7 +21,6 @@ export default function CreateDocument() {
         title: 'Document created',
         description: 'The document has been successfully created',
       })
-      router.push('/documents')
     },
     onError: (error) => {
       toast({

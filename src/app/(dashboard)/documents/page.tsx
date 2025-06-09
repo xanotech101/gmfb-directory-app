@@ -14,6 +14,8 @@ import { useUser } from '@/providers/user.provider'
 
 export default function Documents() {
   const { hasPermission } = useUser()
+
+  const canViewDocument = hasPermission('can_view_document')
   const canEditDocument = hasPermission('can_update_document')
   const canViewDocuments = hasPermission('can_view_documents')
   const canCreateDocuments = hasPermission('can_create_document')
@@ -78,7 +80,11 @@ export default function Documents() {
               setFilters((prev) => ({ ...prev, page }))
             },
           }}
-          permissions={{ canDelete: canDeleteDocument, canEdit: canEditDocument }}
+          permissions={{
+            canDelete: canDeleteDocument,
+            canEdit: canEditDocument,
+            canView: canViewDocument,
+          }}
           filters={{
             onSearch: (searchString: string) => {
               setFilters((prev) => ({ ...prev, search: searchString, page: 1 }))

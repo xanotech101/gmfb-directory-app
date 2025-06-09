@@ -4,21 +4,20 @@ import { del } from '@/lib/fetch'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trash2Icon } from 'lucide-react'
 
-export const DeleteDocument = ({ docId }: { docId: string }) => {
+export const DeleteAnnouncement = ({ announcementId }: { announcementId: string }) => {
   const queryClient = useQueryClient()
 
-  const deleteDocument = useMutation({
-    mutationKey: ['delete-document'],
-    mutationFn: async () => del(`/api/documents/${docId}`, { isClient: true }),
+  const deleteAnnouncement = useMutation({
+    mutationKey: ['delete-announcement'],
+    mutationFn: async () => del(`/api/announcements/${announcementId}`, { isClient: true }),
     onSuccess: () => {
       toast({
-        title: 'Document deleted successfully',
-        description: 'The document has been deleted successfully.',
+        title: 'Announcement deleted successfully',
+        description: 'The announcement has been deleted successfully.',
         variant: 'default',
       })
-      queryClient.invalidateQueries({ queryKey: ['documents'] })
+      queryClient.invalidateQueries({ queryKey: ['announcements'] })
     },
-
     onError: (error) => {
       toast({
         title: 'Error',
@@ -32,14 +31,14 @@ export const DeleteDocument = ({ docId }: { docId: string }) => {
       trigger={
         <button className="w-full text-sm text-left flex items-center gap-1">
           <Trash2Icon className="size-4" />
-          Delete Document
+          Delete Announcement
         </button>
       }
-      title="Delete Document"
-      description={`Are you sure you want to delete the document? This action cannot be undone.`}
+      title="Delete Announcement"
+      description={`Are you sure you want to delete the announcement? This action cannot be undone.`}
       actionProps={{
-        action: () => deleteDocument.mutateAsync(),
-        isLoading: deleteDocument.isPending,
+        action: () => deleteAnnouncement.mutateAsync(),
+        isLoading: deleteAnnouncement.isPending,
         buttonProps: {
           variant: 'destructive',
           children: 'Delete',

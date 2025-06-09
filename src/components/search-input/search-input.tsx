@@ -24,7 +24,7 @@ export const SearchInput = ({
     <div className="w-auto mb-4 relative max-w-xs">
       <Input
         {...props}
-        className="pl-8"
+        className="pl-8 border-gray-300"
         type="search"
         value={value}
         onChange={(e) => {

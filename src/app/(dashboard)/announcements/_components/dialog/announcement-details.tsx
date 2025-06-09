@@ -10,31 +10,23 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { useQuery } from '@tanstack/react-query'
-import { get } from '@/lib/fetch'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircleIcon, ClockIcon, RefreshCwIcon } from 'lucide-react'
+import { CheckCircleIcon, ClockIcon, ReceiptTextIcon, RefreshCwIcon } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import { useGetAnnouncement } from '../../hooks/use-get-announcement'
 import { formatDate } from '@/lib/format-date'
 
 export function AnnouncementDetails({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false)
-
-  const { data } = useQuery<any>({
-    queryKey: ['announcement-details', id],
-    queryFn: async () =>
-      get(`/api/announcements/${id}`, {
-        isClient: true,
-      }),
-    enabled: !!id,
-  })
-
-  const announcement = data?.data ?? {}
+  const { data: announcement } = useGetAnnouncement(id)
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button className="w-full text-sm">View details</button>
+        <button className="w-full text-sm text-left flex items-center gap-1">
+          <ReceiptTextIcon className="size-4" />
+          View details
+        </button>
       </SheetTrigger>
       <SheetContent
         className="max-w-[80%] md:max-w-[40%] bg-white text-[14px]"
@@ -101,7 +93,7 @@ export function AnnouncementDetails({ id }: { id: string }) {
                     <ClockIcon className="h-5 w-5 text-primary" />
                     <span className="font-medium">Created</span>
                   </div>
-                  {/* <span className="text-sm">{formatDate(announcement?.created_at)}</span> */}
+                  <span className="text-sm">{formatDate(announcement?.created_at)}</span>
                 </div>
                 <Separator className="bg-gray-200/70" />
                 <div className="flex items-center justify-between">
@@ -109,7 +101,7 @@ export function AnnouncementDetails({ id }: { id: string }) {
                     <RefreshCwIcon className="h-5 w-5 text-primary" />
                     <span className="font-medium">Updated</span>
                   </div>
-                  {/* <span className="text-sm">{formatDate(announcement?.updated_at)}</span> */}
+                  <span className="text-sm">{formatDate(announcement?.updated_at)}</span>
                 </div>
               </div>
             </div>

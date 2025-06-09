@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -16,13 +17,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EllipsisVertical } from 'lucide-react'
+import { EllipsisVertical, SquarePenIcon } from 'lucide-react'
 import { Pagination, PaginationProps, useFooterText } from '@/components/pagination/pagination'
 import { AnnouncementDetails } from './dialog/announcement-details'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
 import { SearchInput } from '@/components/search-input/search-input'
 import { EmptyState } from '@/components/ui/empty-state'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { DeleteAnnouncement } from './dialog/delete-announcement'
 
 interface AnnouncementsTableProps {
   data: any
@@ -31,12 +34,18 @@ interface AnnouncementsTableProps {
     onSearch: (searchString: string) => void
     searchString: string
   }
+  permissions: {
+    canView: boolean
+    canDelete: boolean
+    canEdit: boolean
+  }
 }
 
 export const AnnouncementsTable = ({
   data,
   pagination,
   filters: { onSearch, searchString },
+  permissions: { canView, canDelete, canEdit },
 }: AnnouncementsTableProps) => {
   const router = useRouter()
   const { currentPage, totalItems, handlePageChange } = pagination
@@ -101,14 +110,28 @@ export const AnnouncementsTable = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuContent className="w-auto max-w-56 overflow-auto">
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            e.preventDefault()
-                          }}
-                        >
-                          <AnnouncementDetails id={announcement.id} />
-                        </DropdownMenuItem>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        {canView && (
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                            <AnnouncementDetails id={announcement.id} />
+                          </DropdownMenuItem>
+                        )}
+                        {canEdit && (
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                            <Link
+                              href={`/announcements/${announcement.id}/edit`}
+                              className="w-full text-sm text-left flex items-center gap-1"
+                            >
+                              <SquarePenIcon className="size-4" />
+                              Edit Announcement
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        {canDelete && (
+                          <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                            <DeleteAnnouncement announcementId={announcement.id} />
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenuPortal>
                   </DropdownMenu>

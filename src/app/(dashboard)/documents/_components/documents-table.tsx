@@ -21,7 +21,7 @@ import { Pagination, PaginationProps, useFooterText } from '@/components/paginat
 import Link from 'next/link'
 import { DocumentDetails } from './dialog/document-details'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
-import { DeleteDocumentDialog } from './dialog/delete-document'
+import { DeleteDocument } from './dialog/delete-document'
 import { SearchInput } from '@/components/search-input/search-input'
 import { EmptyState } from '@/components/ui/empty-state'
 
@@ -33,15 +33,16 @@ interface DocumentsTableProps {
     searchString: string
   }
   permissions: {
-    canDelete?: boolean
-    canEdit?: boolean
+    canView: boolean
+    canDelete: boolean
+    canEdit: boolean
   }
 }
 
 export const DocumentsTable = ({
   data,
   pagination,
-  permissions,
+  permissions: { canView, canDelete, canEdit },
   filters: { onSearch, searchString },
 }: DocumentsTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
@@ -102,10 +103,12 @@ export const DocumentsTable = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                        <DocumentDetails id={doc.id} canDeleteDocument={permissions.canDelete} />
-                      </DropdownMenuItem>
-                      {permissions.canEdit && (
+                      {canView && (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                          <DocumentDetails id={doc.id} canDeleteDocument={canDelete} />
+                        </DropdownMenuItem>
+                      )}
+                      {canEdit && (
                         <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                           <Link
                             href={`/documents/${doc.id}/edit`}
@@ -116,9 +119,9 @@ export const DocumentsTable = ({
                           </Link>
                         </DropdownMenuItem>
                       )}
-                      {permissions.canDelete && (
+                      {canDelete && (
                         <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                          <DeleteDocumentDialog docId={doc.id} />
+                          <DeleteDocument docId={doc.id} />
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
