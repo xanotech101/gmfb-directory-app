@@ -3,9 +3,12 @@ import { get, post } from '@/lib/fetch'
 import { NextResponse, NextRequest } from 'next/server'
 import { getTokens } from '@/lib/get-tokens'
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   const { accessToken } = await getTokens()
-  const response = await get<any>('/api/v1/folders', {
+  const { searchParams } = new URL(request.url)
+  const search = searchParams.get('search') || ''
+
+  const response = await get<any>(`/api/v1/folders?search=${search}`, {
     options: {
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -1,16 +1,21 @@
 'use client'
 import { Show } from 'react-smart-conditional'
 import { Skeleton } from '@/components/ui/skeleton'
-import { EmptyState } from '@/components/ui/empty-state'
-import { Package } from 'lucide-react'
 import { FolderTable } from './_components/folder-table'
 import { CreateFolder } from './_components/dialog/create-folder'
 import { useGetFolders } from './hooks/use-get-folders'
 import { useUser } from '@/providers/user.provider'
+import { useQueryState } from 'nuqs'
 
 export default function Folders() {
   const { hasPermission } = useUser()
-  const { isFetching, folders } = useGetFolders()
+
+  const [search, setSearch] = useQueryState('search', {
+    defaultValue: '',
+    history: 'push',
+  })
+
+  const { isLoading, folders } = useGetFolders(search)
 
   const canCreateFolders = hasPermission('can_create_folder')
   const canUpdateFolders = hasPermission('can_update_folder')
@@ -30,21 +35,19 @@ export default function Folders() {
         )}
       </div>
       <Show as="div" className="mt-8 flow-root">
-        <Show.If condition={isFetching} as={Skeleton} className="h-[200px] w-full rounded-xl" />
+        <Show.If condition={isLoading} as={Skeleton} className="h-[200px] w-full rounded-xl" />
         <Show.If
-          condition={folders.length === 0}
-          as={EmptyState}
-          icon={Package}
-          title="No Folders Found"
-          description="Get started by creating a new folder."
-          className="w-full bg-white"
-        />
-        <Show.If
-          condition={folders.length > 0}
+          condition={folders}
           as={FolderTable}
           data={folders}
-          canUpdateFolders={canUpdateFolders}
-          canDeleteFolder={canDeleteFolders}
+          permissions={{
+            canDelete: canDeleteFolders,
+            canEdit: canUpdateFolders,
+          }}
+          filters={{
+            onSearch: (searchString: string) => setSearch(searchString),
+            searchString: search,
+          }}
         />
       </Show>
     </>

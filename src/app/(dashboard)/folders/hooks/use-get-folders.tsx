@@ -2,17 +2,17 @@
 import { get } from '@/lib/fetch'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetFolders = () => {
-  const { isFetching, data } = useQuery<any>({
-    queryKey: ['folders'],
+export const useGetFolders = (search: string) => {
+  const { isLoading, data } = useQuery<any>({
+    queryKey: ['folders', search],
     queryFn: async () =>
-      get('/api/folders', {
+      get(`/api/folders?search=${search}`, {
         isClient: true,
       }),
   })
 
   return {
-    isFetching,
+    isLoading,
     folders: data?.data || [],
   }
 }
