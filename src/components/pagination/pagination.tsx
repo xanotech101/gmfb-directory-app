@@ -19,7 +19,7 @@ function Pagination({
   const getFooterText = useFooterText(currentPage, totalItems)
 
   return (
-    <div className="fixed bottom-0 left-72 w-[calc(100vw-18rem)] bg-white/50 border-t border-gray-200/60 z-10 px-5">
+    <div className="fixed bottom-0 left-72 w-[calc(100vw-18rem)] bg-white/70 border-t border-gray-200/60 z-10 px-5 shadow-3xl">
       <div className="flex items-center justify-between py-5 rounded-b-lg">
         <div className="text-[14px] text-gray-500">{getFooterText}</div>
         {totalItems > itemsPerPage ? (
