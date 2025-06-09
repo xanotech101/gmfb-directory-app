@@ -69,7 +69,7 @@ export const DesktopSidebar = ({
                 onClick={() =>
                   post('/api/auth/logout', { isClient: true }).finally(() => router.push('/login'))
                 }
-                className="group -mx-2 flex gap-x-3 p-2 text-sm font-semibold leading-6 bg-gray-100 w-full rounded-lg hover:text-[#891C69] hover:bg-gray-200 text-gray-500 hover:shadow-sm"
+                className="group -mx-2 flex gap-x-3 p-2 text-sm font-semibold leading-6 bg-transparent w-full rounded-lg hover:text-[#891C69] text-gray-500"
               >
                 <Power aria-hidden="true" className="h-6 w-6 shrink-0" />
                 Logout

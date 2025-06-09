@@ -21,10 +21,8 @@ export function Providers({ children }: { readonly children: React.ReactNode }) 
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <UserContextProvider>
-        {children}
-      </UserContextProvider>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <UserContextProvider>{children}</UserContextProvider>
     </QueryClientProvider>
   )
 }

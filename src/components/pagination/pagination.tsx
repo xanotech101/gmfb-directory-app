@@ -16,25 +16,42 @@ function Pagination({
   currentPage,
 }: PaginationProps): JSX.Element | null {
   const pageCount = Math.ceil(totalItems / itemsPerPage)
+  const getFooterText = useFooterText(currentPage, totalItems)
 
-  return totalItems > itemsPerPage ? (
-    <ReactPaginate
-      breakLabel="..."
-      nextLabel={<ChevronRightIcon className="h-5 w-5" aria-hidden="true" />}
-      onPageChange={({ selected }) => handlePageChange(selected + 1)}
-      pageRangeDisplayed={3}
-      pageCount={pageCount}
-      forcePage={currentPage - 1}
-      previousLabel={<ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />}
-      renderOnZeroPageCount={null}
-      containerClassName="pagination"
-      pageClassName="pagination__item"
-      previousClassName="pagination__item-previous"
-      nextClassName="pagination__item-next"
-      breakClassName="pagination__item"
-      activeClassName="active"
-    />
-  ) : null
+  return (
+    <div className="fixed bottom-0 left-72 w-[calc(100vw-18rem)] bg-white/50 border-t border-gray-200/60 z-10 px-5">
+      <div className="flex items-center justify-between py-5 rounded-b-lg">
+        <div className="text-[14px] text-gray-500">{getFooterText}</div>
+        {totalItems > itemsPerPage ? (
+          <ReactPaginate
+            breakLabel="..."
+            onPageChange={({ selected }) => handlePageChange(selected + 1)}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            forcePage={currentPage - 1}
+            renderOnZeroPageCount={null}
+            containerClassName="pagination"
+            pageClassName="pagination__item"
+            previousClassName="pagination__item-previous"
+            nextClassName="pagination__item-next"
+            breakClassName="pagination__item"
+            activeClassName="active"
+            previousLabel={
+              <div className="flex items-center">
+                <ChevronLeftIcon className="size-5" aria-hidden="true" />
+                Previous
+              </div>
+            }
+            nextLabel={
+              <div className="flex items-center">
+                Next <ChevronRightIcon className="size-5" aria-hidden="true" />
+              </div>
+            }
+          />
+        ) : null}
+      </div>
+    </div>
+  )
 }
 
 const useFooterText = (currentPage: number, totalItems: number, itemsPerPage = ITEMS_PER_PAGE) => {

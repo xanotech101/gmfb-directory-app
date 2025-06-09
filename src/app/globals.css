@@ -92,11 +92,11 @@ body {
 }
 
 .pagination {
-  @apply flex space-x-2;
+  @apply flex space-x-2 border border-gray-200 px-1 py-2 rounded-lg bg-white shadow-sm;
 }
 
 .pagination__item {
-  @apply relative inline-flex items-center justify-center w-[30px] h-[30px] text-xs font-medium text-gray-500 hover:bg-gray-50 rounded-full px-2 py-2 transition-all duration-200;
+  @apply relative inline-flex items-center justify-center size-8 text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-lg px-2 py-2 transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none;
 }
 
 .pagination__item a {
@@ -104,13 +104,13 @@ body {
 }
 
 .pagination__item-previous {
-  @apply w-[30px] h-[30px] rounded-full bg-[#F3F2F7] flex justify-center items-center py-2 text-sm font-medium text-black hover:bg-gray-50 transition-all duration-200;
+  @apply text-sm font-medium text-black bg-transparent flex justify-center items-center mr-4 hover:bg-gray-100 p-1 rounded-lg;
 }
 
 .pagination__item-next {
-  @apply w-[30px] h-[30px] rounded-full bg-[#F3F2F7] flex justify-center items-center px-2 py-2 text-xs font-medium text-black hover:bg-gray-50 transition-all duration-200;
+  @apply text-sm font-medium text-black bg-transparent flex justify-center items-center !ml-4 hover:bg-gray-100 p-1 rounded-lg;
 }
 
 .active {
-  @apply bg-[#891C69] text-white rounded-full pointer-events-none cursor-not-allowed !shadow-lg;
+  @apply bg-[#891C69] text-white rounded-lg pointer-events-none cursor-not-allowed !shadow-lg;
 }

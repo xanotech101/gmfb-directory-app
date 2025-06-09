@@ -139,17 +139,11 @@ export const DocumentsTable = ({
           className="w-full bg-white mt-2"
         />
       )}
-      <div className="flex items-center justify-between px-3 py-5 rounded-b-lg mt-4">
-        <div className="text-[14px] text-gray-500 flex-1">{getFooterText}</div>
-        <div className="text-center flex-1 flex justify-center">
-          <Pagination
-            totalItems={totalItems}
-            currentPage={currentPage!}
-            handlePageChange={handlePageChange}
-          />
-        </div>
-        <span className="flex-1" />
-      </div>
+      <Pagination
+        totalItems={totalItems}
+        currentPage={currentPage!}
+        handlePageChange={handlePageChange}
+      />
     </>
   )
 }
