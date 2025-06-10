@@ -31,16 +31,16 @@ export default function AvatarGroup({ content = [], max = 5, size, fontSize }: A
                 style={{
                   width: size ? `${size}px` : undefined,
                   height: size ? `${size}px` : undefined,
-                  border: c?.image ? 'none' : `2px solid ${getRandomColor(index).border}`,
+                  border: c?.image ? 'none' : `2px solid ${getRandomColor().border}`,
                 }}
               >
                 <AvatarImage src={c.image} alt={c.name} />
                 <AvatarFallback
                   className="uppercase flex items-center justify-center"
                   style={{
-                    backgroundColor: getRandomColor(index).background,
-                    color: getRandomColor(index).text,
-                    fontSize: `${fontSize}px`
+                    backgroundColor: getRandomColor().background,
+                    color: getRandomColor().text,
+                    fontSize: `${fontSize}px`,
                   }}
                 >
                   {c.name
@@ -62,15 +62,15 @@ export default function AvatarGroup({ content = [], max = 5, size, fontSize }: A
             style={{
               width: size ? `${size}px` : undefined,
               height: size ? `${size}px` : undefined,
-              border: `2px solid ${getRandomColor(lastIndex).border}`,
+              border: `2px solid ${getRandomColor().border}`,
             }}
           >
             <AvatarFallback
               style={{
-                backgroundColor: getRandomColor(lastIndex).background,
-                color: getRandomColor(lastIndex).text,
-                border: `1px solid ${getRandomColor(lastIndex).border}`,
-                fontSize: `${fontSize}px`
+                backgroundColor: getRandomColor().background,
+                color: getRandomColor().text,
+                border: `1px solid ${getRandomColor().border}`,
+                fontSize: `${fontSize}px`,
               }}
             >
               +{remainingUsers}
