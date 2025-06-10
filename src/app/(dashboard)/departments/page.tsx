@@ -19,6 +19,7 @@ export default function Departments() {
   const canViewDepartments = hasPermission('can_view_departments')
   const canCreateDepartments = hasPermission('can_create_department')
   const canDeleteDepartment = hasPermission('can_delete_department')
+  const canViewDepartment = hasPermission('can_view_department')
 
   const [filters, setFilters] = useQueryStates(
     {
@@ -78,6 +79,7 @@ export default function Departments() {
           permissions={{
             canEdit: canEditDepartments,
             canDelete: canDeleteDepartment,
+            canView: canViewDepartment,
           }}
         />
       </Show>

@@ -35,6 +35,7 @@ interface DepartmentTableProps {
   permissions: {
     canEdit: boolean
     canDelete: boolean
+    canView: boolean
   }
 }
 
@@ -42,7 +43,7 @@ export const DepartmentTable = ({
   data,
   pagination,
   filters: { onSearch, searchString },
-  permissions: { canEdit, canDelete },
+  permissions: { canEdit, canDelete, canView },
 }: DepartmentTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
   const getFooterText = useFooterText(currentPage, totalItems)
@@ -101,9 +102,11 @@ export const DepartmentTable = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-auto max-w-56">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                        <DepartmentUsers name={d.name} id={d.id} />
-                      </DropdownMenuItem>
+                      {canView && (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                          <DepartmentUsers name={d.name} id={d.id} />
+                        </DropdownMenuItem>
+                      )}
                       {canEdit && (
                         <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                           <UpdateDepartment id={d.id} name={d.name} hod={d.hod} />
