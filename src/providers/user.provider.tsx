@@ -16,11 +16,7 @@ const UserContext = createContext<UserContextValue>({
 })
 
 export const UserContextProvider = ({ children }: { children: ReactNode }) => {
-  const {
-    data,
-    isLoading,
-    refetch: refetchUser,
-  } = useQuery<any>({
+  const { data, refetch: refetchUser } = useQuery<any>({
     queryKey: ['profile'],
     queryFn: async () =>
       get('/api/users/profile', {
