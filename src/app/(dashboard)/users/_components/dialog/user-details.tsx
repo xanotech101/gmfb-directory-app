@@ -37,7 +37,11 @@ export function UserDetails({ user }: { user: any }) {
         </DialogHeader>
         <ScrollArea className="max-h-[60vh] pr-4 [&_.scrollbar]:hidden">
           <div className="flex flex-col items-center space-y-4 pb-4">
-            <UserAvatar firstName={user.first_name} lastName={user.last_name} />
+            <UserAvatar
+              firstName={user.first_name}
+              lastName={user.last_name}
+              className="size-12 text-lg"
+            />
             <div className="text-center">
               <h3 className="text-lg font-semibold">
                 {user.first_name} {user.last_name}
