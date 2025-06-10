@@ -34,7 +34,7 @@ export const Documents = () => {
   }
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col rounded-lg">
       <CardHeader>
         <CardTitle className="flex flex-row justify-between items-center">
           Latest Documents
@@ -60,15 +60,13 @@ export const Documents = () => {
           condition={data?.data?.items?.length > 0}
           as="ul"
           role="list"
-          className="divide-y divide-gray-100"
+          className="flex flex-col gap-3"
         >
           {data?.data?.items?.slice(0, 4)?.map((doc: any) => (
-            <li key={doc.id} className="gap-x-4 py-5">
-              <div className="flex-auto">
-                <div className="flex items-baseline justify-between gap-x-4">
-                  <p className="text-sm/6 font-semibold text-gray-900">{doc.subject}</p>
-                </div>
-              </div>
+            <li key={doc.id} className="border border-gray-200 rounded-lg p-5">
+              <h3 className="text-sm/6 font-semibold text-gray-900 line-clamp-2 capitalize">
+                {doc.subject}
+              </h3>
               <div className="flex items-center space-x-4 mt-2">
                 <span className="flex items-center text-sm text-muted-foreground">
                   <CalendarIcon className="mr-1 h-4 w-4" />
