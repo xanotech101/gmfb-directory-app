@@ -33,9 +33,9 @@ export default function FolderDetails() {
   return (
     <>
       {folder.isFetching ? (
-        <div>Loading...</div>
+        <Skeleton className="h-[20px] w-40 rounded-lg" />
       ) : (
-        <h1 className="text-base font-semibold leading-6 text-gray-900">
+        <h1 className="text-base font-semibold leading-6 text-gray-900 capitalize">
           {folder.data?.data?.name || 'Folder Details'}
         </h1>
       )}

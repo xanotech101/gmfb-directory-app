@@ -9,7 +9,16 @@ interface FileViewerProps {
   title: string
 }
 
-export const FileViewer = ({ type, url, title }: FileViewerProps) => {
+export const FileViewer = ({ url, title, type }: FileViewerProps) => {
+  let viewerUrl = url
+  if (
+    type === 'application/msword' ||
+    type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ) {
+    viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
+  } else {
+    viewerUrl = `${url}#toolbar=0&navpanes=0&scrollbar=0`
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,7 +34,7 @@ export const FileViewer = ({ type, url, title }: FileViewerProps) => {
         <div className="w-full h-full flex items-center justify-center p-8 ">
           <div className="w-full h-full relative">
             <iframe
-              src={`${url}#toolbar=0&navpanes=0&scrollbar=0`}
+              src={viewerUrl}
               className="absolute inset-0 w-full h-full border border-gray-300 rounded-md"
               title={title}
               allow="fullscreen"
