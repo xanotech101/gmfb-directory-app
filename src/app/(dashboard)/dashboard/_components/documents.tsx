@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import { BuildingIcon, CalendarIcon, FileIcon, UserCircle } from 'lucide-react'
+import { BuildingIcon, CalendarIcon, FilesIcon, UserCircle } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Show } from 'react-smart-conditional'
 import Link from 'next/link'
@@ -79,7 +79,7 @@ export const Documents = () => {
                   {doc.metadata?.send_to_all_departments ? 'All' : doc.departments?.length} user(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <FileIcon className="mr-1 h-4 w-4" />
+                  <FilesIcon className="mr-1 h-4 w-4" />
                   {doc.files?.length} file(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">

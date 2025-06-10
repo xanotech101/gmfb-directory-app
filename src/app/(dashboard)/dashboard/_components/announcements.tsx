@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import DOMPurify from 'dompurify'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import { BuildingIcon, CalendarIcon, FileIcon, UserCircleIcon } from 'lucide-react'
+import { BuildingIcon, CalendarIcon, FilesIcon, UserCircleIcon } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Show } from 'react-smart-conditional'
 import Link from 'next/link'
@@ -70,25 +70,25 @@ export const Announcements = () => {
                   <p className="text-sm/6 font-semibold text-gray-900">{a.subject}</p>
                 </div>
                 <div
-                  className="mt-1 line-clamp-2 text-sm/6 text-gray-600"
+                  className="mt-1 line-clamp-2 text-sm/6 text-muted-foreground"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(a?.body ?? '') }}
                 />
               </div>
               <div className="flex items-center space-x-4 mt-2">
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <CalendarIcon className="mr-1 h-4 w-4" />
+                  <CalendarIcon className="mr-1 size-4" />
                   {formatDate(a.created_at)}
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <UserCircleIcon className="mr-1 h-4 w-4" />
+                  <UserCircleIcon className="mr-1 size-4" />
                   {a.metadata?.send_to_all_departments ? 'All' : a.departments?.length} user(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <FileIcon className="mr-1 h-4 w-4" />
+                  <FilesIcon className="mr-1 size-4" />
                   {a.files?.length} file(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <BuildingIcon className="mr-1 h-4 w-4" />
+                  <BuildingIcon className="mr-1 size-4 " />
                   {a.metadata?.send_to_all_departments ? 'All' : a.departments?.length}{' '}
                   department(s)
                 </span>
