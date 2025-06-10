@@ -191,10 +191,10 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             {selectedValues.length > 0 ? (
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
-                  {selectedValues.slice(0, maxCount).map((value) => {
+                  {selectedValues.slice(0, maxCount).map((value, index) => {
                     return (
                       <Badge
-                        key={value.value}
+                        key={`selected-${value.value}-${index}`}
                         className={cn(
                           isAnimating ? 'animate-bounce' : '',
                           multiSelectVariants({ variant }),
@@ -268,11 +268,11 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             <CommandList className="p-3">
               {!options.length && <p className="py-6 text-center text-sm">No results found.</p>}
               <CommandGroup className="my-2">
-                {options.map((option) => {
+                {options.map((option, index) => {
                   const isSelected = selectedValues.some((value) => value.value === option.value)
                   return (
                     <CommandItem
-                      key={option.value}
+                      key={`option-${option.value}-${index}`}
                       onSelect={() => toggleOption(option)}
                       className="cursor-pointer"
                     >

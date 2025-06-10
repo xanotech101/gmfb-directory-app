@@ -56,10 +56,10 @@ export const CreateDepartment = () => {
       >
         <DialogHeader>
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">
-            Update department
+            Create department
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-700">
-            Fill the form to update department
+            Fill the form to create department
           </DialogDescription>
         </DialogHeader>
         <DepartmentForm onSubmit={createDepartment} />

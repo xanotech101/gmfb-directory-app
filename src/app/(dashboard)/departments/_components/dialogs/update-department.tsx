@@ -64,7 +64,7 @@ export const UpdateDepartment = ({ id, name, hod }: UpdateDepartmentProps) => {
             Update Department
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-700">
-            Fill in the form below to create a new department
+            Fill in the form below to update the department
           </DialogDescription>
         </DialogHeader>
         <DepartmentForm
