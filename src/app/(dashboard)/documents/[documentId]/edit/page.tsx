@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { put } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
 import { useRouter, useParams } from 'next/navigation'
 import { DocumentForm } from '../../_components/form/document-form'
 import { useGetDocument } from '../../hooks/use-get-document'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function EditDocument() {
   const router = useRouter()
+  useBreadcrumbs([
+    { label: 'Documents', href: '/documents' },
+    { label: 'Edit Document', href: '#' },
+  ])
   const { documentId } = useParams<{ documentId: string }>()
   const { data: document, isLoading, isError } = useGetDocument(documentId)
 

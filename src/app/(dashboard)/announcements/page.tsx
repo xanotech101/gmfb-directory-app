@@ -11,9 +11,11 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Plus } from 'lucide-react'
 import { AnnouncementsTable } from './_components/announcement-table'
 import { useUser } from '@/providers/user.provider'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Announcements() {
   const { hasPermission } = useUser()
+  useBreadcrumbs([{ label: 'Announcements', href: '#' }])
 
   const canViewAnnouncement = hasPermission('can_view_announcement')
   const canCreateAnnouncements = hasPermission('can_create_announcement')

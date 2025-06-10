@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import { parseAsFloat, parseAsString, useQueryState, useQueryStates } from 'nuqs'
+import { parseAsFloat, parseAsString, useQueryStates } from 'nuqs'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { Show } from 'react-smart-conditional'
@@ -11,9 +11,11 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { DocumentsTable } from './_components/documents-table'
 import { useUser } from '@/providers/user.provider'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Documents() {
   const { hasPermission } = useUser()
+  useBreadcrumbs([{ label: 'Documents', href: '#' }])
 
   const canViewDocument = hasPermission('can_view_document')
   const canEditDocument = hasPermission('can_update_document')

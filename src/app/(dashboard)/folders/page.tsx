@@ -6,9 +6,11 @@ import { CreateFolder } from './_components/dialog/create-folder'
 import { useGetFolders } from './hooks/use-get-folders'
 import { useUser } from '@/providers/user.provider'
 import { useQueryState } from 'nuqs'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Folders() {
   const { hasPermission } = useUser()
+  useBreadcrumbs([{ label: 'Folders', href: '#' }])
 
   const [search, setSearch] = useQueryState('search', {
     defaultValue: '',

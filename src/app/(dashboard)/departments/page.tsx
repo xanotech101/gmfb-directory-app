@@ -11,9 +11,11 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { useUser } from '@/providers/user.provider'
 import { CreateDepartment } from './_components/dialogs/create-department'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Departments() {
   const { hasPermission } = useUser()
+  useBreadcrumbs([{ label: 'Departments', href: '#' }])
 
   const canEditDepartments = hasPermission('can_update_department')
   const canViewDepartments = hasPermission('can_view_departments')

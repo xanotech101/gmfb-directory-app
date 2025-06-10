@@ -4,8 +4,10 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Password } from '../settings/password'
 import { Account } from './account'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Page() {
+  useBreadcrumbs([{ label: 'Settings', href: '#' }])
   return (
     <div>
       <div className="mb-8">

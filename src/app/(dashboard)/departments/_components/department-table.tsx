@@ -46,9 +46,6 @@ export const DepartmentTable = ({
   permissions: { canEdit, canDelete, canView },
 }: DepartmentTableProps) => {
   const { currentPage, totalItems, handlePageChange } = pagination
-  const getFooterText = useFooterText(currentPage, totalItems)
-
-  console.log('DepartmentTable data:', data)
 
   return (
     <>

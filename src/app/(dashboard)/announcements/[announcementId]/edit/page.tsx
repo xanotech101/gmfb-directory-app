@@ -3,13 +3,18 @@
 import { useMutation } from '@tanstack/react-query'
 import { put } from '@/lib/fetch'
 import { toast } from '@/hooks/use-toast'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useGetAnnouncement } from '../../hooks/use-get-announcement'
 import { AnnouncementForm } from '../../_components/form/announcement-form'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function EditAnnouncement() {
   const { announcementId } = useParams<{ announcementId: string }>()
   const { data: announcement, isLoading, isError } = useGetAnnouncement(announcementId)
+  useBreadcrumbs([
+    { label: 'Announcements', href: '/announcements' },
+    { label: 'Edit Announcement', href: '#' },
+  ])
 
   const updateAnnouncement = useMutation({
     mutationKey: ['update-announcement'],

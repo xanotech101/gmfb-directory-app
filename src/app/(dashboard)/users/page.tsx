@@ -11,9 +11,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { useUser } from '@/providers/user.provider'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Users() {
   const { hasPermission } = useUser()
+  useBreadcrumbs([{ label: 'Users', href: '#' }])
 
   const canViewUsers = hasPermission('can_view_users')
   const canInviteUser = hasPermission('can_invite_user')

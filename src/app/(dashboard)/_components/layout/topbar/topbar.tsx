@@ -24,12 +24,12 @@ import {
 } from '@/components/ui/menubar'
 import { Badge } from '@/components/ui/badge'
 import { Power, UserCircle } from 'lucide-react'
-
-const userNavigation = [{ name: 'Your profile', href: 'settings' }]
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void }) => {
   const router = useRouter()
   const { user } = useUser()
+  const { breadcrumbs } = useBreadcrumbs([])
 
   return (
     <div className="bg-white border-b border-gray-200">
@@ -48,24 +48,37 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
           <div aria-hidden="true" className="h-6 w-px bg-gray-200 lg:hidden" />
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="relative flex-1 items-center">
-              <Breadcrumb className="opacity-0">
+            <div className="relative flex-1">
+              <Breadcrumb className="items-center h-full flex">
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="/public" className="hover:text-[#891C69]">
-                      Home
-                    </BreadcrumbLink>
+                    {breadcrumbs.length === 0 ? (
+                      <BreadcrumbPage className="text-gray-900">Home</BreadcrumbPage>
+                    ) : (
+                      <BreadcrumbLink asChild className="hover:text-gray-900 transition-all">
+                        <Link href="/dashboard">Home</Link>
+                      </BreadcrumbLink>
+                    )}
                   </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/components" className="hover:text-[#891C69]">
-                      Components
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                  </BreadcrumbItem>
+                  {breadcrumbs.map((breadcrumb, index) => {
+                    const landindex = breadcrumbs.length - 1
+                    return (
+                      <React.Fragment key={index}>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                          {landindex === index ? (
+                            <BreadcrumbPage className="text-gray-900">
+                              {breadcrumb.label}
+                            </BreadcrumbPage>
+                          ) : (
+                            <BreadcrumbLink asChild className="hover:text-gray-900 transition-all">
+                              <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
+                            </BreadcrumbLink>
+                          )}
+                        </BreadcrumbItem>
+                      </React.Fragment>
+                    )
+                  })}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>

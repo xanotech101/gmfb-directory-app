@@ -11,9 +11,12 @@ import { useUser } from '@/providers/user.provider'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Package } from 'lucide-react'
 import { CreateRole } from './_components/form/create-role'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Roles() {
   const { hasPermission } = useUser()
+  useBreadcrumbs([{ label: 'Roles', href: '#' }])
+
   const canViewRoles = hasPermission('can_view_roles')
   const canCreateRoles = hasPermission('can_create_role')
 

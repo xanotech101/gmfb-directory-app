@@ -8,9 +8,14 @@ import { Show } from 'react-smart-conditional'
 import { FileCard } from '../../documents/_components/file-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function FolderDetails() {
   const { folderId } = useParams<{ folderId: string }>()
+  useBreadcrumbs([
+    { label: 'Folders', href: '/folders' },
+    { label: 'Folder Details', href: '#' },
+  ])
 
   const folder = useQuery<any>({
     queryKey: ['folders', folderId],

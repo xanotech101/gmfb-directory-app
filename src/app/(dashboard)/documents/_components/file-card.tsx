@@ -38,9 +38,9 @@ export function FileCard({ file, handleDelete, documentId, canDeleteDocument }: 
   return (
     <Card className="overflow-hidden" key={file.id}>
       <CardContent className="p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3 flex-1 truncate mr-4">
+        <div className="flex items-center space-x-2 flex-1 truncate mr-4">
           <FileIcon type={file.type} imageUrl={file.url} />
-          <span className="font-medium truncate" title={fileName}>
+          <span className="font-medium truncate text-[15px]" title={fileName}>
             {fileName}
           </span>
         </div>
