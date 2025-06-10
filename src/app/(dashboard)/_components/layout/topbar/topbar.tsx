@@ -55,7 +55,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                     {breadcrumbs.length === 0 ? (
                       <BreadcrumbPage className="text-gray-900">Home</BreadcrumbPage>
                     ) : (
-                      <BreadcrumbLink asChild className="hover:text-gray-900 transition-all">
+                      <BreadcrumbLink asChild className="hover:text-gray-900 cursor-pointer">
                         <Link href="/dashboard">Home</Link>
                       </BreadcrumbLink>
                     )}
@@ -71,7 +71,7 @@ export const Topbar = ({ setSidebarOpen }: { setSidebarOpen(open: boolean): void
                               {breadcrumb.label}
                             </BreadcrumbPage>
                           ) : (
-                            <BreadcrumbLink asChild className="hover:text-gray-900 transition-all">
+                            <BreadcrumbLink asChild className="hover:text-gray-900 cursor-pointer">
                               <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
                             </BreadcrumbLink>
                           )}
