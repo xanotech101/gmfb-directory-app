@@ -15,8 +15,6 @@ import { formatDate } from '@/lib/format-date'
 import { UserCircle } from 'lucide-react'
 import { UserAvatar } from '@/components/user-avatar/user-avatar'
 
-const randomIndex = Math.floor(Math.random())
-
 export function UserDetails({ user }: { user: any }) {
   if (!user) return null
 
