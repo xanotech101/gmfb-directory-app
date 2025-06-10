@@ -35,7 +35,7 @@ export const Announcements = () => {
   }
 
   return (
-    <Card className="flex flex-col rounded-lg">
+    <Card className="flex flex-col rounded-md">
       <CardHeader>
         <CardTitle className="flex flex-row justify-between items-center">
           Latest Announcements
@@ -64,7 +64,7 @@ export const Announcements = () => {
           className="flex flex-col gap-3"
         >
           {data?.data?.items?.slice(0, 4)?.map((a: any) => (
-            <li key={a.id} className="border border-gray-200 rounded-lg p-5">
+            <li key={a.id} className="border border-gray-200 rounded-md p-5">
               <h3 className="text-sm/6 font-semibold text-gray-900 line-clamp-2 capitalize">
                 {a.subject}
               </h3>

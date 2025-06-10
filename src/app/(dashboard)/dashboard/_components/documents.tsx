@@ -34,7 +34,7 @@ export const Documents = () => {
   }
 
   return (
-    <Card className="flex flex-col rounded-lg">
+    <Card className="flex flex-col rounded-md">
       <CardHeader>
         <CardTitle className="flex flex-row justify-between items-center">
           Latest Documents
@@ -63,7 +63,7 @@ export const Documents = () => {
           className="flex flex-col gap-3"
         >
           {data?.data?.items?.slice(0, 4)?.map((doc: any) => (
-            <li key={doc.id} className="border border-gray-200 rounded-lg p-5">
+            <li key={doc.id} className="border border-gray-200 rounded-md p-5">
               <h3 className="text-sm/6 font-semibold text-gray-900 line-clamp-2 capitalize">
                 {doc.subject}
               </h3>
