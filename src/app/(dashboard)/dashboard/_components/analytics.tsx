@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from 'next/link'
-import { BellAlertIcon, DocumentDuplicateIcon, UserGroupIcon, UsersIcon } from '@heroicons/react/24/outline'
+import {
+  BellAlertIcon,
+  DocumentDuplicateIcon,
+  UserGroupIcon,
+  UsersIcon,
+} from '@heroicons/react/24/outline'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
@@ -10,8 +15,8 @@ import React from 'react'
 import { useUser } from '@/providers/user.provider'
 
 export const Analytics = () => {
-  const {user} = useUser()
-  console.log(user)
+  const { user } = useUser()
+
   const { data, isFetching } = useQuery<any>({
     queryKey: ['analytics'],
     queryFn: async () =>
@@ -22,22 +27,55 @@ export const Analytics = () => {
 
   return (
     <Show>
-      <Show.If condition={isFetching} className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0">
+      <Show.If
+        condition={isFetching}
+        className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
+      >
         {new Array(4).fill(null).map((_, i) => (
           <Skeleton className="h-[100px] w-full rounded-xl" key={i} />
         ))}
       </Show.If>
-      <Show.If condition={data} className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0">
-        <Metric label="Departments" href="departments" value={data?.data?.departments} Icon={UsersIcon} />
-        <Metric label="Documents" href="documents" value={data?.data?.documents ?? 0} Icon={DocumentDuplicateIcon} />
-        {user?.meta?.is_admin && <Metric label="Users" href="users" value={data?.data?.users} Icon={UserGroupIcon} />}
-        <Metric label="Announcements" href="announcements" value={data?.data?.announcements} Icon={BellAlertIcon} />
+      <Show.If
+        condition={data}
+        className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
+      >
+        <Metric
+          label="Departments"
+          href="departments"
+          value={data?.data?.departments}
+          Icon={UsersIcon}
+        />
+        <Metric
+          label="Documents"
+          href="documents"
+          value={data?.data?.documents ?? 0}
+          Icon={DocumentDuplicateIcon}
+        />
+        {user?.meta?.is_admin && (
+          <Metric label="Users" href="users" value={data?.data?.users} Icon={UserGroupIcon} />
+        )}
+        <Metric
+          label="Announcements"
+          href="announcements"
+          value={data?.data?.announcements}
+          Icon={BellAlertIcon}
+        />
       </Show.If>
     </Show>
   )
 }
 
-const Metric = ({ label, value, href, Icon }: { label: string; value: number, href: string, Icon: any }) => (
+const Metric = ({
+  label,
+  value,
+  href,
+  Icon,
+}: {
+  label: string
+  value: number
+  href: string
+  Icon: any
+}) => (
   <Card className="h-auto p-4 border hover:border-[#891C69]">
     <Link href={`/${href}`} className="block">
       <CardHeader className="flex items-center justify-between flex-row p-0">

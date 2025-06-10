@@ -5,20 +5,25 @@ import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import DOMPurify from 'dompurify'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import { BuildingIcon, CalendarIcon, FileIcon, Package, UsersIcon } from 'lucide-react'
+import { BuildingIcon, CalendarIcon, FileIcon, UserCircleIcon } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
-import React, { Fragment } from 'react'
 import { Show } from 'react-smart-conditional'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { useUser } from '@/providers/user.provider'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const Announcements = () => {
-  const { data } = useQuery<any>({
+  const { hasPermission } = useUser()
+  const canViewAnnouncements = hasPermission('can_view_announcements')
+
+  const { data, isFetching } = useQuery<any>({
     queryKey: ['dashboard-announcements'],
     queryFn: async () =>
-      get(`/api/announcements?page=${1}&limit=${4}`, {
+      get(`/api/announcements?page=${1}&limit=${3}`, {
         isClient: true,
       }),
+    enabled: canViewAnnouncements,
   })
 
   const formatDate = (dateString: string) => {
@@ -42,6 +47,16 @@ export const Announcements = () => {
           'h-[200px]': !data?.data?.items?.length,
         })}
       >
+        <Show.If condition={isFetching} className="h-full">
+          <Skeleton className="h-full w-full rounded-xl" />
+        </Show.If>
+        <Show.If
+          condition={!canViewAnnouncements}
+          as={EmptyState}
+          className="h-full"
+          title="Permission Denied"
+          description="You do not have permission to view announcements."
+        />
         <Show.If
           condition={data?.data?.items?.length > 0}
           as="ul"
@@ -65,7 +80,7 @@ export const Announcements = () => {
                   {formatDate(a.created_at)}
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <UsersIcon className="mr-1 h-4 w-4" />
+                  <UserCircleIcon className="mr-1 h-4 w-4" />
                   {a.metadata?.send_to_all_departments ? 'All' : a.departments?.length} user(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
@@ -88,14 +103,13 @@ export const Announcements = () => {
             </li>
           ))}
         </Show.If>
-        <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
-          <EmptyState
-            icon={Package}
-            className="h-[180px]"
-            title="No Announcements"
-            description="There are no announcements to display."
-          />
-        </Show.If>
+        <Show.If
+          condition={data?.data?.items?.length === 0}
+          as={EmptyState}
+          className="h-[180px]"
+          title="No Announcements"
+          description="There are no announcements to display."
+        />
       </Show>
 
       {data && data?.data?.items?.length > 0 && (

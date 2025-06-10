@@ -4,20 +4,25 @@ import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { get } from '@/lib/fetch'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import { BuildingIcon, CalendarIcon, FileIcon, Package, UsersIcon } from 'lucide-react'
+import { BuildingIcon, CalendarIcon, FileIcon, UserCircle } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
-import React, { Fragment } from 'react'
 import { Show } from 'react-smart-conditional'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { useUser } from '@/providers/user.provider'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const Documents = () => {
-  const { data } = useQuery<any>({
+  const { hasPermission } = useUser()
+  const canViewDocuments = hasPermission('can_view_documents')
+
+  const { data, isFetching } = useQuery<any>({
     queryKey: ['dashboard-documents'],
     queryFn: async () =>
-      get(`/api/documents?page=${1}&limit=${4}`, {
+      get(`/api/documents?page=${1}&limit=${3}`, {
         isClient: true,
       }),
+    enabled: canViewDocuments,
   })
 
   const formatDate = (dateString: string) => {
@@ -41,6 +46,16 @@ export const Documents = () => {
           'h-[200px]': !data?.data?.items?.length,
         })}
       >
+        <Show.If condition={isFetching} className="h-full">
+          <Skeleton className="h-full w-full rounded-xl" />
+        </Show.If>
+        <Show.If
+          condition={!canViewDocuments}
+          as={EmptyState}
+          className="h-full"
+          title="Permission Denied"
+          description="You do not have permission to view documents."
+        />
         <Show.If
           condition={data?.data?.items?.length > 0}
           as="ul"
@@ -60,7 +75,7 @@ export const Documents = () => {
                   {formatDate(doc.created_at)}
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
-                  <UsersIcon className="mr-1 h-4 w-4" />
+                  <UserCircle className="mr-1 h-4 w-4" />
                   {doc.metadata?.send_to_all_departments ? 'All' : doc.departments?.length} user(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
@@ -83,14 +98,13 @@ export const Documents = () => {
             </li>
           ))}
         </Show.If>
-        <Show.If condition={data?.data?.items?.length === 0} as={Fragment}>
-          <EmptyState
-            icon={Package}
-            className="h-[180px]"
-            title="No Documents"
-            description="There are no documents to display."
-          />
-        </Show.If>
+        <Show.If
+          condition={data?.data?.items?.length === 0}
+          as={EmptyState}
+          className="h-[180px]"
+          title="No Documents"
+          description="There are no documents to display."
+        />
       </Show>
       {data && data?.data?.items?.length > 0 && (
         <CardFooter className="mt-auto">

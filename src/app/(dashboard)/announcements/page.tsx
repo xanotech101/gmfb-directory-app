@@ -70,7 +70,7 @@ export default function Announcements() {
           className="bg-white w-full"
           as={EmptyState}
           title="Permission Denied"
-          description="You do not have permission to view departments."
+          description="You do not have permission to view announcements."
         />
         <Show.If
           condition={data}
