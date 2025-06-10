@@ -6,5 +6,5 @@ export const formatDate = (dateString: string) => {
   if (!isValid(date)) {
     return ''
   }
-  return format(date, 'PPpp')
+  return format(date, 'MMMM dd, yyyy')
 }

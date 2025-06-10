@@ -41,7 +41,16 @@ const colors = [
   },
 ]
 
-export const getRandomColor = (index?: number) => {
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[(index ?? randomIndex) % colors.length]
+export const getRandomColor = (alphabet?: string) => {
+  const alphabets = 'abcdefghijklmnopqrstuvwxyz'
+  if (!alphabet || alphabet.length === 0) {
+    return colors[0]
+  }
+
+  const index = alphabets.indexOf(alphabet.toLowerCase())
+  if (index === -1) {
+    return colors[0]
+  }
+  const colorIndex = index % colors.length
+  return colors[colorIndex]
 }

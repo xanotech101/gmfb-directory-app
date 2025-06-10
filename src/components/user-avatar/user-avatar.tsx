@@ -14,14 +14,14 @@ export const UserAvatar = ({ firstName, lastName, className }: UserAvatarProps) 
     <Avatar
       className={cn(`size-7 flex-shrink-0 border-2 text-sm`, className)}
       style={{
-        border: `2px solid ${getRandomColor(0).border}`,
+        border: `2px solid ${getRandomColor().border}`,
       }}
     >
       <AvatarFallback
         className="h-full w-full flex justify-center items-center"
         style={{
-          backgroundColor: getRandomColor(0).background,
-          color: getRandomColor(0).text,
+          backgroundColor: getRandomColor().background,
+          color: getRandomColor().text,
         }}
       >
         {firstName?.[0]}

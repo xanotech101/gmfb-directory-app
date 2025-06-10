@@ -57,8 +57,6 @@ export function UserDetails({ user }: { user: any }) {
                 <div className="capitalize">{user.gender}</div>
                 <div>Verified:</div>
                 <div>{user.is_verified ? 'Yes' : 'No'}</div>
-                <div>Default Password:</div>
-                <div>{user.is_default_password ? 'Yes' : 'No'}</div>
               </div>
             </div>
             <Separator />
@@ -83,8 +81,6 @@ export function UserDetails({ user }: { user: any }) {
               <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                 <div>Created:</div>
                 <div>{formatDate(user.created_at)}</div>
-                <div>Updated:</div>
-                <div>{formatDate(user.updated_at)}</div>
               </div>
             </div>
           </div>
