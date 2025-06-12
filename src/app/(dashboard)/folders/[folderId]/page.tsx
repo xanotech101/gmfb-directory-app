@@ -40,9 +40,17 @@ export default function FolderDetails() {
       {folder.isFetching ? (
         <Skeleton className="h-[20px] w-40 rounded-lg" />
       ) : (
-        <h1 className="text-base font-semibold leading-6 text-gray-900 capitalize">
-          {folder.data?.data?.name || 'Folder Details'}
-        </h1>
+        <>
+          <h1 className="text-base font-semibold leading-6 text-gray-900 capitalize">
+            {folder.data?.data?.name || 'Folder Details'}
+          </h1>
+          <p className="text-sm mt-2 text-muted-foreground">
+            List of files in{' '}
+            <span className="font-semibold">
+              {`${folder.data?.data?.name} folder` || 'this folder'}
+            </span>
+          </p>
+        </>
       )}
 
       <Show>
@@ -70,7 +78,7 @@ export default function FolderDetails() {
         </Show.If>
         <Show.If
           condition={files?.data?.data?.meta?.total === 0}
-          className="bg-white w-full"
+          className="bg-white w-full mt-5"
           as={EmptyState}
           title="No Files Found"
           description="This folder is empty."

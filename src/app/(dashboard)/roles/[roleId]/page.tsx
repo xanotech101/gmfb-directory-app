@@ -10,10 +10,15 @@ import { Show } from 'react-smart-conditional'
 import { useParams, useRouter } from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from '@/hooks/use-toast'
+import { useBreadcrumbs } from '@/providers/breadcrumb.provider'
 
 export default function Permissions() {
-  const params = useParams()
+  const params = useParams<{ roleId: string }>()
   const router = useRouter()
+  useBreadcrumbs([
+    { label: 'Roles', href: '/roles' },
+    { label: 'Permissions', href: '#' },
+  ])
   const [selectedPermissions, setSelectedPermissions] = React.useState<Record<string, string[]>>({})
 
   const { isFetching, data } = useQuery<any>({
@@ -35,8 +40,8 @@ export default function Permissions() {
 
   useEffect(() => {
     if (roleData?.data) {
-      const permissions = roleData?.data?.permissions ?? [] as Record<string, string>[]
-      const permissionsByScope = permissions.reduce((acc:any, permission: any) => {
+      const permissions = roleData?.data?.permissions ?? ([] as Record<string, string>[])
+      const permissionsByScope = permissions.reduce((acc: any, permission: any) => {
         if (!acc[permission.scope]) {
           acc[permission.scope] = []
         }
@@ -52,24 +57,24 @@ export default function Permissions() {
     mutationFn: async () =>
       patch(`/api/roles/${params.roleId}/permissions`, {
         isClient: true,
-        body: {permissions: Object.values(selectedPermissions).flat()},
+        body: { permissions: Object.values(selectedPermissions).flat() },
       }),
     onSuccess: () => {
       toast({
-        title: "Success",
-        description: "Permissions Updated Successfully.",
+        title: 'Success',
+        description: 'Permissions Updated Successfully.',
       })
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        variant: "destructive",
-        description: error.message ?? "Something went wrong.",
+        title: 'Error',
+        variant: 'destructive',
+        description: error.message ?? 'Something went wrong.',
       })
     },
     onSettled: () => {
       refetch()
-    }
+    },
   })
 
   return (
@@ -77,47 +82,51 @@ export default function Permissions() {
       <div className="sm:flex sm:items-center">
         <div className="flex items-center justify-between sm:flex-auto ">
           <div className="flex flex-col">
-            <h1 className="text-left font-semibold leading-6 text-gray-900 capitalize">{roleData?.data?.name}</h1>
-            <p className="mt-2 text-sm text-gray-700">
-              {roleData?.data?.description}
-            </p>
+            <h1 className="text-left font-semibold leading-6 text-gray-900 capitalize">
+              {roleData?.data?.name}
+            </h1>
+            <p className="mt-2 text-sm text-gray-700">{roleData?.data?.description}</p>
           </div>
           <div className="flex items-center justify-between space-x-3">
             {roleData && data && (
               <Button
-                  onClick={() => updatePermissions.mutate()}
-                  disabled={updatePermissions.isPending}
-                  isLoading={updatePermissions.isPending}
+                onClick={() => updatePermissions.mutate()}
+                disabled={updatePermissions.isPending}
+                isLoading={updatePermissions.isPending}
               >
                 Save
               </Button>
             )}
-            <Button
-              variant="outline"
-              onClick={router.back}
-              disabled={updatePermissions.isPending}
-            >
+            <Button variant="outline" onClick={router.back} disabled={updatePermissions.isPending}>
               Cancel
             </Button>
           </div>
         </div>
       </div>
       <Show className="mt-8 flow-root">
-        <Show.If condition={data} className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0">
+        <Show.If
+          condition={data}
+          className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
+        >
           {Object.keys(data?.data ?? {}).map((key) => {
-            const permissions = data?.data?.[key] ?? [] as Record<string, string>[]
+            const permissions = data?.data?.[key] ?? ([] as Record<string, string>[])
             return (
               <PermissionCard
                 key={key}
                 scope={key}
                 scopePermissions={permissions}
                 selectedPermissions={selectedPermissions[key]}
-                setSelectedPermissions={(permissions: string[]) => setSelectedPermissions((prev) => ({ ...prev, [key]: permissions }))}
+                setSelectedPermissions={(permissions: string[]) =>
+                  setSelectedPermissions((prev) => ({ ...prev, [key]: permissions }))
+                }
               />
             )
           })}
         </Show.If>
-        <Show.If condition={isFetching} className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0">
+        <Show.If
+          condition={isFetching}
+          className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
+        >
           {new Array(4).fill(null).map((_, idx) => (
             <Skeleton key={idx} className="h-80" />
           ))}
