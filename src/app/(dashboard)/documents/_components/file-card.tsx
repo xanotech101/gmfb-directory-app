@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { SquareArrowOutUpRight, Trash2Icon } from 'lucide-react'
+import { Trash2Icon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ConfirmAction } from '@/components/confirm-action/confirm-action'
 import { useState } from 'react'
