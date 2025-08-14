@@ -1,8 +1,8 @@
 const colors = [
   {
-    background: '#4A5568', // Slate gray
-    text: '#E2E8F0',
-    border: '#718096',
+    background: '#f3f4f6', // Slate gray
+    text: '#111827',
+    border: '#9ca3af',
   },
   {
     background: '#553C9A', // Muted purple

@@ -12,9 +12,9 @@ interface UserAvatarProps {
 export const UserAvatar = ({ firstName, lastName, className }: UserAvatarProps) => {
   return (
     <Avatar
-      className={cn(`size-7 flex-shrink-0 border-2 text-sm`, className)}
+      className={cn(`size-8 flex-shrink-0 border-1 text-sm`, className)}
       style={{
-        border: `2px solid ${getRandomColor().border}`,
+        border: `1px solid ${getRandomColor().border}`,
       }}
     >
       <AvatarFallback

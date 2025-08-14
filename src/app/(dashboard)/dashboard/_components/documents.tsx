@@ -67,7 +67,7 @@ export const Documents = () => {
               <h3 className="text-sm/6 font-semibold text-gray-900 line-clamp-2 capitalize">
                 {doc.subject}
               </h3>
-              <div className="flex items-center space-x-4 mt-2">
+              <div className="flex items-center gap-y-2 gap-x-4 mt-2 flex-wrap">
                 <span className="flex items-center text-sm text-muted-foreground">
                   <CalendarIcon className="mr-1 h-4 w-4" />
                   {formatDate(doc.created_at)}

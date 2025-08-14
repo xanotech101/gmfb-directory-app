@@ -28,10 +28,7 @@ export function UserDetails({ user }: { user: any }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
-          <DialogTitle>User Details</DialogTitle>
-          <DialogDescription>
-            Detailed information about {user.first_name} {user.last_name}
-          </DialogDescription>
+          <DialogTitle className="sr-only">User Details</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh] pr-4 [&_.scrollbar]:hidden">
           <div className="flex flex-col items-center space-y-4 pb-4">
@@ -67,7 +64,7 @@ export function UserDetails({ user }: { user: any }) {
                 <div>{user.role?.name}</div>
                 <div>Departments:</div>
                 <div>
-                  {user.departments?.map((dept: any) => (
+                  {user.departments?.map((dept: { id: string; name: string }) => (
                     <Badge key={dept.id} variant="default" className="mr-1 mb-1">
                       {dept.name}
                     </Badge>

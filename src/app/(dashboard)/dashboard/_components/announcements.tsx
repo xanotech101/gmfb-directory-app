@@ -68,7 +68,7 @@ export const Announcements = () => {
               <h3 className="text-sm/6 font-semibold text-gray-900 line-clamp-2 capitalize">
                 {a.subject}
               </h3>
-              <div className="flex items-center space-x-4 mt-2">
+              <div className="flex items-center gap-y-2 gap-x-4 mt-2 flex-wrap">
                 <span className="flex items-center text-sm text-muted-foreground">
                   <CalendarIcon className="mr-1 size-4" />
                   {formatDate(a.created_at)}
@@ -76,10 +76,6 @@ export const Announcements = () => {
                 <span className="flex items-center text-sm text-muted-foreground">
                   <UserCircleIcon className="mr-1 size-4" />
                   {a.metadata?.send_to_all_departments ? 'All' : a.departments?.length} user(s)
-                </span>
-                <span className="flex items-center text-sm text-muted-foreground">
-                  <FilesIcon className="mr-1 size-4" />
-                  {a.files?.length} file(s)
                 </span>
                 <span className="flex items-center text-sm text-muted-foreground">
                   <BuildingIcon className="mr-1 size-4 " />

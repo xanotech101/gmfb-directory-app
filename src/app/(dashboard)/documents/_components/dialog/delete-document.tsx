@@ -30,7 +30,7 @@ export const DeleteDocument = ({ docId }: { docId: string }) => {
   return (
     <ConfirmAction
       trigger={
-        <button className="w-full text-sm text-left flex items-center gap-1">
+        <button className="w-full text-sm text-left flex items-center gap-1 text-red-700">
           <Trash2Icon className="size-4" />
           Delete Document
         </button>

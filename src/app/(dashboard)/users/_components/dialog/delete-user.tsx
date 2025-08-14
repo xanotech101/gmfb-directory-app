@@ -31,7 +31,7 @@ export const DeleteUser = ({ userId }: { userId: string }) => {
   return (
     <ConfirmAction
       trigger={
-        <button className="w-full text-sm flex items-center gap-1">
+        <button className="w-full text-sm flex items-center gap-1 text-red-700">
           <Trash2Icon className="size-4" />
           Delete User
         </button>

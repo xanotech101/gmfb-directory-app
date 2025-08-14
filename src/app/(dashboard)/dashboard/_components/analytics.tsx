@@ -29,7 +29,7 @@ export const Analytics = () => {
     <Show>
       <Show.If
         condition={isFetching}
-        className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
+        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
       >
         {new Array(4).fill(null).map((_, i) => (
           <Skeleton className="h-[100px] w-full rounded-xl" key={i} />
@@ -37,7 +37,7 @@ export const Analytics = () => {
       </Show.If>
       <Show.If
         condition={data}
-        className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
+        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4 mx-4 sm:mx-6 lg:mx-0"
       >
         <Metric
           label="Departments"
