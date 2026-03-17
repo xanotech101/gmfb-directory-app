@@ -1,0 +1,43 @@
+name: Deploy to GFMB ASG
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Trigger ASG instance refresh
+        run: |
+          REFRESH_ID=$(aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name gfmb-asg \
+            --preferences '{"MinHealthyPercentage":0,"InstanceWarmup":300}' \
+            --query 'InstanceRefreshId' --output text)
+          echo "Instance refresh started: $REFRESH_ID"
+
+          # Wait for completion (max 15 min)
+          for i in $(seq 1 30); do
+            sleep 30
+            STATUS=$(aws autoscaling describe-instance-refreshes \
+              --auto-scaling-group-name gfmb-asg \
+              --instance-refresh-ids "$REFRESH_ID" \
+              --query 'InstanceRefreshes[0].Status' --output text)
+            echo "Status: $STATUS ($((i*30))s)"
+            if [ "$STATUS" = "Successful" ]; then
+              echo "Deploy complete!"
+              exit 0
+            elif [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ]; then
+              echo "Deploy failed: $STATUS"
+              exit 1
+            fi
+          done
+          echo "Timeout waiting for refresh"
+          exit 1
